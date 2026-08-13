@@ -1,0 +1,111 @@
+diff --git a/nominate_cmodule/src/normal_cdf.cpp b/nominate_cmodule/src/normal_cdf.cpp
+index d73cca2..d2ffd62 100644
+--- a/nominate_cmodule/src/normal_cdf.cpp
++++ b/nominate_cmodule/src/normal_cdf.cpp
+@@ -75,44 +75,23 @@ void NormalCDF::initializeTable()
+ 
+ double NormalCDF::interpolate(double z, int column) const
+ {
+-    // Manejar valores fuera de límites
+-    if (z <= minZ_)
+-    {
+-        return table_[0 * 4 + column];
+-    }
+-    if (z >= maxZ_)
+-    {
+-        return table_[(tableSize_ - 1) * 4 + column];
+-    }
+-
+-    // OPTIMIZADO: Cálculo directo de índice O(1) en lugar de búsqueda lineal O(n)
+-    // La tabla tiene valores z desde minZ_ (-5.0) hasta maxZ_ (+5.0)
+-    // con espaciado de 1/resolution_ (0.0001)
+-    double indexFloat = (z - minZ_) * resolution_;
+-    size_t lowerIndex = static_cast<size_t>(indexFloat);
+-
+-    // Asegurar que no excedemos los límites
+-    if (lowerIndex >= tableSize_ - 1)
+-    {
+-        lowerIndex = tableSize_ - 2;
+-    }
+-    size_t upperIndex = lowerIndex + 1;
+-
+-    // Obtener los valores z y los valores de la columna objetivo
+-    double z_lower = table_[lowerIndex * 4 + 0];
+-    double z_upper = table_[upperIndex * 4 + 0];
+-    double value_lower = table_[lowerIndex * 4 + column];
+-    double value_upper = table_[upperIndex * 4 + column];
+-
+-    // Interpolación lineal
+-    // Evitar división por cero
+-    if (std::abs(z_upper - z_lower) < 1e-10)
++    // REQ-006 CDF-MATCH EXPERIMENT (2026-06-08): Fortran-faithful nearest-neighbor
++    // lookup, replacing linear interpolation. Replicates PROLLC2 ZDF lookup exactly
++    // (legacy_2004_DW-NOMINATE.FOR:3001-3011):
++    //   WWIMJ = ZS*XDEVIT ; KWIMJ = IFIX(ABS(WWIMJ)+0.5) ; clamp to NDEVIT-2 ;
++    //   ZS>=0 -> ZDF(NDEVIT-1+KWIMJ) ; ZS<0 -> ZDF(NDEVIT-1-KWIMJ).
++    // The C++ table_ is symmetric around index NDEVIT-1 (z=0). To revert, restore the
++    // linear-interpolation body from git (922ea91).
++    long kwimj = static_cast<long>(std::abs(z) * resolution_ + 0.5); // IFIX truncates toward 0
++    const long maxK = static_cast<long>(NDEVIT) - 2;
++    if (kwimj > maxK)
+     {
+-        return value_lower;
++        kwimj = maxK;
+     }
+-
+-    double t = (z - z_lower) / (z_upper - z_lower);
+-    return value_lower + t * (value_upper - value_lower);
++    const size_t index = (z >= 0.0)
++                             ? (NDEVIT - 1 + static_cast<size_t>(kwimj))
++                             : (NDEVIT - 1 - static_cast<size_t>(kwimj));
++    return table_[index * 4 + column];
+ }
+ 
+ double NormalCDF::cdf(double z) const
+@@ -165,35 +144,19 @@ std::pair<double, double> NormalCDF::logCdfAndMills(double z) const
+         return {logCdfVal, millsVal};
+     }
+ 
+-    // OPTIMIZADO: Cálculo directo de índice O(1)
+-    double indexFloat = (z - minZ_) * resolution_;
+-    size_t lowerIndex = static_cast<size_t>(indexFloat);
+-    if (lowerIndex >= tableSize_ - 1)
+-    {
+-        lowerIndex = tableSize_ - 2;
+-    }
+-    size_t upperIndex = lowerIndex + 1;
+-
+-    // Obtener los valores z
+-    double z_lower = table_[lowerIndex * 4 + 0];
+-    double z_upper = table_[upperIndex * 4 + 0];
+-
+-    // Calcular factor de interpolación
+-    double t = 0.0;
+-    if (std::abs(z_upper - z_lower) >= 1e-10)
++    // REQ-006 CDF-MATCH EXPERIMENT (2026-06-08): Fortran-faithful nearest-neighbor
++    // (was linear interpolation), same KWIMJ=IFIX(ABS(z*XDEVIT)+0.5) lookup as interpolate().
++    long kwimj = static_cast<long>(std::abs(z) * resolution_ + 0.5);
++    const long maxK = static_cast<long>(NDEVIT) - 2;
++    if (kwimj > maxK)
+     {
+-        t = (z - z_lower) / (z_upper - z_lower);
++        kwimj = maxK;
+     }
+-
+-    // Interpolar logCdf (columna 2)
+-    double logCdf_lower = table_[lowerIndex * 4 + 2];
+-    double logCdf_upper = table_[upperIndex * 4 + 2];
+-    double logCdfVal = logCdf_lower + t * (logCdf_upper - logCdf_lower);
+-
+-    // Interpolar CDF (columna 1) para calcular Mills ratio
+-    double cdf_lower = table_[lowerIndex * 4 + 1];
+-    double cdf_upper = table_[upperIndex * 4 + 1];
+-    double cdfVal = cdf_lower + t * (cdf_upper - cdf_lower);
++    const size_t index = (z >= 0.0)
++                             ? (NDEVIT - 1 + static_cast<size_t>(kwimj))
++                             : (NDEVIT - 1 - static_cast<size_t>(kwimj));
++    double logCdfVal = table_[index * 4 + 2];
++    double cdfVal = table_[index * 4 + 1];
+     if (cdfVal < 1e-300)
+         cdfVal = 1e-300;
+     double millsVal = std::exp(-z * z / 2.0) / cdfVal;

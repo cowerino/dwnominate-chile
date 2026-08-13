@@ -1,0 +1,16 @@
+suppressMessages(library(wnominate))
+data(sen90)
+cat("CLASS:", class(sen90), "\n")
+cat("DIM (legis x votes):", paste(dim(sen90$votes), collapse=" x "), "\n")
+cat("CODES:\n"); str(sen90$codes)
+cat("VOTE VALUE TABLE:\n"); print(table(as.vector(sen90$votes), useNA="always"))
+cat("LEGIS.DATA cols:", paste(colnames(sen90$legis.data), collapse=", "), "\n")
+cat("FIRST 5 LEGIS:\n"); print(head(sen90$legis.data, 5))
+cat("ROWNAMES sample:", paste(head(rownames(sen90$votes), 5), collapse=" | "), "\n")
+
+# Published reference output
+data(sen90wnom)
+cat("\nsen90wnom CLASS:", class(sen90wnom), "\n")
+cat("sen90wnom legislators coord cols:", paste(colnames(sen90wnom$legislators), collapse=", "), "\n")
+cat("sen90wnom FIRST 5 (coord1D/coord2D):\n")
+print(head(sen90wnom$legislators[, c("coord1D","coord2D")], 5))
