@@ -109,12 +109,14 @@ struct RollCallClassification
     std::vector<double> projections;   // Proyecciones finales de legisladores
     bool searchPerformed;              // Flag indicando si se ejecuto SEARCH
     int totalErrors;                   // Numero de errores de clasificacion
+    int firstCallErrors;               // JEH+JEL de la PRIMERA llamada a JAN1PT, pre-SEARCH
     int totalClassified;               // Total de votos clasificados (excluye ausentes)
 
     RollCallClassification()
         : cuttingPoint(0.0),
           searchPerformed(false),
           totalErrors(0),
+          firstCallErrors(-1),
           totalClassified(0) {}
 };
 

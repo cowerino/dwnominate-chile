@@ -5,6 +5,7 @@
 
 #include "dwnominate.hpp"
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <cstdlib>
 #include <cmath>
@@ -12,6 +13,8 @@
 #include <limits>
 #include <chrono>
 #include <set>
+#include <vector>
+#include <array>
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -22,6 +25,166 @@ static double g_wintTimeMs = 0.0;
 static double g_sigmasTimeMs = 0.0;
 static double g_rcTimeMs = 0.0;
 static double g_legTimeMs = 0.0;
+
+// ---------------------------------------------------------------------------
+// Instrumentacion de fase (UC-8). Inerte salvo que DWNOM_PHASE_DUMP este puesto.
+//
+// Emite el mismo par de puntos que el log del Fortran de referencia: despues de
+// la fase de roll calls y despues de la fase de legisladores. Se llama SOLO en
+// los dos sitios donde el bucle principal ya calculo la verosimilitud, asi que
+// no evalua nada de nuevo y no puede perturbar el estado (globalStats_,
+// legislatorLogLikelihood_). No cambiar eso: una instrumentacion que recalcula
+// la verosimilitud reescribe esos acumuladores.
+//
+// Comparar contra dwnom2004_chile_per_period/run.log, que registra por
+// iteracion "NUMBER RCs & CLASSIFICATION" + LNL (post-RC) y luego
+// "UNIQUE LEGISLATORS" + LNL (post-LEG).
+// ---------------------------------------------------------------------------
+static bool phaseDumpEnabled()
+{
+    static const bool on = (std::getenv("DWNOM_PHASE_DUMP") != nullptr);
+    return on;
+}
+
+// Contadores por roll call del ultimo paso de la fase RC. Cada hilo escribe su
+// propio indice, asi que no hay carrera. Solo se llenan bajo DWNOM_PHASE_DUMP.
+static std::vector<int> g_rcSpreadIters;
+static std::vector<int> g_rcMidpointIters;
+// Estado post-CUTPLANE por roll call (oldz, oldd) antes de optimizar. Comparable
+// 1:1 con DWNOM40.DAT del Fortran, del que se reconstruye OLDZ=proj(WS(1)*ZVEC)
+// y OLDD=+-0.5*ZVEC segun MCUTS.
+static std::vector<std::array<double, 4>> g_rcCutplaneInit;
+// Errores y total clasificado de CUTPLANE por roll call. Comparable con las
+// columnas KTT y KT de DWNOM40.DAT, que son POR roll call porque el Fortran
+// llama a CUTPLANE con NRCALL=1.
+static std::vector<int> g_rcCutErrors;
+static std::vector<int> g_rcCutTotal;
+static std::vector<int> g_rcCutFirst;
+
+static void dumpIterationHistogram(int ihappy)
+{
+    if (!phaseDumpEnabled() || g_rcSpreadIters.empty())
+    {
+        return;
+    }
+    // El Fortran permite 5 ciclos JJJJ x hasta 10 iteraciones internas por fase,
+    // luego el minimo por roll call ajustado es 5 y el maximo 50.
+    auto summarise = [](const std::vector<int> &v, const char *label) {
+        std::vector<int> s;
+        s.reserve(v.size());
+        for (int x : v)
+        {
+            if (x > 0)
+            {
+                s.push_back(x);
+            }
+        }
+        if (s.empty())
+        {
+            return;
+        }
+        std::sort(s.begin(), s.end());
+        long long sum = 0;
+        for (int x : s)
+        {
+            sum += x;
+        }
+        std::cout << "[RCITER] " << label
+                  << " n=" << s.size()
+                  << " min=" << s.front()
+                  << " p25=" << s[s.size() / 4]
+                  << " med=" << s[s.size() / 2]
+                  << " p75=" << s[(3 * s.size()) / 4]
+                  << " max=" << s.back()
+                  << " mean=" << (static_cast<double>(sum) / s.size())
+                  << " at_floor(<=5)=" << std::count_if(s.begin(), s.end(), [](int x) { return x <= 5; })
+                  << " at_cap(>=50)=" << std::count_if(s.begin(), s.end(), [](int x) { return x >= 50; })
+                  << "\n";
+    };
+    std::cout << "[RCITER] iter=" << ihappy << "\n";
+    if (ihappy == 1 && !g_rcCutplaneInit.empty())
+    {
+        std::ofstream f("cpp_cutplane_init.csv");
+        f << "rollcall_id,mid1,mid2,spread1,spread2,cut_errors,cut_total,cut_first" << '\n';
+        f.precision(10);
+        for (size_t i = 0; i < g_rcCutplaneInit.size(); ++i)
+        {
+            const auto &v = g_rcCutplaneInit[i];
+            f << i << "," << v[0] << "," << v[1] << "," << v[2] << "," << v[3] << "," << g_rcCutErrors[i] << "," << g_rcCutTotal[i] << "," << g_rcCutFirst[i] << '\n';
+        }
+        std::cout << "[RCITER] wrote cpp_cutplane_init.csv" << std::endl;
+    }
+    summarise(g_rcSpreadIters, "spread  ");
+    summarise(g_rcMidpointIters, "midpoint");
+}
+
+static void dumpPhaseState(const char *phase,
+                           int ihappy,
+                           double logLik,
+                           const ClassificationStats &stats,
+                           const Eigen::VectorXd &weights,
+                           const Eigen::MatrixXd &midpoints,
+                           const Eigen::MatrixXd &spreads)
+{
+    if (!phaseDumpEnabled())
+    {
+        return;
+    }
+
+    const int n = static_cast<int>(midpoints.rows());
+    std::vector<double> radii;
+    radii.reserve(static_cast<size_t>(n));
+    int rim = 0;
+
+    for (int i = 0; i < n; ++i)
+    {
+        // Los roll calls que no pasan el filtro quedan en cero exacto en ambos
+        // arreglos; el Fortran los escribe igual. Excluirlos para que las
+        // estadisticas radiales sean sobre el conjunto ajustado.
+        if (midpoints.row(i).isZero(0.0) && spreads.row(i).isZero(0.0))
+        {
+            continue;
+        }
+        const double r = midpoints.row(i).norm();
+        radii.push_back(r);
+        if (r >= 0.999)
+        {
+            ++rim;
+        }
+    }
+    std::sort(radii.begin(), radii.end());
+
+    const double pct = (stats.totalVotes > 0)
+                           ? 100.0 * static_cast<double>(stats.correctClassified) / stats.totalVotes
+                           : 0.0;
+
+    std::cout << "[PHASE] iter=" << ihappy
+              << " phase=" << phase
+              << std::fixed
+              << " LL=" << std::setprecision(4) << logLik
+              << " votes=" << stats.totalVotes
+              << " correct=" << stats.correctClassified
+              << " class=" << std::setprecision(4) << pct
+              << " w2=" << std::setprecision(6)
+              << (weights.size() > 1 ? weights(1) : 0.0)
+              << " beta=" << weights(weights.size() - 1)
+              << " fitted=" << radii.size()
+              << " rim=" << rim;
+
+    std::cout << " rdec=" << std::setprecision(4);
+    for (int d = 1; d <= 10; ++d)
+    {
+        size_t idx = 0;
+        if (!radii.empty())
+        {
+            idx = std::min(radii.size() - 1,
+                           static_cast<size_t>(d) * radii.size() / 10);
+        }
+        std::cout << (d > 1 ? "," : "") << (radii.empty() ? 0.0 : radii[idx]);
+    }
+    std::cout << " rmax=" << (radii.empty() ? 0.0 : radii.back())
+              << std::defaultfloat << "\n";
+}
 
 // CONSTRUCTOR E INICIALIZACION
 DWNominate::DWNominate(const DWNominateConfig &config, const DWNominateInput &input)
@@ -59,6 +222,16 @@ DWNominate::DWNominate(const DWNominateConfig &config, const DWNominateInput &in
     // Inicializar matrices de estado
     int numLegislators = static_cast<int>(legislatorCoords_.rows());
     int numRollCalls = static_cast<int>(rollCallMidpoints_.rows());
+
+    if (phaseDumpEnabled())
+    {
+        g_rcSpreadIters.assign(static_cast<size_t>(numRollCalls), 0);
+        g_rcMidpointIters.assign(static_cast<size_t>(numRollCalls), 0);
+        g_rcCutplaneInit.assign(static_cast<size_t>(numRollCalls), {0.0, 0.0, 0.0, 0.0});
+        g_rcCutErrors.assign(static_cast<size_t>(numRollCalls), -1);
+        g_rcCutTotal.assign(static_cast<size_t>(numRollCalls), -1);
+        g_rcCutFirst.assign(static_cast<size_t>(numRollCalls), -1);
+    }
 
     // XBIGLOG: Log-likelihood por legislador (antes/despues)
     legislatorLogLikelihood_ = Eigen::MatrixXd::Zero(numLegislators, 2);
@@ -331,6 +504,9 @@ DWNominateResult DWNominate::run()
 
         // PLOG despues de roll calls
         currentLogLikelihood_ = computeLogLikelihood();
+        dumpPhaseState("post-RC", ihappy, currentLogLikelihood_, globalStats_,
+                       weights_, rollCallMidpoints_, rollCallSpreads_);
+        dumpIterationHistogram(ihappy);
 
         // Fase de legisladores
         if (config_.fixLegislators)
@@ -348,6 +524,8 @@ DWNominateResult DWNominate::run()
 
         // PLOG despues de legisladores
         currentLogLikelihood_ = computeLogLikelihood();
+        dumpPhaseState("post-LEG", ihappy, currentLogLikelihood_, globalStats_,
+                       weights_, rollCallMidpoints_, rollCallSpreads_);
 
         result.totalIterations = ihappy;
 
@@ -629,6 +807,12 @@ void DWNominate::executeRollCallPhase(int iteration)
 }
 
 // Procesa un roll call individual.
+// ⚠ CODIGO MUERTO: cero call sites. La ruta viva es processRollCallParallel.
+// Conservado a proposito, no borrado sin decision de Roberto (D-E4).
+// Esta copia siempre tuvo la proyeccion de entrada de fase correcta; la ruta
+// viva no la tenia. Ese es el defecto de clase "correcto en un lugar, no
+// aplicado en la ruta que corre", quinta instancia. Desde 2026-08-14 las dos
+// copias coinciden en las tres proyecciones. Si tocas una, toca la otra.
 void DWNominate::processRollCall(
     int congressIndex,
     int rollCallLocalIndex,
@@ -689,10 +873,17 @@ void DWNominate::processRollCall(
     if (ns == 1)
     {
         // NS=1: Usar JAN11PT
+        // JAN11PT NO ordena internamente: findCuttingPoint1DFixedPolarity recorre
+        // los candidatos de forma incremental y asume proyecciones ascendentes.
+        // Como prepareRollCallData ahora devuelve TODO en orden natural (ver el fix
+        // de alineacion 2026-08-15), esta rama debe ordenar AMBOS arreglos aqui,
+        // juntos, para no repetir el desalineamiento que rompia CUTPLANE.
         std::vector<double> projections(numVoters);
+        std::vector<int> sortedVotes(numVoters);
         for (int i = 0; i < numVoters; ++i)
         {
             projections[i] = coords(sortedIndices[i], 0);
+            sortedVotes[i] = voteCodes[sortedIndices[i]];
         }
 
         double cuttingPoint = 0.0;
@@ -700,7 +891,7 @@ void DWNominate::processRollCall(
         double accuracy1 = 0.0;
         double accuracy2 = 0.0;
 
-        applyJan11pt(numVoters, projections, voteCodes,
+        applyJan11pt(numVoters, projections, sortedVotes,
                      cuttingPoint, spread, polarity,
                      accuracy1, accuracy2);
 
@@ -727,7 +918,7 @@ void DWNominate::processRollCall(
         // Verificar si ya tenemos valores inicializados (de R o anterior)
         bool hasPreloadedValues = oldz.squaredNorm() > 1e-10;
 
-        applyCutplane(numVoters, coords, voteCodes, oldz, oldd, polarity);
+        applyCutplane(numVoters, coords, voteCodes, oldz, oldd, polarity, globalRollCallIndex);
 
         // Solo actualizar midpoint/spread desde CUTPLANE en primera iteracion
         // Y SOLO si no había valores pre-cargados (e.g., de R)
@@ -751,6 +942,12 @@ void DWNominate::processRollCall(
 
     // Ejecutar optimizacion
     // Fortran: CALL RCINT2(...)
+    if (!g_rcCutplaneInit.empty())
+    {
+        g_rcCutplaneInit[static_cast<size_t>(globalRollCallIndex)] =
+            {oldz(0), ns > 1 ? oldz(1) : 0.0, oldd(0), ns > 1 ? oldd(1) : 0.0};
+    }
+
     RollCallOptimizationResult rcResult = optimizeRollCall(
         legislatorCoords_,
         globalRollCallIndex,
@@ -762,6 +959,12 @@ void DWNominate::processRollCall(
         rcConfig);
 
     // Actualizar parametros optimizados en el estado interno
+    if (!g_rcSpreadIters.empty())
+    {
+        g_rcSpreadIters[static_cast<size_t>(globalRollCallIndex)] = rcResult.spreadIterations;
+        g_rcMidpointIters[static_cast<size_t>(globalRollCallIndex)] = rcResult.midpointIterations;
+    }
+
     rollCallMidpoints_.row(globalRollCallIndex) = rcResult.midpoint.transpose();
     rollCallSpreads_.row(globalRollCallIndex) = rcResult.spread.transpose();
 
@@ -825,9 +1028,27 @@ void DWNominate::processRollCallParallel(
 
     // Leer midpoint actual (cada thread lee su propia fila)
     Eigen::VectorXd midpoint = rollCallMidpoints_.row(globalRollCallIndex).transpose();
-    // REQ-004 fix: removed normalizeToUnitSphere(midpoint) - Fortran PROLLC2 reads
-    // ZMID directly without clamping; clamping here every iter prevents midpoints
-    // from ever escaping the unit ball even after the applyCutplane fix.
+
+    // UC-2, 2026-08-14: proyeccion de entrada de fase RESTAURADA.
+    //
+    // Fortran L563-573, comentario propio "DO CHECK ON MIDPOINT TO MAKE SURE ITS
+    // WITHIN THE UNIT HYPERSPHERE": justo despues de LSCALE=LSCALE+1, es decir
+    // solo para roll calls que pasan el filtro, y ANTES de cargar OLDZ/OLDD.
+    // Es condicional (IF(SUM.GT.1.0)) y escribe de vuelta al arreglo persistente
+    // ZMID, no a una copia local. normalizeToUnitSphere ya es condicional, asi
+    // que coincide; el nombre enga~na, proyecta sobre la bola, no normaliza.
+    //
+    // REQ-004 la quito con la justificacion "Fortran PROLLC2 reads ZMID directly
+    // without clamping". Eso audita el callee y concluye sobre el caller: la
+    // proyeccion no esta en PROLLC2, esta en la fase que lo llama.
+    normalizeToUnitSphere(midpoint);
+    rollCallMidpoints_.row(globalRollCallIndex) = midpoint.transpose();
+
+    // NO portar el clamp de spread de Fortran L574-577
+    // (IF(ABS(OLDD(K)).GT.2.0) OLDD(K)=OLDD(K)/ABS(OLDD(K))): OLDD(K) se
+    // reasigna incondicionalmente desde DYN dos lineas despues, dentro de la
+    // misma pasada del DO 21, sin uso intermedio. Es codigo muerto en la
+    // referencia. Verificado 2026-08-14.
 
     // Variables temporales para el roll call actual
     Eigen::VectorXd oldz = midpoint;
@@ -838,10 +1059,17 @@ void DWNominate::processRollCallParallel(
     if (ns == 1)
     {
         // NS=1: Usar JAN11PT
+        // JAN11PT NO ordena internamente: findCuttingPoint1DFixedPolarity recorre
+        // los candidatos de forma incremental y asume proyecciones ascendentes.
+        // Como prepareRollCallData ahora devuelve TODO en orden natural (ver el fix
+        // de alineacion 2026-08-15), esta rama debe ordenar AMBOS arreglos aqui,
+        // juntos, para no repetir el desalineamiento que rompia CUTPLANE.
         std::vector<double> projections(numVoters);
+        std::vector<int> sortedVotes(numVoters);
         for (int i = 0; i < numVoters; ++i)
         {
             projections[i] = coords(sortedIndices[i], 0);
+            sortedVotes[i] = voteCodes[sortedIndices[i]];
         }
 
         double cuttingPoint = 0.0;
@@ -849,7 +1077,7 @@ void DWNominate::processRollCallParallel(
         double accuracy1 = 0.0;
         double accuracy2 = 0.0;
 
-        applyJan11pt(numVoters, projections, voteCodes,
+        applyJan11pt(numVoters, projections, sortedVotes,
                      cuttingPoint, spread, polarity,
                      accuracy1, accuracy2);
 
@@ -873,7 +1101,7 @@ void DWNominate::processRollCallParallel(
         // Verificar si ya tenemos valores inicializados (de R o anterior)
         bool hasPreloadedValues = oldz.squaredNorm() > 1e-10;
 
-        applyCutplane(numVoters, coords, voteCodes, oldz, oldd, polarity);
+        applyCutplane(numVoters, coords, voteCodes, oldz, oldd, polarity, globalRollCallIndex);
 
         // Solo actualizar midpoint/spread desde CUTPLANE en primera iteracion
         // Y SOLO si no había valores pre-cargados (e.g., de R)
@@ -897,6 +1125,12 @@ void DWNominate::processRollCallParallel(
                                    // optimization that broke faithfulness vs Fortran)
 
     // Ejecutar optimizacion (thread-safe: solo lee datos compartidos)
+    if (!g_rcCutplaneInit.empty())
+    {
+        g_rcCutplaneInit[static_cast<size_t>(globalRollCallIndex)] =
+            {oldz(0), ns > 1 ? oldz(1) : 0.0, oldd(0), ns > 1 ? oldd(1) : 0.0};
+    }
+
     RollCallOptimizationResult rcResult = optimizeRollCall(
         legislatorCoords_,
         globalRollCallIndex,
@@ -908,6 +1142,12 @@ void DWNominate::processRollCallParallel(
         rcConfig);
 
     // Actualizar parametros (thread-safe: cada thread escribe en fila diferente)
+    if (!g_rcSpreadIters.empty())
+    {
+        g_rcSpreadIters[static_cast<size_t>(globalRollCallIndex)] = rcResult.spreadIterations;
+        g_rcMidpointIters[static_cast<size_t>(globalRollCallIndex)] = rcResult.midpointIterations;
+    }
+
     rollCallMidpoints_.row(globalRollCallIndex) = rcResult.midpoint.transpose();
     rollCallSpreads_.row(globalRollCallIndex) = rcResult.spread.transpose();
 
@@ -1021,13 +1261,19 @@ int DWNominate::prepareRollCallData(
         sortedIndices[i] = static_cast<int>(rawIndices[i]);
     }
 
-    // Reordenar voteCodes segun el orden
-    std::vector<int> sortedVoteCodes(numVoters);
-    for (int i = 0; i < numVoters; ++i)
-    {
-        sortedVoteCodes[i] = voteCodes[sortedIndices[i]];
-    }
-    voteCodes = sortedVoteCodes;
+    // FIX 2026-08-15: NO reordenar voteCodes.
+    //
+    // Antes se reordenaba voteCodes a orden de proyeccion mientras coords quedaba en
+    // orden natural, asi que los dos salian DESALINEADOS: voteCodes[i] era del
+    // legislador sortedIndices[i] pero coords.row(i) era del legislador i. La ruta
+    // NS>=2 (CUTPLANE) los consume juntos, de modo que clasificaba un emparejamiento
+    // barajado. Medido: 27.84% de error contra 5.58% del optimo alineado y 28.30% de
+    // la prediccion barajada.
+    //
+    // El Fortran pasa XMAT y LDATA en orden NATURAL y ordena adentro
+    // (RSORT + MVOTE(I)=MM(LLL(I)) en CUTPLANE:4293-4296), asi que orden natural
+    // en ambos es lo fiel. sortedIndices se sigue devolviendo por compatibilidad
+    // pero ya no debe usarse para indexar coords contra voteCodes.
 
     return numVoters;
 }
@@ -1078,7 +1324,8 @@ void DWNominate::applyCutplane(
     const std::vector<int> &voteCodes,
     Eigen::VectorXd &midpoint,
     Eigen::VectorXd &spread,
-    CuttingPolarity &polarity)
+    CuttingPolarity &polarity,
+    int globalRollCallIndex)
 {
     int ns = config_.numDimensions;
 
@@ -1090,6 +1337,13 @@ void DWNominate::applyCutplane(
     bool searchEnabled = true; // IFIXX=1
     RollCallClassification result = classifyRollCall(
         coords, normalVector, voteCodes, searchEnabled);
+
+    if (globalRollCallIndex >= 0 && !g_rcCutErrors.empty())
+    {
+        g_rcCutErrors[static_cast<size_t>(globalRollCallIndex)] = result.totalErrors;
+        g_rcCutTotal[static_cast<size_t>(globalRollCallIndex)] = result.totalClassified;
+        g_rcCutFirst[static_cast<size_t>(globalRollCallIndex)] = result.firstCallErrors;
+    }
 
     // Ajustar orientacion del vector normal
     Eigen::VectorXd zvec = normalVector;
@@ -1112,11 +1366,21 @@ void DWNominate::applyCutplane(
     {
         midpoint(k) = ws * zvec(k);
     }
-    // REQ-004 fix: removed normalizeToUnitSphere(midpoint) - Fortran CUTPLANE does NOT
-    // clamp rollcall midpoints to unit ball; midpoint = WS * ZVEC where |ZVEC|=1 but
-    // WS can exceed 1. Clamping here forces iter-1 midpoints into unit ball and
-    // prevents convergence to Fortran's true midpoints (e.g. RC 1 cong 1 Chile
-    // Fortran mid=(-1.756,-0.958) norm 2.0; pre-fix C++ clamped to norm 1.0).
+
+    // UC-2, 2026-08-14: proyeccion post-CUTPLANE RESTAURADA.
+    //
+    // Fortran L651-678: dentro de IF(IHAPPY.EQ.1), calcula OLDZ(K)=WS(1)*ZVEC(1,K)
+    // acumulando SUM, y luego IF(SUM.GT.1.0) divide OLDZ por SQRT(SUM). Aqui el
+    // guard IHAPPY.EQ.1 vive en el llamador (solo conserva midpoint/spread de
+    // CUTPLANE en la primera iteracion), asi que proyectar siempre es equivalente:
+    // en iteraciones posteriores el resultado se descarta.
+    //
+    // REQ-004 la quito citando "Fortran mid=(-1.756,-0.958) norm 2.0". Eso es una
+    // mala lectura de columnas: rcout es FORMAT(I3,I5,4F7.3) escrito como
+    // (DYN(I,K),ZMID(I,K),K=1,NS), o sea spread1,mid1,spread2,mid2. Esa fila es
+    // spread1=-1.756, mid1=-0.958; el midpoint real es (-0.958,0.017), norma
+    // 0.958, DENTRO de la bola.
+    normalizeToUnitSphere(midpoint);
 
     // Calcular spread
     for (int k = 0; k < ns; ++k)
@@ -1227,7 +1491,7 @@ void DWNominate::processLegislator(int uniqueId, const LegislatorPresence &prese
 
     // Canonical-faithful Fortran XINT defaults: maxIterations=10, numSearchPointsConst=25,
     // numSearchPointsTemporal=10, stepUnit=0.01, unitSphereScale=0.75. See
-    // the XINT-vs-optimizer audit in the reproduction package for the derivation.
+    // quevotan-db/reproduce/fortran/XINT_VS_OPTIMIZE_LEGISLATORS.md for the audit.
     LegislatorOptimizerConfig legConfig;
 
     // Ejecutar optimizacion

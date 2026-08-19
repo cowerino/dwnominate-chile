@@ -460,16 +460,19 @@ static double optimizeMidpointIteration(
             midpoint(k) = saved.midpoint[k] - stepAccum * gradMidpoint[k];
         }
 
-        // 2026-08-06 (experiment/req004-clamp-restore): REQ-004's removal is retracted here.
-        // The constraint does exist in the reference, but it lives in RCINT2, the grid search
-        // that CALLS PROLLC2, not in PROLLC2 itself. dwnom2004.f:3299:
-        //   IF(SUM.GT.1.0) THEN ... OLDZ(K)=OLDZ(K)/SQRT(SUM) ... evaluate, exit search loop
-        // REQ-004 audited the callee and drew a conclusion about the caller. Its supporting
-        // observation was also a column misread: dwnom2004.f:729-730 writes
-        // (DYN(I,K),ZMID(I,K),K=1,NS), so the cited "mid=(-1.414,-0.929) norm 1.69" is
-        // (spread-1, midpoint-1); the real midpoint on that row has norm 0.929, inside the ball.
-        // Restoring the call also re-enables the existing "if (projected) break" below, which
-        // is the analogue of the Fortran's exit from the search loop after projecting.
+        // UC-2, 2026-08-14: proyeccion de salida de la busqueda RESTAURADA.
+        //
+        // Fortran RCINT2 L3296-3307, comentario propio "CHECK TO SEE IF ROLL CALL
+        // MIDPOINT OUTSIDE UNIT HYPERSPHERE": si SUM>1 proyecta OLDZ sobre la
+        // esfera, recalcula derivadas y verosimilitud ahi, y SALE del bucle de
+        // busqueda. El break de abajo ya implementaba esa salida; solo faltaba
+        // la llamada, que REQ-004 dejo cableada en false.
+        //
+        // La justificacion de REQ-004 ("PROLLC2 has no constraint") audita el
+        // callee y concluye sobre el caller: la restriccion vive en RCINT2, que
+        // es quien llama a PROLLC2. Su cifra de apoyo (norma 1.69) es la misma
+        // mala lectura de columnas de rcout: FORMAT(I3,I5,4F7.3) escrito como
+        // (DYN,ZMID) por dimension, o sea spread1,mid1,spread2,mid2.
         bool projected = projectToUnitSphere(midpoint);
 
         // Evaluar en este punto (CORRECCION E: funcion optimizada)

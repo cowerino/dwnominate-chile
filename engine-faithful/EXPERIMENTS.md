@@ -16,7 +16,7 @@ and the **experiment panel** (`out/chile/cpp_input/`, legs **346–368**, the
 REQ-011..015 headline results). Every citable Chilean number must name its panel.
 
 Full reproduction harness, Fortran oracle binary, seeds, and per-Congress
-Procrustes scripts live in the companion reproduction package (`REPLICATION.md`,
+Procrustes scripts live in **`quevotan-db/reproduce/`** (`REPLICATION.md`,
 `BRIDGE.md` = coordination ledger, `FINDINGS.md` = empirical record).
 
 ## Build
@@ -69,7 +69,7 @@ All cells dim-1 ≥ 0.98, dim-2 ≥ 0.88; principal/well-converged regimes ≥ 0
 ## Determinism and the nature of the residual
 
 Established by a five-test diagnostic sweep (2026-06-07; full record in
-the reproduction package's findings record):
+`quevotan-db/reproduce/FINDINGS.md`):
 
 - **The engine is bit-reproducible.** Identical inputs give byte-identical
   output across thread counts and run-to-run (OpenMP reduction is order-stable
@@ -98,7 +98,7 @@ but null. Every estimation formula is verified bit-identical to Fortran; the onl
 remaining difference is arithmetic precision. The one un-run confirmation is a direct
 single-precision downcast (D7) — left as future work because it would make C++ *less*
 accurate (on US, Fortran-vs-VoteView 0.985 > C++ 0.977). Forward-stated summary:
-the fidelity-findings record; receipts are kept with the reproduction package.
+`Strategy 2026/arch/dwnominate-fidelity-findings.md`; receipts: `quevotan-db/reproduce/BRIDGE.md`.
 
 ## Performance (timing receipt — FACTORED 2026-06-13)
 
@@ -118,4 +118,4 @@ comes entirely from OpenMP parallelizing the roll-call phase (RC 287.2s → 35.1
 −99530.16, class 93.49%, β 5.9289 — OpenMP math-neutral, Canary 0). **Report the speed as a
 parallelization result, always with the single-thread parity number; do NOT claim a faster
 engine.** The canonical Fortran could be parallelized similarly. Receipt:
-the timing receipt in the reproduction package.
+`quevotan-db/reproduce/out/chile/subperiod25/dyn25_quad_st_out/_rt_timing_result.md`.

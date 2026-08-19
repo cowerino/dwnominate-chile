@@ -668,6 +668,11 @@ RollCallClassification classifyRollCall(
 
     int jeh = cutResult.counts.errorsHigh;
     int jel = cutResult.counts.errorsLow;
+
+    // Errores de la PRIMERA evaluacion de JAN1PT, sobre ZVEC=(1,0), antes de SEARCH.
+    // Es el candidato 1 de la busqueda, asi que en una implementacion correcta el
+    // resultado final no puede ser peor que esto.
+    result.firstCallErrors = jeh + jel;
     int jch = cutResult.counts.correctHigh;
     int jcl = cutResult.counts.correctLow;
 

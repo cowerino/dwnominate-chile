@@ -569,7 +569,8 @@ private:
         const std::vector<int> &voteCodes,
         Eigen::VectorXd &midpoint,
         Eigen::VectorXd &spread,
-        CuttingPolarity &polarity);
+        CuttingPolarity &polarity,
+        int globalRollCallIndex = -1);
 
     // METODOS AUXILIARES DE LEGISLADORES
     /**

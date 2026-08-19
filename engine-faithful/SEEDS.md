@@ -81,7 +81,7 @@ binary. Both are on `feature/dwnominate-cpp`.
 
 ## Canonical Chilean invocation
 
-Inputs and the seed generator live in the companion reproduction package:
+Inputs and the seed generator live in `quevotan-db/reproduce/`:
 
 ```
 # 1. build seeds from per-legislatura W-NOMINATE (chain-Procrustes aligned)
@@ -94,7 +94,7 @@ dwnominate --input-dir=reproduce/input --periods=23 --model=2 --dimensions=2 \
 ```
 
 Established reference result (C++ vs Fortran 2004, both per-period seeded — see
-the reproduction package's REQ-001 record):
+`quevotan-db/reproduce/BRIDGE.md` REQ-001):
 
 | Engine | Class % | β | w2 |
 |---|---:|---:|---:|
