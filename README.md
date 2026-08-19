@@ -11,23 +11,28 @@ Society (SCCC / JCC 2026). Roberto Nieves Tocornal, Pablo Antivil Morales, Julio
 
 ## Contents
 
+**Working engines are top level. Everything pre-fix is quarantined in `experimental/`.**
+
 | path | what |
 |---|---|
-| `engine-faithful/` | **the engine.** Our C++ port of `dwnom2004`, sources, build files, benchmarks and the exact compiler flags used. This is the tree the paper's numbers come from |
+| `engine-faithful/` | **the paper's engine.** Our C++ port of `dwnom2004` at `quevotan-api@77bfeea`, sources, build files, benchmarks and the exact compiler flags. Every number in the paper comes from this tree |
+| `engine-modern/` | the NLopt variant (COBYLA / BOBYQA), authored by Julio Rojas-Mora. **A second engine and a cross-check, never the faithful one.** Partial: the `.cpp` files and build as of 2026-08-13. Two headers (`optimizer_options.hpp`, `parameter_optimizer.hpp`) and the newer SLSQP revision are not here yet |
+| `experimental/` | **two pre-fix trees, kept deliberately, not for results.** `f01e747-prefix-trunk/` is the known-bad build the validation suite is calibrated against; `e27ec21-prefix-projections-restored/` records a measured negative result plus unmerged patches. See `experimental/README.md` |
 
 ## Status, 2026-08-19
 
-**This repository was just updated and the previous contents were replaced.** Until today it held two
-**pre-fix** engine trees, `engine/` at `f01e747` and `engine-experimental/` at `e27ec21`. Both
-predate a defect fix and **both have been removed**, because anyone building them would reproduce
-numbers the paper no longer reports.
+**The repository was reorganised today.** Until now it held two engine trees at top level, `engine/`
+and `engine-experimental/`, **both predating the 2026-08-15 alignment fix**, with nothing marking
+which was current. Anyone building either reproduced numbers the paper no longer reports. They are
+now under `experimental/`, named by commit, with a README saying what is wrong with them, and the
+corrected engine sits at top level as `engine-faithful/`.
 
-**What changed in the engine.** `prepareRollCallData` filled the coordinate and vote arrays in
-legislator order, computed the projection order, and then reordered **only** the vote array,
-returning the two misaligned. The one-dimensional branch compensated, so `JAN11PT` was unaffected;
-the two-dimensional branch passed both straight to `CUTPLANE`, which therefore classified a shuffled
-pairing of legislators to votes. The later optimizer receives coordinates and votes separately, which
-is why the likelihood and the derivatives were correct and the defect stayed hidden behind them.
+**What the fix was.** `prepareRollCallData` filled the coordinate and vote arrays in legislator
+order, computed the projection order, and then reordered **only** the vote array, returning the two
+misaligned. The one-dimensional branch compensated, so `JAN11PT` was unaffected; the two-dimensional
+branch passed both straight to `CUTPLANE`, which therefore classified a shuffled pairing of
+legislators to votes. The later optimizer receives coordinates and votes separately, which is why the
+likelihood and the derivatives were correct and the defect stayed hidden behind them.
 
 On the 23-period Chilean panel at the procedure's four iterations, corrected:
 
@@ -60,8 +65,8 @@ three of four static panels.
 
 ## Not here yet
 
-- `engine-modern/`, the NLopt variant (COBYLA / BOBYQA, and now SLSQP with analytic gradients). It is
-  a second engine and a cross-check, never the faithful one. Its authoritative copy is Julio's.
+- The newer `engine-modern` revision (SLSQP with analytic gradients, adaptive tolerances, telemetry,
+  and a faithful-then-polish hybrid). Its authoritative copy is Julio's.
 - `reference-fortran/`, the canonical 2004 Fortran. Redistributable under MIT from
   `wmay/dwnominate` with attribution to William May, Keith T. Poole and Nolan McCarty.
 - `reproduce/`, the extraction scripts and per-figure receipts.
