@@ -17,6 +17,7 @@ Society (SCCC / JCC 2026). Roberto Nieves Tocornal, Pablo Antivil Morales, Julio
 |---|---|
 | `engine-faithful/` | **the paper's engine.** Our C++ port of `dwnom2004` at `quevotan-api@77bfeea`, sources, build files, benchmarks and the exact compiler flags. Every number in the paper comes from this tree |
 | `engine-modern/` | the NLopt variant (COBYLA / BOBYQA), authored by Julio Rojas-Mora. **A second engine and a cross-check, never the faithful one.** Partial: the `.cpp` files and build as of 2026-08-13. Two headers (`optimizer_options.hpp`, `parameter_optimizer.hpp`) and the newer SLSQP revision are not here yet |
+| `data/chile-static/` | **the Chilean roll calls used for the static tests**, legislaturas 353, 366 and 368: vote matrix, W-NOMINATE seed and metadata each, with a README carrying the padding and screen caveats and our agreement numbers |
 | `experimental/` | **two pre-fix trees, kept deliberately, not for results.** `f01e747-prefix-trunk/` is the known-bad build the validation suite is calibrated against; `e27ec21-prefix-projections-restored/` records a measured negative result plus unmerged patches. See `experimental/README.md` |
 
 ## Status, 2026-08-19
