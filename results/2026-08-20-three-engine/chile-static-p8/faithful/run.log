@@ -3,9 +3,9 @@
 ============================================================
 
 Configuracion:
-  Input:      C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\static_panels\p8
-  Output:     C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\p8
-  WNOMINATE:  C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\static_panels\p8\wnominate_coordinates.csv
+  Input:      <QUEVOTAN-DB>\reproduce\out\chile\static_panels\p8
+  Output:     <SCRATCH>\verify\p8
+  WNOMINATE:  <QUEVOTAN-DB>\reproduce\out\chile\static_panels\p8\wnominate_coordinates.csv
   Modelo:     0 (constante)
   Iteraciones:4
   Periodos:   1
@@ -17,7 +17,7 @@ Cargando datos...
   Ref. R:     output_R_dwnominate_model0
   Legisladores filtrados (sin votos no-missing en ningun periodo): 219 de 340 totales
   Pesos iniciales: W1=1.0, W2=0.3463, Beta=5.9539
-  W-NOMINATE: Cargadas 115 coordenadas iniciales desde C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\static_panels\p8\wnominate_coordinates.csv
+  W-NOMINATE: Cargadas 115 coordenadas iniciales desde <QUEVOTAN-DB>\reproduce\out\chile\static_panels\p8\wnominate_coordinates.csv
   Coordenadas aplicadas: 0 per-(leg,periodo), 115 per-legislador, 6 fallback
 dwnominate.exe : Advertencia: No se puede abrir output_R_dwnominate_model0/dwnominate_bill_parameters.csv
 At line:18 char:3
@@ -73,9 +73,9 @@ Resultados:
   Tiempo: 0.4s
 
 Exportando resultados...
-Exportado: C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\p8/cpp_coordinates_all_periods.csv (121 registros)
-Exportado (polaridad corregida): C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\p8/cpp_coordinates_all_periods_corrected.csv (121 registros)
-Exportado: C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\p8/cpp_bill_parameters.csv (298 roll calls)
-Exportado: C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\p8/cpp_summary.csv
+Exportado: <SCRATCH>\verify\p8/cpp_coordinates_all_periods.csv (121 registros)
+Exportado (polaridad corregida): <SCRATCH>\verify\p8/cpp_coordinates_all_periods_corrected.csv (121 registros)
+Exportado: <SCRATCH>\verify\p8/cpp_bill_parameters.csv (298 roll calls)
+Exportado: <SCRATCH>\verify\p8/cpp_summary.csv
 
 Completado exitosamente.

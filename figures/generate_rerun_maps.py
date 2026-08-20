@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate modern-local/global disk maps from Julio's re-run (overlay results).
 
-Reads from:  C:/Users/cow/Documents/repo-overlay/results/2026-08-20-three-engine
+Reads from:  results/2026-08-20-three-engine
 Writes to:   figures/rerun-2026-08-20/
 
 Only the dynamic panels were re-run (chile-dyn-m2, us-dyn-5p), modern arms only.
@@ -20,13 +20,13 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 FIGDIR = ROOT / "figures" / "rerun-2026-08-20"
-RESDIR = Path("C:/Users/cow/Documents/repo-overlay/results/2026-08-20-three-engine")
+RESDIR = ROOT / "results" / "2026-08-20-three-engine"
 
-# Metadata from quevotan-db (same machine).
-QDB = Path("C:/Users/cow/Documents/GitHub/quevotan-db")
-CHILE_META = QDB / "reproduce" / "input" / "legislator_metadata.csv"
-US90_META = QDB / "benchmark_sen90" / "legislator_metadata.csv"
-USDYN_META = QDB / "benchmark_us" / "cpp_input" / "legislator_metadata.csv"
+# Metadata is vendored in this repository.
+DATADIR = ROOT / "data"
+CHILE_META = DATADIR / "chile-dynamic" / "legislator_metadata.csv"
+US90_META = DATADIR / "us-sen90" / "legislator_metadata.csv"
+USDYN_META = DATADIR / "us-dynamic-5p" / "legislator_metadata.csv"
 
 PARTY_LR = {
     "PRep": 1.0,

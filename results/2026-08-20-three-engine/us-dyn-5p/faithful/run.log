@@ -3,9 +3,9 @@
 ============================================================
 
 Configuracion:
-  Input:      C:\Users\cow\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\us\cpp_input
-  Output:     C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\us5
-  WNOMINATE:  C:\Users\cow\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\us\cpp_input\wnominate_coordinates.csv
+  Input:      <HOME>\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\us\cpp_input
+  Output:     <SCRATCH>\verify\us5
+  WNOMINATE:  <HOME>\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\us\cpp_input\wnominate_coordinates.csv
   Modelo:     1 (lineal)
   Iteraciones:4
   Periodos:   5
@@ -16,7 +16,7 @@ Configuracion:
 Cargando datos...
   Ref. R:     output_R_dwnominate_model1
   Pesos iniciales: W1=1.0, W2=0.3463, Beta=5.9539
-  W-NOMINATE: Cargadas 168 coordenadas iniciales desde C:\Users\cow\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\us\cpp_input\wnominate_coordinates.csv
+  W-NOMINATE: Cargadas 168 coordenadas iniciales desde <HOME>\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\us\cpp_input\wnominate_coordinates.csv
   Coordenadas aplicadas: 0 per-(leg,periodo), 523 per-legislador, 0 fallback
 dwnominate.exe : Advertencia: No se puede abrir output_R_dwnominate_model1/dwnominate_bill_parameters.csv
 At line:18 char:3
@@ -70,9 +70,9 @@ Resultados:
   Tiempo: 14.9s
 
 Exportando resultados...
-Exportado: C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\us5/cpp_coordinates_all_periods.csv (523 registros)
-Exportado (polaridad corregida): C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\us5/cpp_coordinates_all_periods_corrected.csv (523 registros)
-Exportado: C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\us5/cpp_bill_parameters.csv (2940 roll calls)
-Exportado: C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\us5/cpp_summary.csv
+Exportado: <SCRATCH>\verify\us5/cpp_coordinates_all_periods.csv (523 registros)
+Exportado (polaridad corregida): <SCRATCH>\verify\us5/cpp_coordinates_all_periods_corrected.csv (523 registros)
+Exportado: <SCRATCH>\verify\us5/cpp_bill_parameters.csv (2940 roll calls)
+Exportado: <SCRATCH>\verify\us5/cpp_summary.csv
 
 Completado exitosamente.

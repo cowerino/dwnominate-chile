@@ -27,9 +27,8 @@ from generate_modern_maps import (  # noqa: E402
     orient_dim1,
 )
 
-FORTRAN_CHILE_DYN = Path(
-    "C:/Users/cow/Documents/GitHub/quevotan-db/comparison"
-    "/fortran_23periods_global_m2_niter4_R/coordinates.csv"
+FORTRAN_CHILE_DYN = (
+    RESDIR / "chile-dyn-m2" / "fortran" / "coordinates.csv"
 )
 
 PANEL = "chile-dyn-m2"

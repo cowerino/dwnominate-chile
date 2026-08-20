@@ -21,11 +21,12 @@ ROOT = Path(__file__).resolve().parents[1]
 FIGDIR = ROOT / "figures"
 RESDIR = ROOT / "results" / "2026-08-20-three-engine"
 
-# Metadata from quevotan-db (same machine), because dwnominate-chile metadata is skeletonized.
-QDB = Path("C:/Users/cow/Documents/GitHub/quevotan-db")
-CHILE_META = QDB / "reproduce" / "input" / "legislator_metadata.csv"
-US90_META = QDB / "benchmark_sen90" / "legislator_metadata.csv"
-USDYN_META = QDB / "benchmark_us" / "cpp_input" / "legislator_metadata.csv"
+# Metadata is vendored in this repository. It used to be read from a sibling checkout on one
+# machine, which meant no one else could regenerate a figure.
+DATADIR = ROOT / "data"
+CHILE_META = DATADIR / "chile-dynamic" / "legislator_metadata.csv"
+US90_META = DATADIR / "us-sen90" / "legislator_metadata.csv"
+USDYN_META = DATADIR / "us-dynamic-5p" / "legislator_metadata.csv"
 
 PARTY_LR = {
     "PRep": 1.0,

@@ -1,13 +1,13 @@
 ﻿=== ltr us-sen90-static model=0 periods=1 scalar=global start 2026-08-20T12:20:53 ===
-binary: C:\Users\cow\Documents\GitHub\dwnominate-chile-julio-ltr\engine-modern\build\release\dwnominate-modern.exe
+binary: <ENGINE-MODERN-LTR>\engine-modern\build\release\dwnominate-modern.exe
 ============================================================
   DW-NOMINATE C++ CLI
 ============================================================
 
 Configuracion:
-  Input:      C:\Users\cow\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\sen90
-  Output:     C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\us-sen90-static\modern-ltr-global
-  WNOMINATE:  C:\Users\cow\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\sen90\wnominate_coordinates.csv
+  Input:      <HOME>\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\sen90
+  Output:     <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\us-sen90-static\modern-ltr-global
+  WNOMINATE:  <HOME>\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\sen90\wnominate_coordinates.csv
   Modelo:     0 (constante)
   Iteraciones:4
   Periodos:   1
@@ -26,7 +26,7 @@ Configuracion:
 Cargando datos...
   Ref. R:     output_R_dwnominate_model0
   Pesos iniciales: W1=1.0, W2=0.3463, Beta=5.9539
-  W-NOMINATE: Cargadas 102 coordenadas iniciales desde C:\Users\cow\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\sen90\wnominate_coordinates.csv
+  W-NOMINATE: Cargadas 102 coordenadas iniciales desde <HOME>\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\sen90\wnominate_coordinates.csv
   Coordenadas aplicadas: 0 per-(leg,periodo), 102 per-legislador, 0 fallback
 dwnominate-modern.exe : Advertencia: No se puede abrir output_R_dwnominate_model0/dwnominate_bill_parameters.csv
 At line:24 char:7
@@ -61,12 +61,12 @@ Resultados:
   Tiempo: 1.8s
 
 Exportando resultados...
-Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\us-sen90-static\modern-ltr-global/cpp_coordinates_all_periods.csv (102 registros)
-Exportado (polaridad corregida): C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\us-sen90-static\modern-ltr-global/cpp_coordinates_all_periods_corrected.csv (102 registros)
-Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\us-sen90-static\modern-ltr-global/cpp_bill_parameters.csv (596 roll calls)
-Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\us-sen90-static\modern-ltr-global/cpp_summary.csv
-Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\us-sen90-static\modern-ltr-global/cpp_convergence_trace.csv
-Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\us-sen90-static\modern-ltr-global/cpp_optimizer_trace.csv
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\us-sen90-static\modern-ltr-global/cpp_coordinates_all_periods.csv (102 registros)
+Exportado (polaridad corregida): <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\us-sen90-static\modern-ltr-global/cpp_coordinates_all_periods_corrected.csv (102 registros)
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\us-sen90-static\modern-ltr-global/cpp_bill_parameters.csv (596 roll calls)
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\us-sen90-static\modern-ltr-global/cpp_summary.csv
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\us-sen90-static\modern-ltr-global/cpp_convergence_trace.csv
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\us-sen90-static\modern-ltr-global/cpp_optimizer_trace.csv
 
 Completado exitosamente.
 EXIT=0 ELAPSED_S=1.82

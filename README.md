@@ -18,6 +18,7 @@ Society (SCCC / JCC 2026). Roberto Nieves Tocornal, Pablo Antivil Morales, Julio
 | `engine-faithful/` | **the paper's engine.** Our C++ port of `dwnom2004` at `quevotan-api@79031cf`, sources, build files, benchmarks and the exact compiler flags. Every number in the paper comes from this tree |
 | `engine-modern/` | the NLopt variant (COBYLA / BOBYQA), authored by Julio Rojas-Mora. **A second engine and a cross-check, never the faithful one.** Partial: the `.cpp` files and build as of 2026-08-13. Two headers (`optimizer_options.hpp`, `parameter_optimizer.hpp`) and the newer SLSQP revision are not here yet |
 | `fortran-canonical/` | **the third engine.** Both canonical Fortran sources unmodified: Poole/Rosenthal's original 2004 distribution and the `wmay/dwnominate` core the paper's `*-fortran` numbers come from, plus the stub and harness that let each link outside R. Same estimation core, verified subroutine by subroutine |
+| `data/` | **every panel any engine here is run on**, with real rosters: the four Chilean panels (23-period dynamic plus legislaturas 353, 366, 368) and the two US panels (Senate 90, and the 5-congress dynamic). See `data/README.md` |
 | `data/chile-static/` | **the Chilean roll calls used for the static tests**, legislaturas 353, 366 and 368: vote matrix (`votes_matrix_p1.csv`, the name the loader expects), W-NOMINATE seed and metadata each, with a README carrying the padding and screen caveats and our agreement numbers |
 | `experimental/` | **two pre-fix trees, kept deliberately, not for results.** `f01e747-prefix-trunk/` is the known-bad build the validation suite is calibrated against; `e27ec21-prefix-projections-restored/` records a measured negative result plus unmerged patches. See `experimental/README.md` |
 
@@ -135,10 +136,28 @@ three of four static panels.
 - `reproduce/`, the extraction scripts and per-figure receipts. This includes the input
   marshalling for `fortran-canonical/`: the CSV-to-legacy-7-file generator the 2004 engine
   needs, and the R driver that produced the published Fortran arm.
-- The Fortran coordinate exports themselves. `results/2026-08-20-three-engine/` currently holds
-  two engines, not three; the figures' Fortran arm is still read from outside this repository.
 - A licence file. Proposed: MIT for the code, CC BY 4.0 for data and reproduction scripts. Not yet
   agreed by all three authors.
+
+## Reproducibility of this package itself, 2026-08-20
+
+Three defects that made the package unreproducible off the authoring machine are fixed, all of them
+found by reading it as an outsider would.
+
+- **Metadata was skeletonised.** Every `legislator_metadata.csv` carried IDs and blank name, party,
+  region and district columns, and the figure scripts compensated by reading the real rosters from a
+  sibling checkout via a hard-coded `C:/Users/...` path. Rosters are real in `data/` now and the
+  scripts read them from there. All 20 map slots regenerate **byte-identical PNGs**, which is the
+  check that the substitution is faithful rather than merely plausible.
+- **The US panels were missing** while `results/` carried US arms. Added as `data/us-sen90/` and
+  `data/us-dynamic-5p/`.
+- **The Fortran arm of the comparison lived outside the repository.** Its coordinate, bill-parameter
+  and summary exports are now at `results/2026-08-20-three-engine/chile-dyn-m2/fortran/`, so the
+  three-engine directory holds three engines.
+
+Absolute local paths are gone from every tracked file. Run logs keep their meaning through
+placeholders (`<QUEVOTAN-DB>`, `<SCRATCH>`, `<HOME>`) rather than being stripped, so a log still
+records which input a run consumed.
 
 ## Building
 

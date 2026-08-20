@@ -1,341 +1,341 @@
-legislator_id,id,nombres,partido,region,distrito
-74,74,,,,
-132,132,,,,
-137,137,,,,
-140,140,,,,
-150,150,,,,
-151,151,,,,
-155,155,,,,
-158,158,,,,
-159,159,,,,
-161,161,,,,
-164,164,,,,
-165,165,,,,
-166,166,,,,
-169,169,,,,
-170,170,,,,
-172,172,,,,
-173,173,,,,
-175,175,,,,
-176,176,,,,
-177,177,,,,
-178,178,,,,
-179,179,,,,
-181,181,,,,
-185,185,,,,
-187,187,,,,
-190,190,,,,
-193,193,,,,
-195,195,,,,
-202,202,,,,
-205,205,,,,
-206,206,,,,
-208,208,,,,
-209,209,,,,
-211,211,,,,
-213,213,,,,
-220,220,,,,
-221,221,,,,
-222,222,,,,
-224,224,,,,
-226,226,,,,
-234,234,,,,
-239,239,,,,
-242,242,,,,
-660,660,,,,
-800,800,,,,
-801,801,,,,
-802,802,,,,
-803,803,,,,
-804,804,,,,
-805,805,,,,
-806,806,,,,
-807,807,,,,
-808,808,,,,
-809,809,,,,
-810,810,,,,
-811,811,,,,
-812,812,,,,
-813,813,,,,
-814,814,,,,
-815,815,,,,
-816,816,,,,
-817,817,,,,
-818,818,,,,
-819,819,,,,
-820,820,,,,
-821,821,,,,
-822,822,,,,
-823,823,,,,
-824,824,,,,
-825,825,,,,
-826,826,,,,
-827,827,,,,
-828,828,,,,
-829,829,,,,
-830,830,,,,
-831,831,,,,
-832,832,,,,
-833,833,,,,
-834,834,,,,
-835,835,,,,
-836,836,,,,
-837,837,,,,
-838,838,,,,
-839,839,,,,
-840,840,,,,
-841,841,,,,
-842,842,,,,
-843,843,,,,
-844,844,,,,
-845,845,,,,
-846,846,,,,
-847,847,,,,
-848,848,,,,
-849,849,,,,
-850,850,,,,
-851,851,,,,
-852,852,,,,
-853,853,,,,
-854,854,,,,
-855,855,,,,
-856,856,,,,
-857,857,,,,
-858,858,,,,
-859,859,,,,
-860,860,,,,
-861,861,,,,
-862,862,,,,
-863,863,,,,
-864,864,,,,
-865,865,,,,
-866,866,,,,
-867,867,,,,
-868,868,,,,
-869,869,,,,
-870,870,,,,
-871,871,,,,
-872,872,,,,
-873,873,,,,
-874,874,,,,
-875,875,,,,
-876,876,,,,
-877,877,,,,
-878,878,,,,
-879,879,,,,
-880,880,,,,
-881,881,,,,
-882,882,,,,
-883,883,,,,
-884,884,,,,
-885,885,,,,
-886,886,,,,
-887,887,,,,
-888,888,,,,
-889,889,,,,
-890,890,,,,
-891,891,,,,
-892,892,,,,
-893,893,,,,
-894,894,,,,
-895,895,,,,
-896,896,,,,
-897,897,,,,
-898,898,,,,
-899,899,,,,
-900,900,,,,
-901,901,,,,
-902,902,,,,
-903,903,,,,
-904,904,,,,
-905,905,,,,
-906,906,,,,
-907,907,,,,
-908,908,,,,
-909,909,,,,
-910,910,,,,
-911,911,,,,
-912,912,,,,
-913,913,,,,
-914,914,,,,
-915,915,,,,
-916,916,,,,
-917,917,,,,
-918,918,,,,
-919,919,,,,
-920,920,,,,
-921,921,,,,
-922,922,,,,
-923,923,,,,
-924,924,,,,
-925,925,,,,
-926,926,,,,
-927,927,,,,
-928,928,,,,
-929,929,,,,
-930,930,,,,
-931,931,,,,
-932,932,,,,
-933,933,,,,
-934,934,,,,
-935,935,,,,
-936,936,,,,
-937,937,,,,
-938,938,,,,
-939,939,,,,
-940,940,,,,
-941,941,,,,
-942,942,,,,
-943,943,,,,
-944,944,,,,
-945,945,,,,
-946,946,,,,
-947,947,,,,
-948,948,,,,
-949,949,,,,
-950,950,,,,
-951,951,,,,
-952,952,,,,
-953,953,,,,
-954,954,,,,
-955,955,,,,
-956,956,,,,
-957,957,,,,
-958,958,,,,
-959,959,,,,
-960,960,,,,
-961,961,,,,
-962,962,,,,
-963,963,,,,
-964,964,,,,
-965,965,,,,
-966,966,,,,
-967,967,,,,
-968,968,,,,
-969,969,,,,
-970,970,,,,
-971,971,,,,
-972,972,,,,
-973,973,,,,
-974,974,,,,
-975,975,,,,
-976,976,,,,
-977,977,,,,
-978,978,,,,
-979,979,,,,
-980,980,,,,
-981,981,,,,
-982,982,,,,
-983,983,,,,
-984,984,,,,
-985,985,,,,
-986,986,,,,
-987,987,,,,
-988,988,,,,
-989,989,,,,
-990,990,,,,
-991,991,,,,
-992,992,,,,
-993,993,,,,
-994,994,,,,
-995,995,,,,
-996,996,,,,
-997,997,,,,
-998,998,,,,
-999,999,,,,
-1000,1000,,,,
-1001,1001,,,,
-1002,1002,,,,
-1003,1003,,,,
-1004,1004,,,,
-1005,1005,,,,
-1006,1006,,,,
-1007,1007,,,,
-1008,1008,,,,
-1009,1009,,,,
-1010,1010,,,,
-1011,1011,,,,
-1012,1012,,,,
-1013,1013,,,,
-1014,1014,,,,
-1015,1015,,,,
-1016,1016,,,,
-1017,1017,,,,
-1018,1018,,,,
-1019,1019,,,,
-1020,1020,,,,
-1021,1021,,,,
-1022,1022,,,,
-1023,1023,,,,
-1024,1024,,,,
-1025,1025,,,,
-1026,1026,,,,
-1027,1027,,,,
-1028,1028,,,,
-1029,1029,,,,
-1030,1030,,,,
-1031,1031,,,,
-1032,1032,,,,
-1033,1033,,,,
-1034,1034,,,,
-1035,1035,,,,
-1036,1036,,,,
-1037,1037,,,,
-1038,1038,,,,
-1039,1039,,,,
-1040,1040,,,,
-1041,1041,,,,
-1042,1042,,,,
-1043,1043,,,,
-1044,1044,,,,
-1045,1045,,,,
-1046,1046,,,,
-1047,1047,,,,
-1048,1048,,,,
-1049,1049,,,,
-1050,1050,,,,
-1051,1051,,,,
-1052,1052,,,,
-1053,1053,,,,
-1054,1054,,,,
-1055,1055,,,,
-1056,1056,,,,
-1057,1057,,,,
-1058,1058,,,,
-1059,1059,,,,
-1060,1060,,,,
-1061,1061,,,,
-1062,1062,,,,
-1063,1063,,,,
-1064,1064,,,,
-1065,1065,,,,
-1066,1066,,,,
-1067,1067,,,,
-1068,1068,,,,
-1069,1069,,,,
-1070,1070,,,,
-1071,1071,,,,
-1072,1072,,,,
-1073,1073,,,,
-1074,1074,,,,
-1075,1075,,,,
-1076,1076,,,,
-1077,1077,,,,
-1078,1078,,,,
-1079,1079,,,,
-1080,1080,,,,
-1081,1081,,,,
-1082,1082,,,,
-1083,1083,,,,
-1084,1084,,,,
-1085,1085,,,,
-1086,1086,,,,
-1087,1087,,,,
-1088,1088,,,,
-1089,1089,,,,
-1090,1090,,,,
-1091,1091,,,,
-1092,1092,,,,
-1093,1093,,,,
-1094,1094,,,,
-1095,1095,,,,
+legislator_id,id,nombres,partido,region,distrito,partido_actual,periodolegis_list,partidos_history
+74,74,Jaime Naranjo Ortiz,PS,Región del Maule,18,Partido Socialista,"3,9",PS
+132,132,Francisco Bayo Veloso,RN,,,,4,RN
+137,137,Eliana Caraball Martínez,DC,,,,"3,4",DC
+140,140,Patricio Cornejo Vidaurrázaga,DC,,,,"3,4",DC
+150,150,Camilo Escalona Medina,PS,,,,4,PS
+151,151,Mario Escobar Urbina,UDI,,,,4,UDI
+155,155,José Antonio Galilea Vidaurre,RN,,,,"3,4",RN
+158,158,Guido Girardi Lavín,PPD,,,,"3,4",PPD
+159,159,Rosa González Román,UDI,,,,"3,4",IND|UDI
+161,161,María Pía Guzmán Mena,RN,,,,"3,4",RN
+164,164,Carlos Hidalgo González,IND,,,,4,IND
+165,165,Gonzalo Ibáñez Santa María,UDI,,,,"3,4",UDI
+166,166,Carmen Ibáñez Soto,RN,,,,4,RN
+169,169,Víctor Jeame Barrueto,PPD,,,,"3,4",PPD
+170,170,Jaime Jiménez Villavicencio,IND,,,,"3,4",DC|IND
+172,172,Carlos Kuschel Silva,RN,Región de Los Lagos,26,Renovación Nacional,"3,4,9",RN
+173,173,Eduardo Lagos Herrera,NOINFO,,,,4,NOINFO
+175,175,Cristián Leay Morán,UDI,,,,"3,4",UDI
+176,176,Juan Pablo Letelier Morel,PS,,,,"3,4",PS
+177,177,Felipe Letelier Norambuena,PPD,,,,"3,4,8",PPD
+178,178,Arturo Longton Guerrero,RN,,,,"3,4",RN
+179,179,Pablo Longueira Montes,UDI,,,,"3,4",UDI
+181,181,Zarko Luksic Sandoval,DC,,,,"3,4",DC
+185,185,María Eugenia Mella Gajardo,DC,,,,4,DC
+187,187,Darío Molina Sanhueza,UDI,,,,"3,4",UDI
+190,190,Waldo Mora Longa,DC,,,,"3,4",DC
+193,193,Pedro Muñoz Aburto,PS,,,,"3,4",PS
+195,195,Alejandro Navarro Brain,PS,,,,"3,4",PS
+202,202,Cristián Pareto Vergara,IND,,,,4,IND
+205,205,Aníbal Pérez Lobos,PPD,,,,"3,4",PPD
+206,206,Ramón Pérez Opazo,IND,,,,4,IND
+208,208,Víctor Pérez Varela,UDI,,,,"3,4",UDI
+209,209,Pablo Prieto Lorca,UDI,,,,4,UDI
+211,211,Víctor Manuel Rebolledo González,PPD,,,,4,PPD
+213,213,Edgardo Riveros Marín,DC,,,,"3,4",DC
+220,220,Edmundo Salas De La Fuente,DC,,,,"3,4",DC
+221,221,Leopoldo Sánchez Grunert,PPD,,,,"3,4",PPD
+222,222,Rodolfo Seguel Molina,DC,,,,"3,4",DC
+224,224,Exequiel Silva Ortiz,DC,,,,"3,4",DC
+226,226,Boris Tapia Martínez,DC,,,,4,DC
+234,234,Mario Varela Herrera,UDI,,,,4,UDI
+239,239,Edmundo Villouta Concha,DC,,,,"3,4",DC
+242,242,Néstor Jofré Núñez,,,,,4,
+660,660,Manuel Matta Aragay,DC,Región del Maule,18,Partido Demócrata Cristiano,9,DC
+800,800,Enrique Accorsi Opazo,PPD,,,,"4,5,6",PPD
+801,801,René Aedo Ormeño,RN,,,,5,RN
+802,802,Sergio Aguiló Melo,IC,,,,"3,4,5,6,8",PS|IC
+803,803,René Alinco Bustos,IND,Región de Aysén del General Carlos Ibáñez del Campo,27,Independientes,"5,6,9",PPD|IND
+804,804,Isabel Allende Bussi,PS,,,,"3,4,5",PS
+805,805,Claudio Alvarado Andrade,UDI,,,,"3,4,5",UDI
+806,806,Pedro Pablo Alvarez-Salamanca Büchi,RN,,,,"3,4,5",RN
+807,807,Rodrigo Alvarez Zenteno,UDI,,,,"3,4,5",UDI
+808,808,Pedro Araya Guerrero,PRI,,,,"4,5,6",DC|IND|PRI
+809,809,Gonzalo Arenas Hödar,UDI,,,,"5,6",UDI
+810,810,Gabriel Ascencio Mansilla,DC,Región de Los Lagos,26,Partido Demócrata Cristiano,"3,4,5,6,9",DC
+811,811,Ramón Barros Montero,UDI,Región del Libertador General Bernardo O' Higgins,16,Unión Demócrata Independiente,"4,5,6,8,9",UDI
+812,812,Eugenio Bauer Jouanne,UDI,,,,"4,5,6",UDI
+813,813,Germán Becker Alvear,RN,,,,"4,5,6,8",RN
+814,814,Mario Bertolino Rendic,RN,,,,"3,4,5,6",RN
+815,815,Sergio Bobadilla Muñoz,UDI,Región del Bío Bío,20,Unión Demócrata Independiente,"5,6,9",UDI
+816,816,Jorge Burgos Varela,DC,,,,"4,5,6",DC
+817,817,Juan Bustos Ramírez,PS,,,,"3,4,5",PS
+818,818,Alberto Cardemil Herrera,RN,,,,"3,4,5,6",RN|IND|RN
+819,819,Guillermo Ceroni Fuentes,PPD,,,,"3,4,5,6,8",PPD
+820,820,Francisco Chahuán Chahuán,RN,,,,5,RN
+821,821,Sergio Correa De la Cerda,UDI,,,,"3,4,5",UDI
+822,822,María Angélica Cristi Marfil,UDI,,,,"3,4,5,6",RN|UDI
+823,823,Marcela Cubillos Sigall,UDI,,,,"4,5",UDI
+824,824,Alfonso De Urresti Longton,PS,,,,"5,6",PS
+825,825,Roberto Delmastro Naso,IND,,,,"3,4,5,6",IND|RN|IND
+826,826,Eduardo Díaz Del Río,PRI,,,,"3,4,5",UDI|IND|PRI
+827,827,Marcelo Díaz Díaz,IND,Región de Valparaíso,7,Independientes,"5,6,9",PS|IND
+828,828,Julio Dittborn Cordua,UDI,,,,"3,4,5",UDI
+829,829,Gonzalo Duarte Leiva,DC,,,,5,DC
+830,830,Andrés Egaña Respaldiza,UDI,,,,"4,5",UDI
+831,831,Edmundo Eluchans Urenda,UDI,,,,"5,6",UDI
+832,832,Francisco Encina Moriamez,PS,,,,"3,4,5",PS
+833,833,Marco Enríquez-Ominami Gumucio,IND,,,,5,IND
+834,834,Maximiano Errázuriz Eguiguren,IND,,,,"3,4,5",RN|IND
+835,835,Alvaro Escobar Rufatt,IND,,,,5,IND
+836,836,Marcos Espinosa Monardes,NOINFO,,,,"5,6,8",NOINFO
+837,837,Fidel Espinoza Sandoval,PS,Región de Los Lagos,25,Partido Socialista,"4,5,6,8,9",PS
+838,838,Enrique Estay Peñaloza,UDI,,,,"5,6",UDI
+839,839,Ramón Farías Ponce,PPD,,,,"5,6,8",PPD
+840,840,Marcelo Forni Lobos,UDI,,,,"4,5",UDI
+841,841,Renán Fuentealba Vildósola,DC,,,,5,DC
+842,842,Pablo Galilea Carrillo,RN,,,,"3,4,5",RN
+843,843,René Manuel García García,RN,Región de La Araucanía,23,Renovación Nacional,"3,4,5,6,8,9",RN
+844,844,Alejandro García-Huidobro Sanfuentes,UDI,,,,"3,4,5,6",UDI
+845,845,Guido Girardi Briere,PPD,,,,5,PPD
+846,846,Joaquín Godoy Ibáñez,AMPL,,,,"5,6,8",RN|AMPL
+847,847,Carolina Goic Boroevic,DC,,,,"5,6",DC
+848,848,Rodrigo González Torres,PPD,Región de Valparaíso,7,Partido Por la Democracia,"4,5,6,8,9",PPD
+849,849,Patricio Hales Dib,PPD,,,,"3,4,5,6",PPD
+850,850,Javier Hernández Hernández,UDI,Región de Los Lagos,25,Unión Demócrata Independiente,"4,5,6,8,9",UDI
+851,851,Amelia Herrera Silva,RN,,,,5,RN
+852,852,Jorge Insunza Gregorio de las Heras,PPD,,,,"5,8",PPD
+853,853,Marta Isasi Barbieri,IND,,,,"5,6",IND
+854,854,Enrique Jaramillo Becker,PPD,,,,"3,4,5,6,8",PPD
+855,855,Carlos Abel Jarpa Wevar,IND,Región del Bío Bío,19,Independientes,"3,4,5,6,8,9",NOINFO|PRad|IND
+856,856,Tucapel Jiménez Fuentes,PPD,Región Metropolitana de Santiago,13,Partido Por la Democracia,"5,6,8,9",PPD
+857,857,José Antonio Kast Rist,IND,,,,"4,5,6,8",UDI|IND
+858,858,Juan Carlos Latorre Carmona,DC,,,,"5,6",DC
+859,859,Antonio Leal Labrín,PPD,,,,"3,4,5",PPD
+860,860,Roberto León Ramírez,DC,,,,"3,5,6,8",DC
+861,861,Juan Lobos Krause,UDI,,,,"5,6",UDI
+862,862,Pablo Lorenzini Basso,IND,Región del Maule,17,Independientes,"3,4,5,6,8,9",DC|IND
+863,863,Rosauro Martínez Labbé,RN,,,,"3,4,5,6,8",IND|RN
+864,864,Juan Masferrer Pellizzari,UDI,,,,"3,4,5",UDI
+865,865,Patricio Melero Abaroa,UDI,,,,"3,4,5,6,8,9",UDI
+866,866,Fernando Meza Moncada,IND,Región de La Araucanía,23,Independientes,"4,5,6,8,9",NOINFO|PRad|IND
+867,867,Cristián Monckeberg Bruner,RN,,,,"5,6,8",RN
+868,868,Nicolás Monckeberg Díaz,RN,,,,"4,5,6,8",RN
+869,869,Manuel Monsalve Benavides,PS,Región del Bío Bío,21,Partido Socialista,"5,6,8,9",PS
+870,870,Carlos Montes Cisternas,PS,,,,"3,4,5,6",PS
+871,871,Iván Moreira Barros,UDI,,,,"3,4,5,6",UDI
+872,872,Jaime Mulet Martínez,FRVS,Región de Atacama,4,Federación Regionalista Verde Social,"3,4,5,9",DC|PRI|FRVS
+873,873,Adriana Muñoz D'Albora,PPD,,,,"3,4,5,6",PPD
+874,874,Claudia Nogueira Fernández,UDI,,,,"5,6,8",UDI
+875,875,Iván Norambuena Farías,UDI,Región del Bío Bío,21,Unión Demócrata Independiente,"4,5,6,8,9",UDI
+876,876,Marco Antonio Núñez Lozano,PPD,,,,"5,6,8",PPD
+877,877,Sergio Ojeda Uribe,DC,,,,"3,4,5,6,8",DC
+878,878,Carlos Olivares Zepeda,PRI,,,,"3,4,5",DC|PRI
+879,879,José Miguel Ortiz Novoa,DC,Región del Bío Bío,20,Partido Demócrata Cristiano,"3,4,5,6,8,9",DC
+880,880,Clemira Pacheco Rivas,PS,,,,"5,6,8",PS
+881,881,Osvaldo Palma Flores,RN,,,,"3,4,5",RN
+882,882,Iván Paredes Fierro,PS,,,,"4,5",IND|PS
+883,883,Denise Pascal Allende,PS,,,,"5,6,8",PS
+884,884,Darío Paya Mira,UDI,,,,"3,4,5",UDI
+885,885,José Pérez Arriagada,PRad,Región del Bío Bío,21,Partido Radical de Chile,"3,4,5,6,8,9",NOINFO|PRad
+886,886,Jaime Quintana Leal,PPD,,,,"4,5",PPD
+887,887,Carlos Recondo Lavanderos,UDI,,,,"3,4,5,6",UDI
+888,888,Alberto Robles Pantoja,NOINFO,,,,"4,5,6,8",NOINFO
+889,889,Manuel Rojas Molina,UDI,,,,"3,4,5,6",UDI
+890,890,Fulvio Rossi Ciocca,PS,,,,"4,5",IND|PS
+891,891,Karla Rubilar Barahona,IND,,,,"5,6,8",RN|IND
+892,892,María Antonieta Saa Díaz,PPD,,,,"3,4,5,6",PPD
+893,893,Jorge Sabag Villalobos,DC,Región del Bío Bío,19,Partido Demócrata Cristiano,"5,6,8,9",DC
+894,894,Eduardo Saffirio Suárez,DC,,,,"4,5",DC
+895,895,Felipe Salaberry Soto,UDI,,,,"4,5,6",UDI
+896,896,Roberto Sepúlveda Hermosilla,RN,,,,5,RN
+897,897,Alejandra Sepúlveda Orbenes,FRVS,Región del Libertador General Bernardo O' Higgins,16,Federación Regionalista Verde Social,"4,5,6,8,9",DC|IND|PRI|IND|FRVS
+898,898,Gabriel Silber Romo,DC,Región Metropolitana de Santiago,8,Partido Demócrata Cristiano,"5,6,8,9",DC
+899,899,Laura Soto González,PPD,,,,"3,4,5",PPD
+900,900,Alejandro Sule Fernández,NOINFO,,,,5,NOINFO
+901,901,Raúl Sunico Galdames,PS,,,,5,PS
+902,902,Jorge Tarud Daccarett,PPD,,,,"4,5,6,8",PPD
+903,903,Carolina Tohá Morales,PPD,,,,"4,5",PPD
+904,904,Eugenio Tuma Zedan,PPD,,,,"3,4,5",PPD
+905,905,Marisol Turres Figueroa,UDI,,,,"5,6,8",UDI
+906,906,Jorge Ulloa Aguillón,UDI,,,,"3,4,5,6,8",UDI
+907,907,Gonzalo Uriarte Herrera,UDI,,,,"4,5,6",UDI
+908,908,Ignacio Urrutia Bonilla,PRep,Región del Maule,18,Partido Republicano,"4,5,6,8,9",UDI|PRep
+909,909,Ximena Valcarce Becerra,RN,,,,5,RN
+910,910,Esteban Valenzuela Van Treek,IND,,,,"4,5",PPD|IND
+911,911,Patricio Vallespín López,DC,,,,"5,6,8",DC
+912,912,Alfonso Vargas Lyng,RN,,,,"3,4,5",RN
+913,913,Mario Venegas Cárdenas,DC,Región de La Araucanía,22,Partido Demócrata Cristiano,"5,6,8,9",DC
+914,914,Samuel Venegas Rubio,IND,,,,"3,4,5",NOINFO|IND
+915,915,Germán Verdugo Soto,RN,,,,"5,6,8",RN
+916,916,Ximena Vidal Lázaro,PPD,,,,"4,5,6",PPD
+917,917,Gastón Von Mühlenbrock Zamora,UDI,Región de Los Ríos,24,Unión Demócrata Independiente,"4,5,6,9",UDI
+918,918,Patricio Walker Prieto,DC,,,,"3,4,5",DC
+919,919,Felipe Ward Edwards,UDI,,,,"5,6,8",UDI
+920,920,Marcelo Schilling Rodríguez,PS,Región de Valparaíso,6,Partido Socialista,"5,6,8,9",PS
+921,921,Lily Pérez San Martín,,,,,"3,4,5",RN
+922,922,Felipe Harboe Bascuñán,PPD,,,,"5,6",PPD
+923,923,Pedro Pablo Álvarez-Salamanca Ramírez,UDI,Región del Maule,17,Unión Demócrata Independiente,"6,8,9",UDI
+924,924,Osvaldo Andrade Lara,PS,,,,"6,8",PS
+925,925,Pepe Auth Stewart,IND,Región Metropolitana de Santiago,8,Independientes,"6,8,9",PPD|IND|PPD|IND
+926,926,Nino Baltolu Rasera,UDI,Región de Arica y Parinacota,1,Unión Demócrata Independiente,"6,9",UDI
+927,927,Pedro Browne Urrejola,AMPL,,,,"6,8",RN|IND|AMPL
+928,928,Giovanni Calderón Bassi,UDI,,,,6,UDI
+929,929,Cristián Campos Jara,PPD,,,,"6,8",PPD
+930,930,Lautaro Carmona Soto,PC,,,,"6,8",PC
+931,931,Juan Luis Castro González,PS,Región del Libertador General Bernardo O' Higgins,15,Partido Socialista,"6,8,9",PS
+932,932,Eduardo Cerda García,DC,,,,6,DC
+933,933,Aldo Cornejo González,DC,,,,"3,6,8",DC
+934,934,Fuad Chahin Valenzuela,DC,,,,"6,8",DC
+935,935,Rojo Edwards Silva,IND,,,,"6,8",RN|IND
+936,936,Cristina Girardi Lavín,PPD,Región Metropolitana de Santiago,9,Partido Por la Democracia,"6,8,9",PPD
+937,937,Hugo Gutiérrez Gálvez,PC,,,,"6,8,9",PC
+938,938,Romilio Gutiérrez Pino,UDI,,,,"6,8",UDI
+939,939,Gustavo Hasbún Selume,UDI,,,,"6,8",UDI
+940,940,María José Hoffmann Opazo,UDI,Región de Valparaíso,7,Unión Demócrata Independiente,"6,8,9",UDI
+941,941,Luis Lemus Aracena,PS,,,,"6,8",PS
+942,942,Javier Macaya Danús,UDI,Región del Libertador General Bernardo O' Higgins,15,Unión Demócrata Independiente,"6,8,9",UDI
+943,943,Miodrag Marinovic Solo de Zaldívar,IND,,,,6,IND
+944,944,Andrea Molina Oliva,UDI,,,,"6,8",UDI
+945,945,Celso Morales Muñoz,UDI,Región del Maule,17,Unión Demócrata Independiente,"6,8,9",UDI
+946,946,Leopoldo Pérez Lahsen,RN,Región Metropolitana de Santiago,12,Renovación Nacional,"6,8,9",RN
+947,947,Ricardo Rincón González,DC,,,,"3,6,8",DC
+948,948,Gaspar Rivas Sánchez,IND,,,,"6,8",RN|IND
+949,949,Marcela Sabat Fernández,RN,,,,"6,8,9",RN
+950,950,René Saffirio Espinoza,IND,Región de La Araucanía,23,Independientes,"6,8,9",DC|IND
+951,951,David Sandoval Plaza,UDI,,,,"6,8",UDI
+952,952,Alejandro Santana Tirachini,RN,Región de Los Lagos,26,Renovación Nacional,"6,8,9",RN
+953,953,Frank Sauerbaum Muñoz,RN,Región del Bío Bío,19,Renovación Nacional,"6,9",RN
+954,954,Ernesto Silva Méndez,UDI,,,,"6,8",UDI
+955,955,Arturo Squella Ovalle,UDI,,,,"6,8",UDI
+956,956,Guillermo Teillier Del Valle,PC,Región Metropolitana de Santiago,13,Partido Comunista,"6,8,9",PC
+957,957,Víctor Torres Jeldes,DC,Región de Valparaíso,7,Partido Demócrata Cristiano,"6,8,9",DC
+958,958,Joaquín Tuma Zedan,PPD,,,,"6,8",PPD
+959,959,Enrique Van Rysselberghe Herrera,UDI,Región del Bío Bío,20,Unión Demócrata Independiente,"6,8,9",UDI
+960,960,Orlando Vargas Pizarro,PPD,,,,6,PPD
+961,961,Pedro Velásquez Seguel,IND,Región de Coquimbo,5,Independientes,"6,9",IND
+962,962,Carlos Vilches Guzmán,UDI,,,,"3,4,6",RN|UDI
+963,963,Matías Walker Prieto,DC,Región de Coquimbo,5,Partido Demócrata Cristiano,"6,8,9",DC
+964,964,Mónica Zalaquett Said,UDI,,,,6,UDI
+965,965,Cristian Letelier Aguilar,,,,,6,
+966,966,Joel Rosales Guzmán,UDI,,,,6,UDI
+967,967,Issa Kort Garriga,UDI,,,,"6,8,9",UDI
+968,968,Jenny Álvarez Vera,PS,Región de Los Lagos,26,Partido Socialista,"8,9",PS
+969,969,Claudio Arriagada Macaya,DC,,,,8,DC
+970,970,Jaime Bellolio Avaria,UDI,,,,"8,9",UDI
+971,971,Bernardo Berger Fett,RN,Región de Los Ríos,24,Renovación Nacional,"8,9",RN
+972,972,Gabriel Boric Font,CS,Región de Magallanes y de la Antártica Chilena,28,Partido Convergencia Social,"8,9",IND|CS
+973,973,Karol Cariola Oliva,PC,Región Metropolitana de Santiago,9,Partido Comunista,"8,9",PC
+974,974,Loreto Carvajal Ambiado,PPD,,,,"8,9",PPD
+975,975,Daniella Cicardini Milla,PS,Región de Atacama,4,Partido Socialista,"8,9",PS
+976,976,Juan Antonio Coloma Álamos,UDI,Región Metropolitana de Santiago,14,Unión Demócrata Independiente,"8,9",UDI
+977,977,Marcelo Chávez Velásquez,DC,,,,8,DC
+978,978,Felipe De Mussy Hiriart,UDI,,,,8,UDI
+979,979,Sergio Espejo Yaksic,IND,,,,8,DC|IND
+980,980,Daniel Farcas Guendelman,PPD,,,,8,PPD
+981,981,Maya Fernández Allende,PS,Región Metropolitana de Santiago,10,Partido Socialista,"8,9",PS
+982,982,Iván Flores García,DC,Región de Los Ríos,24,Partido Demócrata Cristiano,"8,9",DC
+983,983,Iván Fuentes Castillo,IND,,,,8,IND
+984,984,Gonzalo Fuenzalida Figueroa,RN,Región Metropolitana de Santiago,11,Renovación Nacional,"8,9",RN
+985,985,Sergio Gahona Salazar,UDI,Región de Coquimbo,5,Unión Demócrata Independiente,"8,9",UDI
+986,986,Marcela Hernando Pérez,PRad,Región de Antofagasta,3,Partido Radical de Chile,"8,9",NOINFO|PRad
+987,987,Giorgio Jackson Drago,RD,Región Metropolitana de Santiago,10,Revolución Democrática,"8,9",NOINFO|RD
+988,988,Felipe Kast Sommerhoff,EVOP,,,,8,EVOP
+989,989,Joaquín Lavín León,UDI,Región Metropolitana de Santiago,8,Unión Demócrata Independiente,"8,9",UDI
+990,990,Daniel Melo Contreras,PS,,,,8,PS
+991,991,Vlado Mirosevic Verdugo,PL,Región de Arica y Parinacota,1,Partido Liberal de Chile,"8,9",PL
+992,992,Juan Enrique Morano Cornejo,DC,,,,8,DC
+993,993,Daniel Núñez Arancibia,PC,Región de Coquimbo,5,Partido Comunista,"8,9",PC
+994,994,Paulina Núñez Urrutia,RN,Región de Antofagasta,3,Renovación Nacional,"8,9",RN
+995,995,Diego Paulsen Kehr,RN,Región de La Araucanía,22,Renovación Nacional,"8,9",RN
+996,996,Jaime Pilowsky Greene,DC,,,,8,DC
+997,997,Roberto Poblete Zapata,IND,,,,8,IND
+998,998,Yasna Provoste Campillay,DC,,,,8,DC
+999,999,Jorge Rathgeb Schifferli,RN,Región de La Araucanía,22,Renovación Nacional,"8,9",RN
+1000,1000,Luis Rocafull López,PS,Región de Arica y Parinacota,1,Partido Socialista,"8,9",PS
+1001,1001,Raúl Saldívar Auger,PS,Región de Coquimbo,5,Partido Socialista,"8,9",PS
+1002,1002,Leonardo Soto Ferrada,PS,Región Metropolitana de Santiago,14,Partido Socialista,"8,9",PS
+1003,1003,Renzo Trisotti Martínez,UDI,Región de Tarapacá,2,Unión Demócrata Independiente,"8,9",UDI
+1004,1004,Christian Urízar Muñoz,PS,,,,8,PS
+1005,1005,Osvaldo Urrutia Soto,UDI,Región de Valparaíso,7,Unión Demócrata Independiente,"8,9",UDI
+1006,1006,Camila Vallejo Dowling,PC,Región Metropolitana de Santiago,12,Partido Comunista,"8,9",PC
+1007,1007,Miguel Ángel Alvarado Ramírez,PPD,,,,8,PPD
+1008,1008,Florcita Alarcón Rojas,IND,Región del Maule,17,Independientes,9,PH|IND
+1009,1009,Jorge Alessandri Vergara,UDI,Región Metropolitana de Santiago,10,Unión Demócrata Independiente,9,UDI
+1010,1010,Sebastián Álvarez Ramírez,EVOP,Región de La Araucanía,23,Evolución Política,9,EVOP
+1011,1011,Sandra Amar Mancilla,IND,Región de Magallanes y de la Antártica Chilena,28,Independientes,9,UDI|IND
+1012,1012,Boris Barrera Moreno,PC,Región Metropolitana de Santiago,9,Partido Comunista,9,PC
+1013,1013,Alejandro Bernales Maldonado,PL,Región de Los Lagos,26,Partido Liberal de Chile,9,PL
+1014,1014,Karim Bianchi Retamales,IND,Región de Magallanes y de la Antártica Chilena,28,Independientes,9,IND
+1015,1015,Jorge Brito Hasbún,RD,Región de Valparaíso,7,Revolución Democrática,9,RD
+1016,1016,Miguel Ángel Calisto Águila,DC,Región de Aysén del General Carlos Ibáñez del Campo,27,Partido Demócrata Cristiano,9,DC
+1017,1017,Álvaro Carter Fernández,IND,Región Metropolitana de Santiago,12,Independientes,9,UDI|IND
+1018,1018,Natalia Castillo Muñoz,IND,Región Metropolitana de Santiago,10,Independientes,9,RD|IND
+1019,1019,José Miguel Castro Bascuñán,RN,Región de Antofagasta,3,Renovación Nacional,9,RN
+1020,1020,Ricardo Celis Araya,PPD,Región de La Araucanía,23,Partido Por la Democracia,9,PPD
+1021,1021,Andrés Celis Montt,RN,Región de Valparaíso,7,Renovación Nacional,9,RN
+1022,1022,Sofía Cid Versalovic,RN,Región de Atacama,4,Renovación Nacional,9,RN
+1023,1023,Miguel Crispi Serrano,RD,Región Metropolitana de Santiago,12,Revolución Democrática,9,RD
+1024,1024,Luciano Cruz-Coke Carvallo,EVOP,Región Metropolitana de Santiago,10,Evolución Política,9,EVOP
+1025,1025,Catalina Del Real Mihovilovic,RN,Región Metropolitana de Santiago,11,Renovación Nacional,9,RN
+1026,1026,Mario Desbordes Jiménez,RN,,,,9,RN
+1027,1027,Jorge Durán Espinoza,RN,Región Metropolitana de Santiago,9,Renovación Nacional,9,RN
+1028,1028,Eduardo Durán Salinas,RN,Región Metropolitana de Santiago,13,Renovación Nacional,9,RN
+1029,1029,Francisco Eguiguren Correa,RN,Región de Coquimbo,5,Renovación Nacional,9,RN
+1030,1030,Camila Flores Oporto,RN,Región de Valparaíso,6,Renovación Nacional,9,RN
+1031,1031,Juan Fuenzalida Cobo,UDI,Región de Coquimbo,5,Unión Demócrata Independiente,9,UDI
+1032,1032,Ramón Galleguillos Castillo,RN,Región de Tarapacá,2,Renovación Nacional,9,RN
+1033,1033,Renato Garín González,RD,,,,9,RD
+1034,1034,Félix González Gatica,PEV,Región del Bío Bío,20,Partido Ecologista Verde,9,PEV
+1035,1035,Carmen Hertz Cádiz,PC,Región Metropolitana de Santiago,8,Partido Comunista,9,PC
+1036,1036,Tomás Hirsch Goldschmidt,IND,Región Metropolitana de Santiago,11,Independientes,9,PH|IND
+1037,1037,Diego Ibáñez Cotroneo,CS,Región de Valparaíso,6,Partido Convergencia Social,9,IND|CS
+1038,1038,Marcos Ilabaca Cerda,PS,Región de Los Ríos,24,Partido Socialista,9,PS
+1039,1039,Pamela Jiles Moreno,PH,Región Metropolitana de Santiago,12,Partido Humanista,9,PH
+1040,1040,Harry Jürgensen Rundshagen,RN,Región de Los Lagos,25,Renovación Nacional,9,RN
+1041,1041,Pablo Kast Sommerhoff,EVOP,Región de Valparaíso,6,Evolución Política,9,EVOP
+1042,1042,Sebastián Keitel Bianchi,EVOP,Región Metropolitana de Santiago,9,Evolución Política,9,EVOP
+1043,1043,Amaro Labra Sepúlveda,PC,Región Metropolitana de Santiago,12,Partido Comunista,9,PC
+1044,1044,Raúl Leiva Carvajal,PS,Región Metropolitana de Santiago,14,Partido Socialista,9,PS
+1045,1045,Aracely Leuquén Uribe,RN,Región de Aysén del General Carlos Ibáñez del Campo,27,Renovación Nacional,9,RN
+1046,1046,Andrés Longton Herrera,RN,Región de Valparaíso,6,Renovación Nacional,9,RN
+1047,1047,Karin Luck Urban,RN,Región Metropolitana de Santiago,11,Renovación Nacional,9,RN
+1048,1048,Carolina Marzán Pinto,PPD,Región de Valparaíso,6,Partido Por la Democracia,9,PPD
+1049,1049,Cosme Mellado Pino,PRad,Región del Libertador General Bernardo O' Higgins,16,Partido Radical de Chile,9,PRad
+1050,1050,Miguel Mellado Suazo,RN,Región de La Araucanía,23,Renovación Nacional,9,RN
+1051,1051,Claudia Mix Jiménez,COM,Región Metropolitana de Santiago,8,Partido Comunes,9,COM
+1052,1052,Andrés Molina Magofke,EVOP,Región de La Araucanía,23,Evolución Política,9,EVOP
+1053,1053,Cristhian Moreira Barros,UDI,Región Metropolitana de Santiago,13,Unión Demócrata Independiente,9,UDI
+1054,1054,Francesca Muñoz González,RN,Región del Bío Bío,20,Renovación Nacional,9,RN
+1055,1055,Nicolás Noman Garrido,UDI,Región de Atacama,4,Unión Demócrata Independiente,9,UDI
+1056,1056,Emilia Nuyado Ancapichún,PS,Región de Los Lagos,25,Partido Socialista,9,PS
+1057,1057,Erika Olivera De La Fuente,IND,Región Metropolitana de Santiago,9,Independientes,9,IND
+1058,1058,Maite Orsini Pascal,RD,Región Metropolitana de Santiago,9,Revolución Democrática,9,RD
+1059,1059,Ximena Ossandón Irarrázabal,RN,Región Metropolitana de Santiago,12,Renovación Nacional,9,RN
+1060,1060,Luis Pardo Sáinz,RN,Región de Valparaíso,6,Renovación Nacional,9,RN
+1061,1061,Andrea Parra Sauterel,PPD,Región de La Araucanía,22,Partido Por la Democracia,9,PPD
+1062,1062,Joanna Pérez Olea,DC,Región del Bío Bío,21,Partido Demócrata Cristiano,9,DC
+1063,1063,Catalina Pérez Salinas,RD,Región de Antofagasta,3,Revolución Democrática,9,RD
+1064,1064,Pablo Prieto Lorca,IND,Región del Maule,17,Independientes,9,IND
+1065,1065,Guillermo Ramírez Diez,UDI,Región Metropolitana de Santiago,11,Unión Demócrata Independiente,9,UDI
+1066,1066,Rolando Rentería Moller,UDI,Región del Maule,18,Unión Demócrata Independiente,9,UDI
+1067,1067,Hugo Rey Martínez,RN,Región del Maule,17,Renovación Nacional,9,RN
+1068,1068,Camila Rojas Valderrama,COM,Región de Valparaíso,7,Partido Comunes,9,COM
+1069,1069,Leonidas Romero Sáez,RN,Región del Bío Bío,20,Renovación Nacional,9,RN
+1070,1070,Patricio Rosas Barrientos,PS,Región de Los Ríos,24,Independientes,9,IND|PS
+1071,1071,Gastón Saavedra Chandía,PS,Región del Bío Bío,20,Partido Socialista,9,PS
+1072,1072,Gustavo Sanhueza Dueñas,UDI,Región del Bío Bío,19,Unión Demócrata Independiente,9,UDI
+1073,1073,Juan Santana Castillo,PS,Región de Atacama,4,Partido Socialista,9,PS
+1074,1074,Marisela Santibáñez Novoa,PC,Región Metropolitana de Santiago,14,Partido Comunista,9,PRO|PC
+1075,1075,Diego Schalper Sepúlveda,RN,Región del Libertador General Bernardo O' Higgins,15,Renovación Nacional,9,RN
+1076,1076,Alexis Sepúlveda Soto,PRad,Región del Maule,17,Partido Radical de Chile,9,PRad
+1077,1077,Raúl Soto Mardones,IND,Región del Libertador General Bernardo O' Higgins,15,Independientes,9,DC|IND
+1078,1078,Jaime Tohá González,PS,Región del Bío Bío,20,Partido Socialista,9,PS
+1079,1079,Sebastián Torrealba Alvarado,RN,Región Metropolitana de Santiago,10,Renovación Nacional,9,RN
+1080,1080,Virginia Troncoso Hellman,IND,Región del Libertador General Bernardo O' Higgins,16,Independientes,9,UDI|IND
+1081,1081,Francisco Undurraga Gazitúa,EVOP,Región Metropolitana de Santiago,11,Evolución Política,9,EVOP
+1082,1082,Cristóbal Urruticoechea Ríos,PRep,Región del Bío Bío,21,Partido Republicano,9,RN|PRep
+1083,1083,Esteban Velásquez Núñez,FRVS,Región de Antofagasta,3,Federación Regionalista Verde Social,9,FRVS
+1084,1084,Daniel Verdessi Belemmi,DC,Región de Valparaíso,6,Partido Demócrata Cristiano,9,DC
+1085,1085,Pablo Vidal Rojas,IND,Región Metropolitana de Santiago,8,Independientes,9,RD|IND
+1086,1086,Gonzalo Winter Etcheberry,CS,Región Metropolitana de Santiago,10,Partido Convergencia Social,9,IND|CS
+1087,1087,Gael Yeomans Araya,CS,Región Metropolitana de Santiago,13,Partido Convergencia Social,9,RD|CS
+1088,1088,Camilo Morán Bahamondes,RN,Región Metropolitana de Santiago,8,Renovación Nacional,9,RN
+1089,1089,Nora Cuevas Contreras,UDI,Región Metropolitana de Santiago,14,Unión Demócrata Independiente,9,UDI
+1090,1090,Tomás Andrés Fuentes Barros,RN,Región Metropolitana de Santiago,10,Renovación Nacional,9,RN
+1091,1091,Rubén Moraga Mamani,PC,Región de Tarapacá,2,Partido Comunista,9,PC
+1092,1092,Marcela Sandoval Osorio,RD,Región Metropolitana de Santiago,14,Revolución Democrática,9,RD
+1093,1093,Patricia Rubio Escobar,PPD,Región del Bío Bío,19,Partido Por la Democracia,9,PPD
+1094,1094,Cristian Labbé Martínez,UDI,Región Metropolitana de Santiago,8,Unión Demócrata Independiente,9,UDI
+1095,1095,Juan Manuel Masferrer Vidal,UDI,Región del Libertador General Bernardo O' Higgins,15,Unión Demócrata Independiente,9,UDI

@@ -3,9 +3,9 @@
 ============================================================
 
 Configuracion:
-  Input:      C:\Users\cow\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\sen90
-  Output:     C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\sen90
-  WNOMINATE:  C:\Users\cow\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\sen90\wnominate_coordinates.csv
+  Input:      <HOME>\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\sen90
+  Output:     <SCRATCH>\verify\sen90
+  WNOMINATE:  <HOME>\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\sen90\wnominate_coordinates.csv
   Modelo:     0 (constante)
   Iteraciones:4
   Periodos:   1
@@ -16,7 +16,7 @@ Configuracion:
 Cargando datos...
   Ref. R:     output_R_dwnominate_model0
   Pesos iniciales: W1=1.0, W2=0.3463, Beta=5.9539
-  W-NOMINATE: Cargadas 102 coordenadas iniciales desde C:\Users\cow\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\sen90\wnominate_coordinates.csv
+  W-NOMINATE: Cargadas 102 coordenadas iniciales desde <HOME>\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\sen90\wnominate_coordinates.csv
   Coordenadas aplicadas: 0 per-(leg,periodo), 102 per-legislador, 0 fallback
 dwnominate.exe : Advertencia: No se puede abrir output_R_dwnominate_model0/dwnominate_bill_parameters.csv
 At line:18 char:3
@@ -51,9 +51,9 @@ Resultados:
   Tiempo: 2.3s
 
 Exportando resultados...
-Exportado: C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\sen90/cpp_coordinates_all_periods.csv (102 registros)
-Exportado (polaridad corregida): C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\sen90/cpp_coordinates_all_periods_corrected.csv (102 registros)
-Exportado: C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\sen90/cpp_bill_parameters.csv (596 roll calls)
-Exportado: C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\sen90/cpp_summary.csv
+Exportado: <SCRATCH>\verify\sen90/cpp_coordinates_all_periods.csv (102 registros)
+Exportado (polaridad corregida): <SCRATCH>\verify\sen90/cpp_coordinates_all_periods_corrected.csv (102 registros)
+Exportado: <SCRATCH>\verify\sen90/cpp_bill_parameters.csv (596 roll calls)
+Exportado: <SCRATCH>\verify\sen90/cpp_summary.csv
 
 Completado exitosamente.

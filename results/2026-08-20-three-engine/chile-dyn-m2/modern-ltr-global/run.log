@@ -1,14 +1,14 @@
 ﻿=== dwnominate-modern chile dyn 23p, scalar-search=global, start 2026-08-20T12:09:13 ===
-binary: C:\Users\cow\Documents\GitHub\dwnominate-chile-julio-ltr\engine-modern\build\release\dwnominate-modern.exe
+binary: <ENGINE-MODERN-LTR>\engine-modern\build\release\dwnominate-modern.exe
 ============================================================
   DW-NOMINATE C++ CLI
 ============================================================
 
 Configuracion:
-  Input:      C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\cpp_input
-  Output:     C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-ltr-global
-  WNOMINATE:  C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\cpp_input\wnominate_coordinates.csv
-  SeedPP:     C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\cpp_input\wnominate_coordinates_per_period.csv
+  Input:      <QUEVOTAN-DB>\reproduce\out\chile\cpp_input
+  Output:     <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-ltr-global
+  WNOMINATE:  <QUEVOTAN-DB>\reproduce\out\chile\cpp_input\wnominate_coordinates.csv
+  SeedPP:     <QUEVOTAN-DB>\reproduce\out\chile\cpp_input\wnominate_coordinates_per_period.csv
   Modelo:     2 (cuadratico)
   Iteraciones:4
   Periodos:   23
@@ -28,8 +28,8 @@ Cargando datos...
   Ref. R:     output_R_dwnominate_model2
   Legisladores filtrados (sin votos no-missing en ningun periodo): 2 de 340 totales
   Pesos iniciales: W1=1.0, W2=0.3463, Beta=5.9539
-  W-NOMINATE: Cargadas 340 coordenadas iniciales desde C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\cpp_input\wnominate_coordinates.csv
-  W-NOMINATE per-period: Cargadas 2685 coordenadas (leg, periodo) desde C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\cpp_input\wnominate_coordinates_per_period.csv
+  W-NOMINATE: Cargadas 340 coordenadas iniciales desde <QUEVOTAN-DB>\reproduce\out\chile\cpp_input\wnominate_coordinates.csv
+  W-NOMINATE per-period: Cargadas 2685 coordenadas (leg, periodo) desde <QUEVOTAN-DB>\reproduce\out\chile\cpp_input\wnominate_coordinates_per_period.csv
   Coordenadas aplicadas: 2685 per-(leg,periodo), 170 per-legislador, 0 fallback
 dwnominate-modern.exe : Advertencia: No se puede abrir output_R_dwnominate_model2/dwnominate_bill_parameters.csv
 At line:15 char:3
@@ -64,12 +64,12 @@ Resultados:
   Tiempo: 64.0s
 
 Exportando resultados...
-Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-ltr-global/cpp_coordinates_all_periods.csv (7774 registros)
-Exportado (polaridad corregida): C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-ltr-global/cpp_coordinates_all_periods_corrected.csv (7774 registros)
-Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-ltr-global/cpp_bill_parameters.csv (12952 roll calls)
-Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-ltr-global/cpp_summary.csv
-Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-ltr-global/cpp_convergence_trace.csv
-Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-ltr-global/cpp_optimizer_trace.csv
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-ltr-global/cpp_coordinates_all_periods.csv (7774 registros)
+Exportado (polaridad corregida): <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-ltr-global/cpp_coordinates_all_periods_corrected.csv (7774 registros)
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-ltr-global/cpp_bill_parameters.csv (12952 roll calls)
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-ltr-global/cpp_summary.csv
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-ltr-global/cpp_convergence_trace.csv
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-ltr-global/cpp_optimizer_trace.csv
 
 Completado exitosamente.
 EXIT=0 ELAPSED_S=64.29

@@ -3,10 +3,10 @@
 ============================================================
 
 Configuracion:
-  Input:      C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\cpp_input
-  Output:     C:\Users\cow\.claude\jobs\ea44c598\tmp\chile_dyn_A_79031cf
-  WNOMINATE:  C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\cpp_input\wnominate_coordinates.csv
-  SeedPP:     C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\cpp_input\wnominate_coordinates_per_period.csv
+  Input:      <QUEVOTAN-DB>\reproduce\out\chile\cpp_input
+  Output:     <SCRATCH>\chile_dyn_A_79031cf
+  WNOMINATE:  <QUEVOTAN-DB>\reproduce\out\chile\cpp_input\wnominate_coordinates.csv
+  SeedPP:     <QUEVOTAN-DB>\reproduce\out\chile\cpp_input\wnominate_coordinates_per_period.csv
   Modelo:     2 (cuadratico)
   Iteraciones:4
   Periodos:   23
@@ -18,8 +18,8 @@ Cargando datos...
   Ref. R:     output_R_dwnominate_model2
   Legisladores filtrados (sin votos no-missing en ningun periodo): 2 de 340 totales
   Pesos iniciales: W1=1.0, W2=0.3463, Beta=5.9539
-  W-NOMINATE: Cargadas 340 coordenadas iniciales desde C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\cpp_input\wnominate_coordinates.csv
-  W-NOMINATE per-period: Cargadas 2685 coordenadas (leg, periodo) desde C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\cpp_input\wnominate_coordinates_per_period.csv
+  W-NOMINATE: Cargadas 340 coordenadas iniciales desde <QUEVOTAN-DB>\reproduce\out\chile\cpp_input\wnominate_coordinates.csv
+  W-NOMINATE per-period: Cargadas 2685 coordenadas (leg, periodo) desde <QUEVOTAN-DB>\reproduce\out\chile\cpp_input\wnominate_coordinates_per_period.csv
   Coordenadas aplicadas: 2685 per-(leg,periodo), 170 per-legislador, 0 fallback
 dwnominate.exe : Advertencia: No se puede abrir output_R_dwnominate_model2/dwnominate_bill_parameters.csv
 At line:12 char:1
@@ -70,9 +70,9 @@ Resultados:
   Tiempo: 68.2s
 
 Exportando resultados...
-Exportado: C:\Users\cow\.claude\jobs\ea44c598\tmp\chile_dyn_A_79031cf/cpp_coordinates_all_periods.csv (2855 registros)
-Exportado (polaridad corregida): C:\Users\cow\.claude\jobs\ea44c598\tmp\chile_dyn_A_79031cf/cpp_coordinates_all_periods_corrected.csv (2855 registros)
-Exportado: C:\Users\cow\.claude\jobs\ea44c598\tmp\chile_dyn_A_79031cf/cpp_bill_parameters.csv (12952 roll calls)
-Exportado: C:\Users\cow\.claude\jobs\ea44c598\tmp\chile_dyn_A_79031cf/cpp_summary.csv
+Exportado: <SCRATCH>\chile_dyn_A_79031cf/cpp_coordinates_all_periods.csv (2855 registros)
+Exportado (polaridad corregida): <SCRATCH>\chile_dyn_A_79031cf/cpp_coordinates_all_periods_corrected.csv (2855 registros)
+Exportado: <SCRATCH>\chile_dyn_A_79031cf/cpp_bill_parameters.csv (12952 roll calls)
+Exportado: <SCRATCH>\chile_dyn_A_79031cf/cpp_summary.csv
 
 Completado exitosamente.

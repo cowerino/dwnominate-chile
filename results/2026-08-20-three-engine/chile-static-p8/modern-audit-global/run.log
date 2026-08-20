@@ -1,13 +1,13 @@
 ﻿=== audit p8 scalar=global start 2026-08-20T12:12:15 ===
-binary: C:\Users\cow\Documents\GitHub\dwnominate-chile-julio-audit\engine-modern\build\release\dwnominate-modern.exe
+binary: <ENGINE-MODERN-AUDIT>\engine-modern\build\release\dwnominate-modern.exe
 ============================================================
   DW-NOMINATE C++ CLI
 ============================================================
 
 Configuracion:
-  Input:      C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\static_panels\p8
-  Output:     C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-global
-  WNOMINATE:  C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\static_panels\p8\wnominate_coordinates.csv
+  Input:      <QUEVOTAN-DB>\reproduce\out\chile\static_panels\p8
+  Output:     <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-global
+  WNOMINATE:  <QUEVOTAN-DB>\reproduce\out\chile\static_panels\p8\wnominate_coordinates.csv
   Modelo:     0 (constante)
   Iteraciones:4
   Periodos:   1
@@ -28,7 +28,7 @@ Cargando datos...
   Ref. R:     output_R_dwnominate_model0
   Legisladores filtrados (sin votos no-missing en ningun periodo): 219 de 340 totales
   Pesos iniciales: W1=1.0, W2=0.3463, Beta=5.9539
-  W-NOMINATE: Cargadas 115 coordenadas iniciales desde C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\static_panels\p8\wnominate_coordinates.csv
+  W-NOMINATE: Cargadas 115 coordenadas iniciales desde <QUEVOTAN-DB>\reproduce\out\chile\static_panels\p8\wnominate_coordinates.csv
   Coordenadas aplicadas: 0 per-(leg,periodo), 115 per-legislador, 6 fallback
 dwnominate-modern.exe : Advertencia: No se puede abrir output_R_dwnominate_model0/dwnominate_bill_parameters.csv
 At line:22 char:7
@@ -63,12 +63,12 @@ Resultados:
   Tiempo: 0.4s
 
 Exportando resultados...
-Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-global/cpp_coordinates_all_periods.csv (121 registros)
-Exportado (polaridad corregida): C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-global/cpp_coordinates_all_periods_corrected.csv (121 registros)
-Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-global/cpp_bill_parameters.csv (298 roll calls)
-Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-global/cpp_summary.csv
-Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-global/cpp_convergence_trace.csv
-Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-global/cpp_optimizer_trace.csv
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-global/cpp_coordinates_all_periods.csv (121 registros)
+Exportado (polaridad corregida): <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-global/cpp_coordinates_all_periods_corrected.csv (121 registros)
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-global/cpp_bill_parameters.csv (298 roll calls)
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-global/cpp_summary.csv
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-global/cpp_convergence_trace.csv
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-global/cpp_optimizer_trace.csv
 
 Completado exitosamente.
 EXIT=0 ELAPSED_S=0.4
