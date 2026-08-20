@@ -612,6 +612,7 @@ DWNominateResult DWNominate::run()
     // SOPORTE MULTI-PERIODO
     // Copiar coeficientes temporales al resultado
     result.temporalCoefficients = temporalCoefficients_;
+    result.servedPeriodsByLegislator = servedPeriodsByLeg_;
 
     // Construir lista de IDs unicos de legisladores procesados
     result.legislatorUniqueIds.clear();
@@ -1192,7 +1193,30 @@ int DWNominate::prepareRollCallData(
     int globalRollCall = congressPtr->rollCallOffset + rollCallLocalIndex;
 
     // Contar legisladores con voto valido
+    //
+    // FIX 2026-08-20: las ausencias se CONSERVAN en la geometria de CUTPLANE.
+    //
+    // El Fortran canonico pasa los NPC legisladores completos; las ausencias van
+    // como LDATA=0 -> codigo 9, no cuentan en los errores pero permanecen en la
+    // nube de puntos sobre la que SEARCH calcula el SVD de direccion minima.
+    // Filtrarlas, como se hacia antes, cambia esa nube y por lo tanto la normal
+    // del plano de corte y su polaridad. Detectado por Julio Rojas 2026-08-20.
+    //
+    // Nota: esto vuelve ALCANZABLE la rama "missing -> proyectar" de
+    // buildFullPointCloud (cutting_plane.cpp), que antes era codigo muerto porque
+    // el llamador nunca entregaba un voto ausente. La auditoria REQ-004 la dio
+    // por fiel sin poder ejecutarla.
+    //
+    // DWNOM_CUTPLANE_FILTER_ABSENT=1 restaura el comportamiento anterior, para
+    // reproducir numeros publicados antes de esta fecha.
+    //
+    // yesCount/noCount siguen contando solo votos reales en ambos modos, porque
+    // alimentan el tamiz de margen del 2.5%.
+    static const bool keepAbsent =
+        (std::getenv("DWNOM_CUTPLANE_FILTER_ABSENT") == nullptr);
+
     std::vector<int> validLegislators;
+    std::vector<char> legMissing;
     for (int i = 0; i < numLegislatorsInCongress; ++i)
     {
         int globalLeg = legislatorOffset + i;
@@ -1208,6 +1232,7 @@ int DWNominate::prepareRollCallData(
         if (!votes_.isMissing(globalLeg, globalRollCall))
         {
             validLegislators.push_back(i);
+            legMissing.push_back(0);
             if (votes_.getVote(globalLeg, globalRollCall))
             {
                 yesCount++;
@@ -1216,6 +1241,11 @@ int DWNominate::prepareRollCallData(
             {
                 noCount++;
             }
+        }
+        else if (keepAbsent)
+        {
+            validLegislators.push_back(i);
+            legMissing.push_back(1);
         }
     }
 
@@ -1240,8 +1270,12 @@ int DWNominate::prepareRollCallData(
             coords(i, k) = legislatorCoords_(globalLeg, k);
         }
 
-        // Voto: 1=Si, 6=No (codigos Fortran)
-        if (votes_.getVote(globalLeg, globalRollCall))
+        // Voto: 1=Si, 6=No, 9=ausente (codigos Fortran)
+        if (legMissing[static_cast<size_t>(i)])
+        {
+            voteCodes[i] = VoteCode::MISSING;
+        }
+        else if (votes_.getVote(globalLeg, globalRollCall))
         {
             voteCodes[i] = VoteCode::YES;
         }
@@ -1770,6 +1804,23 @@ void DWNominate::reconstructLegislatorCoords(
     if (kk == 0)
     {
         return;
+    }
+
+    // Registrar el span servido para que el exportador pueda reproducir la
+    // configuracion ajustada (mismo xinc, mismo t local). Ver
+    // DWNominateResult::getCoordinatesAtPeriod.
+    //
+    // servedPeriods guarda numeros de CONGRESO; el exportador indexa por periodo
+    // 1-based (1..numPeriods). Se convierte aqui, con la misma relacion que usa
+    // result.numPeriods = lastCongress - firstCongress + 1.
+    {
+        std::vector<int> servedIdx;
+        servedIdx.reserve(servedPeriods.size());
+        for (int congress : servedPeriods)
+        {
+            servedIdx.push_back(congress - config_.firstCongress + 1);
+        }
+        servedPeriodsByLeg_[presence.uniqueId] = servedIdx;
     }
 
     // Calcular incremento temporal (igual que en buildLegendreTimeTrends)

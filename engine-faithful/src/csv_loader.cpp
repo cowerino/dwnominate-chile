@@ -10,6 +10,39 @@
 #include <algorithm>
 #include <stdexcept>
 #include <cmath>
+#include <cstdlib>
+
+// ---------------------------------------------------------------------------
+// Codificacion canonica de votos. Sigue dwnom2004.f:308-317 exactamente:
+//
+//     IF(LVOTE(JJ).GE.1.AND.LVOTE(JJ).LE.3) RCVOTET1 = .TRUE.   ! si
+//     IF(LVOTE(JJ).EQ.0.OR.LVOTE(JJ).GT.6)  RCVOTET9 = .TRUE.   ! missing
+//     IF(LVOTE(JJ).GE.4.AND.LVOTE(JJ).LE.6) -> no
+//
+// es decir: 1-3 = si, 4-6 = no, 0 y >6 = missing.
+//
+// -1 es NUESTRO centinela de NA (celda vacia o no parseable), no un codigo
+// Fortran, y tambien cuenta como missing.
+//
+// Importa aunque los paneles chilenos actuales solo contengan {1,6,9}: ICPSR y
+// Voteview codifican si como 1-3 y no como 4-6, con 7-9 ausente/no votante. El
+// mapeo anterior ("todo lo que no sea 1 es no") convertia 2, 3 en NO y 0, 7, 8
+// en NO, corrompiendo silenciosamente cualquier dato externo sin emitir error.
+// ---------------------------------------------------------------------------
+namespace
+{
+
+inline bool isMissingVoteCode(int v)
+{
+    return v == -1 || v == 0 || v > 6;
+}
+
+inline bool isYeaVoteCode(int v)
+{
+    return v >= 1 && v <= 3;
+}
+
+} // namespace
 
 // Constructor
 CSVLoader::CSVLoader(const std::string &inputDir, const std::string &outputDir)
@@ -423,11 +456,12 @@ DWNominateInput CSVLoader::buildDWNominateInput(int numPeriods, const Initializa
                 continue; // no aparece en el CSV de este periodo
             }
             int voteRow = it->second;
-            // Activo en este periodo: >=1 voto no-missing (1=Si, 0/6=No; -1/9=missing).
+            // Activo en este periodo: >=1 voto no-missing, segun la codificacion
+            // canonica del Fortran (ver isMissingVoteCode arriba).
             bool active = false;
             for (int v : pd.votes[voteRow])
             {
-                if (v != -1 && v != 9)
+                if (!isMissingVoteCode(v))
                 {
                     active = true;
                     break;
@@ -531,13 +565,62 @@ DWNominateInput CSVLoader::buildDWNominateInput(int numPeriods, const Initializa
 
         if (!applied)
         {
-            // Fallback: distribución uniforme simple basada en el índice único
-            int uIdx = legislatorIdToIndex_.count(legId) ? legislatorIdToIndex_.at(legId) : 0;
-            double frac = (totalUniqueLegislators > 0)
-                              ? static_cast<double>(uIdx) / static_cast<double>(totalUniqueLegislators)
-                              : 0.0;
-            input.legislatorCoords(r, 0) = frac - 0.5;
-            input.legislatorCoords(r, 1) = (uIdx % 2 == 0 ? 0.1 : -0.1) * frac;
+            // Legislador sin coordenada inicial de W-NOMINATE.
+            //
+            // FIX 2026-08-20: se parte del ORIGEN, como el Fortran canonico.
+            // `us_legstart.dat` escribe 0.000 0.000 para exactamente estos
+            // casos (verificado en run_static_chile_p23, legisladores 1091,
+            // 1092 y 1093, que ingresan a la camara recien en la legislatura
+            // 368 y emiten 24, 27 y 5 votos de 1023).
+            //
+            // El fallback anterior repartia estos legisladores a lo largo de
+            // x segun su POSICION EN EL ROSTER:
+            //     x = uIdx/N - 0.5,   y = +-0.1 * uIdx/N
+            // Eso inyecta el orden de los IDs en el ajuste. Es un punto de
+            // partida arbitrario y NO neutral: a los IDs altos los deja cerca
+            // de x = +0.5. Un optimizador con region de confianza amplia se
+            // escapa de ahi (el Fortran, engine-faithful y engine-modern en
+            // busqueda global los llevan todos a la izquierda), pero uno con
+            // region estrecha no: engine-modern con --scalar-search=local deja
+            // al legislador 1091 (PC) en (+0.737,+0.676) y al 1093 (PPD) en
+            // (+0.998,+0.055), es decir un diputado comunista dentro del
+            // bloque de derecha, y eso solo baja r1 de 0.9994 a 0.9550.
+            //
+            // El origen es neutral: no privilegia ningun lado y es lo que hace
+            // la referencia. DWNOM_SEED_FALLBACK_RAMP=1 restaura el anterior.
+            //
+            // ⚠ ESTE TOGGLE NO REPRODUCE BIT A BIT, a diferencia de
+            // DWNOM_CUTPLANE_FILTER_ABSENT y DWNOM_EXPORT_GLOBAL_T. Medido:
+            // con la rampa forzada en tiempo de COMPILACION el panel p23 da
+            // -13300.413955, identico al binario previo; con la MISMA rampa
+            // detras de esta rama en tiempo de EJECUCION da -13291.962727.
+            // Misma aritmetica, mismas semillas, mismos datos: la diferencia
+            // es solo que el compilador ya no puede plegar la rama.
+            // Con -O3 -march=native -ffast-math (CMakeLists:97) eso reordena
+            // las operaciones de punto flotante, y 4 iteraciones de un
+            // optimizador no convexo amplifican el ULP a 8.45 nats.
+            // Consecuencia que importa mas alla de aqui: hay un PISO DE RUIDO
+            // de ~8 nats en este panel, y la brecha neta de leg 368 contra el
+            // Fortran es de +10.65 nats. No se puede citar esa cifra como
+            // evidencia de fidelidad a esa precision.
+            // Para reproducir de verdad el comportamiento anterior, usar el
+            // commit anterior, no este flag.
+            static const bool legacyRamp =
+                (std::getenv("DWNOM_SEED_FALLBACK_RAMP") != nullptr);
+            if (legacyRamp)
+            {
+                int uIdx = legislatorIdToIndex_.count(legId) ? legislatorIdToIndex_.at(legId) : 0;
+                double frac = (totalUniqueLegislators > 0)
+                                  ? static_cast<double>(uIdx) / static_cast<double>(totalUniqueLegislators)
+                                  : 0.0;
+                input.legislatorCoords(r, 0) = frac - 0.5;
+                input.legislatorCoords(r, 1) = (uIdx % 2 == 0 ? 0.1 : -0.1) * frac;
+            }
+            else
+            {
+                input.legislatorCoords(r, 0) = 0.0;
+                input.legislatorCoords(r, 1) = 0.0;
+            }
             coordsFallback++;
         }
     }
@@ -628,14 +711,15 @@ DWNominateInput CSVLoader::buildDWNominateInput(int numPeriods, const Initializa
             {
                 int localRc = globalRcIdx - off;
                 int vote = pd.votes[voteRow][localRc];
-                // Codificación: 1=Sí, 0/6=No, 9=Missing/Abstención, -1=NA
-                if (vote == -1 || vote == 9)
+                // Codificacion canonica (dwnom2004.f:308-317): 1-3=Si, 4-6=No,
+                // 0 y >6 = missing, -1 = NA nuestro. Ver isMissingVoteCode.
+                if (isMissingVoteCode(vote))
                 {
                     input.votes.setVote(r, globalRcIdx, false, true);
                 }
                 else
                 {
-                    input.votes.setVote(r, globalRcIdx, vote == 1, false);
+                    input.votes.setVote(r, globalRcIdx, isYeaVoteCode(vote), false);
                 }
             }
             else

@@ -10,7 +10,7 @@ Cámara de Diputados de Chile. Three single-period panels, one directory each.
 
 ## Files, per directory
 
-- `votes_matrix.csv` — the roll call. First column is `legislator_id`, one column per roll call.
+- `votes_matrix_p1.csv` — the roll call. First column is `legislator_id`, one column per roll call.
   Codes are the NOMINATE convention: **1-3 yea, 4-6 nay, 7-9 missing.** Abstentions,
   dispensations and absences are all coded missing.
 - `wnominate_coordinates.csv` — the W-NOMINATE starting coordinates (the seed).

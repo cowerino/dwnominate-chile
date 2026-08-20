@@ -22,10 +22,21 @@ find_package(BLAS)
 # REQ-005 Stage 2: locally-built reference netlib LAPACK 3.12.1.
 # Routes Eigen's SVD through LAPACKE_dgesvd via EIGEN_USE_LAPACKE.
 # See external/lapack-3.12.1/ for the source build.
+#
+# 2026-08-20: the SVD backend is now an EXPLICIT switch, not an implicit
+# consequence of a static library happening to exist on disk. Rung L3 of the
+# tolerance ladder (findings/FINDING-tolerance-rungs-2026-08-17.md) measures
+# Eigen JacobiSVD against LAPACKE_dgesvd at +780.75 nats on one config and
+# -433.63 on another, and it is the ONLY rung that moves a reported parameter.
+# A quantity that large must be selectable and recorded, not inferred from a
+# file test. Default ON preserves the published configuration exactly.
+option(USE_REF_LAPACK "Route Eigen's SVD through LAPACKE_dgesvd (published configuration)" ON)
 set(REF_LAPACK_ROOT ${CMAKE_SOURCE_DIR}/external/lapack-3.12.1/build)
-if(EXISTS ${REF_LAPACK_ROOT}/lib/liblapacke.a)
+if(USE_REF_LAPACK AND EXISTS ${REF_LAPACK_ROOT}/lib/liblapacke.a)
     set(REF_LAPACK_FOUND TRUE)
-    message(STATUS "Reference LAPACK found at ${REF_LAPACK_ROOT}")
+    message(STATUS "Reference LAPACK found at ${REF_LAPACK_ROOT} (EIGEN_USE_LAPACKE ON)")
+elseif(NOT USE_REF_LAPACK)
+    message(STATUS "USE_REF_LAPACK=OFF: Eigen's own JacobiSVD will be used")
 endif()
 
 # REQ-005 Stage 2b: locally-built OpenBLAS 0.3.33 (BLAS + LAPACK + LAPACKE bundled,

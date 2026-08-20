@@ -26,6 +26,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <cstdlib>
 #include <functional>
 
 /**
@@ -246,6 +247,12 @@ struct DWNominateResult
     // Lista de IDs unicos de legisladores procesados
     std::vector<int> legislatorUniqueIds;
 
+    // Periodos EFECTIVAMENTE SERVIDOS por cada legislador, en orden ascendente.
+    // El optimizador normaliza el tiempo sobre ESTE span (xinc = 2/(kk-1)), no
+    // sobre la rejilla global de numPeriods. Sin este mapa el exportador no
+    // puede reproducir la configuracion ajustada. Ver getCoordinatesAtPeriod.
+    std::map<int, std::vector<int>> servedPeriodsByLegislator;
+
     // Configuracion del modelo para reconstruccion
     int numPeriods;    // Numero de periodos (congresos)
     int temporalModel; // Modelo temporal (0=constante, 1=lineal, 2=cuadratico, 3=cubico)
@@ -285,12 +292,71 @@ struct DWNominateResult
         int ns = static_cast<int>(coef.cols());
         Eigen::VectorXd coords(ns);
 
-        // Calcular tiempo normalizado t en [-1, 1]
-        // period es 1-based, convertir a 0-based index
+        // FIX 2026-08-20 (a): el tiempo se normaliza sobre el span SERVIDO por
+        // este legislador, exactamente como buildLegendreTimeTrends y
+        // reconstructLegislatorCoords (xinc = 2/(kk-1) sobre servedPeriods).
+        //
+        // Antes se usaba la rejilla GLOBAL, t = -1 + 2*(period-1)/(numPeriods-1),
+        // que es una abscisa distinta a la que vio el optimizador. Para un
+        // legislador que no sirve el panel completo eso evalua su polinomio
+        // FUERA del rango en que fue ajustado, es decir extrapola. El efecto es
+        // cero en los extremos del panel (donde t_local == t_global) y maximo a
+        // mitad de panel, y era responsable de ~90% del desacuerdo aparente
+        // contra el Fortran en el panel dinamico chileno
+        // (r2 0.9190 -> 0.9942, distancia media 2D 0.1154 -> 0.0380).
+        //
+        // FIX 2026-08-20 (b): se respeta el orden polinomico efectivo, igual que
+        // reconstructLegislatorCoords (REQ-003). Antes se sumaban SIEMPRE los 4
+        // terminos de Legendre, filtrando al output el coeficiente cubico que la
+        // inicializacion OLS ajusta pero que el optimizador nunca toca en
+        // modelos lineal o cuadratico.
+        //
+        // FIX 2026-08-20 (c): un periodo NO servido ya no se exporta. Antes se
+        // rellenaba cada celda (legislador, periodo), 7774 filas contra 2855
+        // servidas en el panel chileno, y esa relleno es la trampa M-4: invita a
+        // comparar celdas donde el legislador no estuvo. El Fortran escribe solo
+        // las servidas en us_legout.dat.
+        //
+        // DWNOM_EXPORT_GLOBAL_T=1 reproduce el comportamiento anterior exacto,
+        // siguiendo el patron de DWNOM_CUTPLANE_FILTER_ABSENT.
+        static const bool legacyGlobalT =
+            (std::getenv("DWNOM_EXPORT_GLOBAL_T") != nullptr);
+
         double t = 0.0;
-        if (numPeriods > 1)
+        int effOrder = 3;
+
+        if (legacyGlobalT)
         {
-            t = -1.0 + 2.0 * static_cast<double>(period - 1) / static_cast<double>(numPeriods - 1);
+            if (numPeriods > 1)
+            {
+                t = -1.0 + 2.0 * static_cast<double>(period - 1) / static_cast<double>(numPeriods - 1);
+            }
+        }
+        else
+        {
+            auto sp = servedPeriodsByLegislator.find(uniqueId);
+            if (sp == servedPeriodsByLegislator.end())
+            {
+                return Eigen::VectorXd();
+            }
+            const std::vector<int> &served = sp->second;
+            int kk = static_cast<int>(served.size());
+            int idx = -1;
+            for (int i = 0; i < kk; ++i)
+            {
+                if (served[i] == period) { idx = i; break; }
+            }
+            if (idx < 0)
+            {
+                return Eigen::VectorXd();   // no sirvio este periodo
+            }
+            if (kk > 1)
+            {
+                t = -1.0 + static_cast<double>(idx) * (2.0 / (static_cast<double>(kk) - 1.0));
+            }
+            effOrder = getEffectiveTemporalOrder(uniqueId);
+            if (effOrder < 0) effOrder = 0;
+            if (effOrder > temporalModel) effOrder = temporalModel;
         }
 
         // Polinomios de Legendre
@@ -299,10 +365,13 @@ struct DWNominateResult
         double p2 = (3.0 * t * t - 1.0) / 2.0;
         double p3 = (5.0 * t * t * t - 3.0 * t) / 2.0;
 
-        // Reconstruir coordenadas para cada dimension
         for (int k = 0; k < ns; ++k)
         {
-            coords(k) = coef(0, k) * p0 + coef(1, k) * p1 + coef(2, k) * p2 + coef(3, k) * p3;
+            double v = coef(0, k) * p0;
+            if (effOrder >= 1) v += coef(1, k) * p1;
+            if (effOrder >= 2) v += coef(2, k) * p2;
+            if (effOrder >= 3) v += coef(3, k) * p3;
+            coords(k) = v;
         }
 
         return coords;
@@ -434,6 +503,10 @@ private:
     // Coeficientes temporales por legislador (XBETA): uniqueId -> Matrix(4, numDim)
     // Almacena los coeficientes de Legendre para reconstruir coordenadas por periodo
     std::map<int, Eigen::MatrixXd> temporalCoefficients_;
+
+    // Periodos servidos por legislador, capturados en reconstructLegislatorCoords
+    // y copiados al resultado para que el exportador use el mismo t local.
+    std::map<int, std::vector<int>> servedPeriodsByLeg_;
 
     // Polaridad de cortes por roll call
     std::vector<CuttingPolarity> rollCallPolarity_; // MCUTS
