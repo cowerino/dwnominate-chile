@@ -53,3 +53,30 @@ emite sólo los períodos servidos, igual que `us_legout.dat`.
 `../rejected-2026-08-20/` guarda las dos series anteriores del mismo día: las de segmentos de
 desplazamiento (tres estilos de datos en un panel) y las facetadas por partido (muchos discos por
 figura). Ambas rechazadas por Roberto. **Un disco por figura.**
+
+## Verificación de procedencia, 2026-08-20
+
+La afirmación de arriba fue **verificada re-corriendo, no inferida de fechas**. Los seis brazos C++
+se volvieron a correr con el binario actual (`quevotan-api@79031cf`, construido 10:33:25) y cada
+salida es **MD5-idéntica** a la que alimenta estas figuras:
+
+| brazo | log-likelihood | `cpp_coordinates_all_periods.csv` |
+|---|---|---|
+| Chile leg 353 (estático) | −1132.370286 | `d2cc9504c3d66a28fd0de06702b5e05d` |
+| Chile leg 366 (estático) | −6276.201346 | `84d5bdbd22fc3cf5a14fa53275f2ef5c` |
+| Chile leg 368 (estático) | −13296.521959 | `c36370c4bee800de5af7d63414e5bf34` |
+| US Senate 90 (estático) | −15457.166891 | `1d7ddae68090eedd31eb1fd99d4ab2b2` |
+| US 5 períodos (dinámico) | −38462.783549 | `2f6098674a42446084d82fa4d5f30447` |
+| Chile 23 períodos (dinámico) | −98603.656973 | `54141afe0d427217c9b203a6413623fb` |
+
+El panel dinámico chileno merecía la duda: su corrida original es anterior a la construcción del
+binario con la semilla de respaldo en el origen. La corrección resulta **inerte** en ese panel, y el
+log dice por qué: `Coordenadas aplicadas: 2685 per-(leg,período), 170 per-legislador, 0 fallback`.
+La semilla de respaldo sólo actúa sobre legisladores que caen al fallback, y aquí no cae ninguno,
+igual que la legislatura 366 quedó byte-idéntica en el caso estático por no tener ninguno.
+
+**Ninguna figura de este directorio necesita regenerarse.**
+
+Lo que sí falta: las salidas del motor no registran con qué binario se produjeron. `expfix_dyn` ni
+siquiera dejó `run.log`. La única forma de resolver esta pregunta fue volver a correr todo. Estampar
+el commit del motor en `cpp_summary.csv` lo haría verificable sin re-correr.
