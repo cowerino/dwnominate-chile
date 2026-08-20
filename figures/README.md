@@ -21,6 +21,27 @@ promedio sobre los períodos servidos, 2002-2021.
 
 **US, dinámico (panel de 5 períodos)** — `us-dyn-p5-{fortran,ours}` y `us-dyn-carrera-{fortran,ours}`.
 
+## Extensión 2026-08-20: motor modern
+
+Se agregaron las mismas 20 ranuras para `engine-modern` en dos modos escalares:
+
+- `*-modern-local.{png,pdf}`
+- `*-modern-global.{png,pdf}`
+
+La convención de estilo es la misma (un disco por figura, círculo unitario, ejes punteados, leyenda abajo).
+
+Generación reproducible en este repo con:
+
+- `figures/generate_modern_maps.py`
+
+Entradas:
+
+- `results/2026-08-20-three-engine/*/modern-ltr-{local,global}/cpp_coordinates_all_periods_corrected.csv`
+
+La guía operativa completa está en:
+
+- `figures/REBUILD-THREE-ENGINE-2026-08-20.md`
+
 ## Procedencia
 
 Todos los brazos C++ se corrieron el 2026-08-20 con el binario **completamente corregido**:
