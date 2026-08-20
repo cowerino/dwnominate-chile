@@ -1,7 +1,13 @@
 "parameter","value"
-"w1",1
-"w2",0.386339038610458
-"beta",8.31815528869629
+"log_likelihood",NA
 "iterations",4
+"valid_votes",NA
+"correct_classifications",NA
+"classification_pct",NA
+"w1",1
+"w2",0.33129757642746
+"beta",7.0804615020752
+"temporal_model",2
+"dimensions",2
 "periods",23
-"model",2
+"elapsed_seconds",168.653844833374
