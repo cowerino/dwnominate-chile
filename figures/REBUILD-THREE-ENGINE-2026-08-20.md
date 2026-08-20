@@ -1,3 +1,24 @@
+> ## STOP: the dynamic engine-modern maps are contaminated and must be rebuilt
+>
+> `engine-modern` lacks the export-frame fix. On the Chilean dynamic panel it emits **7,774** rows
+> against `engine-faithful`'s **2,855**; the extra 4,919 are placements for (legislator, period)
+> pairs the member never served, and its `..._corrected.csv` is identical to its raw export.
+>
+> Measured effect on the figures already rendered:
+>
+> | figure | faithful points | modern points | phantom |
+> |---|---:|---:|---:|
+> | `cl-dyn-leg353-modern-*` | 121 | 338 | 217 (64 %) |
+> | `cl-dyn-leg366-modern-*` | 155 | 338 | 183 (54 %) |
+> | `cl-dyn-leg368-modern-*` | 161 | 338 | 177 (52 %) |
+> | `cl-dyn-carrera-modern-*` | mean over 8.45 periods | mean over 23.00 | every average contaminated |
+>
+> **Fix:** build the served-pair key set from the matching `engine-faithful` export
+> (`cpp_coordinates_all_periods_corrected.csv`, columns `legislator_id` and `period`) and inner-join
+> every `engine-modern` dynamic export to it before plotting or averaging. The static panels are
+> unaffected. Likelihoods, weights and timings are unaffected: the optimiser already uses served
+> spans, so this is an export defect only.
+
 # Figure rebuild playbook (one map per figure)
 
 This document is the handoff for an external agent to regenerate figures from the published

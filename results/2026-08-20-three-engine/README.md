@@ -143,3 +143,27 @@ Set `OMP_NUM_THREADS=1` for comparable timings. Drop `--block-solver` and `--sca
 - The Fortran wall clocks come from earlier sessions on unknown flags and load. The
   faithful-versus-modern timings were measured back to back on one machine and are directly
   comparable; the Fortran ratios need a same-session re-run before being quoted.
+
+## 7. Known defect in the dynamic exports, read before plotting
+
+`engine-modern` does **not** carry the export-frame fix that `engine-faithful` has. On the Chilean
+dynamic panel it writes **7,774** rows where `engine-faithful` writes **2,855**, the extra 4,919
+being padded placements for (legislator, period) pairs the member did not serve. Its
+`cpp_coordinates_all_periods_corrected.csv` is identical to its raw export.
+
+**Filter any dynamic `engine-modern` export to the served pairs before plotting or correlating**,
+taking the roster of served keys from the corresponding `engine-faithful` export. Unfiltered, about
+63 % of the plotted points on that panel are phantoms.
+
+This is an **export and plotting defect only**. The optimiser and the likelihood already operate on
+served spans, so every likelihood, weight and timing in section 1 is unaffected.
+
+On the served subset, dimension 1 agrees closely between the engines (r = 0.973) while dimension 2
+does not (r = 0.784, modern's spread 17 % wider), and the disagreement is confined to the dynamic
+panels: every static panel is at r = 0.962 to 0.998 on both dimensions.
+
+**Out-of-disk placements in the dynamic model are expected.** The unit-ball constraint applies to the
+intercept, while the per-period coordinate is the intercept plus Legendre terms and is not
+re-projected. Legislators serving a single period, where the polynomial is inactive, sit at radius
+exactly 1.0000 with none outside; multi-period legislators reach 2.4161 with 6.5 % outside. The
+canonical Fortran behaves the same way.
