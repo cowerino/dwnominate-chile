@@ -12,6 +12,8 @@ include(CTest)
 option(DWNOMINATE_FETCH_DEPENDENCIES
        "Download Eigen and NLopt when they are not installed" ON)
 option(DWNOMINATE_ENABLE_OPENMP "Parallelize independent model blocks" OFF)
+option(DWNOMINATE_ENABLE_REGRESSION_TESTS
+       "Run the committed Chile and US numerical regression panels" OFF)
 
 find_package(Eigen3 3.4 CONFIG QUIET)
 if(NOT Eigen3_FOUND)
@@ -103,6 +105,7 @@ set_target_properties(dwnominate_modern PROPERTIES OUTPUT_NAME dwnominate-modern
 target_link_libraries(dwnominate_modern PRIVATE dwnominate_core)
 
 if(BUILD_TESTING)
+    find_package(Python3 REQUIRED COMPONENTS Interpreter)
     add_executable(test_unit_ball tests/test_unit_ball.cpp)
     target_link_libraries(test_unit_ball PRIVATE dwnominate_core)
     add_test(NAME unit_ball_constraints COMMAND test_unit_ball)
@@ -110,4 +113,63 @@ if(BUILD_TESTING)
     add_executable(test_scalar_optimizer tests/test_scalar_optimizer.cpp)
     target_link_libraries(test_scalar_optimizer PRIVATE dwnominate_core)
     add_test(NAME scalar_optimizer COMMAND test_scalar_optimizer)
+
+    add_executable(test_legacy_input_rounding tests/test_legacy_input_rounding.cpp)
+    target_link_libraries(test_legacy_input_rounding PRIVATE dwnominate_core)
+    add_test(NAME legacy_input_rounding COMMAND test_legacy_input_rounding)
+
+    add_executable(test_cutplane_alignment tests/test_cutplane_alignment.cpp)
+    target_link_libraries(test_cutplane_alignment PRIVATE dwnominate_core)
+    add_test(NAME cutplane_alignment COMMAND test_cutplane_alignment)
+
+    add_executable(test_optimizer_gradients tests/test_optimizer_gradients.cpp)
+    target_link_libraries(test_optimizer_gradients PRIVATE dwnominate_core)
+    add_test(NAME optimizer_gradients COMMAND test_optimizer_gradients)
+
+    add_executable(test_feasibility_contract tests/test_feasibility_contract.cpp)
+    target_link_libraries(test_feasibility_contract PRIVATE dwnominate_core)
+    add_test(NAME feasibility_contract COMMAND test_feasibility_contract)
+
+    add_test(
+        NAME chile_static_alias_smoke
+        COMMAND dwnominate_modern
+            --input-dir=${CMAKE_CURRENT_SOURCE_DIR}/../data/chile-static/leg353
+            --output-dir=${CMAKE_CURRENT_BINARY_DIR}/test-output/chile353
+            --wnominate=${CMAKE_CURRENT_SOURCE_DIR}/../data/chile-static/leg353/wnominate_coordinates.csv
+            --model=0 --iterations=1 --dimensions=2
+            --block-solver=slsqp --scalar-search=local
+    )
+    set_tests_properties(chile_static_alias_smoke PROPERTIES TIMEOUT 60)
+
+    add_test(
+        NAME convergence_and_served_export
+        COMMAND ${Python3_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_convergence_and_export.py
+            $<TARGET_FILE:dwnominate_modern>
+            ${CMAKE_CURRENT_SOURCE_DIR}/../data/chile-static/leg353
+            ${CMAKE_CURRENT_BINARY_DIR}/test-output/convergence-chile353
+    )
+    set_tests_properties(convergence_and_served_export PROPERTIES TIMEOUT 120)
+
+    add_test(
+        NAME dynamic_state_roundtrip
+        COMMAND ${Python3_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_dynamic_roundtrip.py
+            $<TARGET_FILE:dwnominate_modern>
+            ${CMAKE_CURRENT_SOURCE_DIR}/../engine-faithful/benchmarks/us/cpp_input
+            ${CMAKE_CURRENT_BINARY_DIR}/test-output/dynamic-roundtrip
+    )
+    set_tests_properties(dynamic_state_roundtrip PROPERTIES TIMEOUT 180)
+
+    if(DWNOMINATE_ENABLE_REGRESSION_TESTS)
+        add_test(
+            NAME reference_panels
+            COMMAND ${Python3_EXECUTABLE}
+                ${CMAKE_CURRENT_SOURCE_DIR}/tools/validate_reference_panels.py
+                --binary=$<TARGET_FILE:dwnominate_modern>
+                --repo-root=${CMAKE_CURRENT_SOURCE_DIR}/..
+                --work-dir=${CMAKE_CURRENT_BINARY_DIR}/regression-output
+        )
+        set_tests_properties(reference_panels PROPERTIES TIMEOUT 300)
+    endif()
 endif()

@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
-"""Generate modern-local/global disk maps from Julio's re-run (overlay results).
+"""Generate dynamic modern disk maps from repository-contained results.
 
-Reads from:  results/2026-08-20-three-engine
-Writes to:   figures/rerun-2026-08-20/
-
-Only the dynamic panels were re-run (chile-dyn-m2, us-dyn-5p), modern arms only.
-Outputs 12 map slots × 2 formats = 24 files.
+The script deliberately has no machine-specific paths. It renders every modern
+arm that exists under ``results/2026-08-20-converged-modern`` and skips absent
+arms, so a certified global-only publication is supported.
 """
 from __future__ import annotations
 
@@ -19,14 +17,12 @@ import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-FIGDIR = ROOT / "figures" / "rerun-2026-08-20"
-RESDIR = ROOT / "results" / "2026-08-20-three-engine"
+FIGDIR = ROOT / "figures" / "converged-modern-2026-08-20"
+RESDIR = ROOT / "results" / "2026-08-20-converged-modern"
 
-# Metadata is vendored in this repository.
-DATADIR = ROOT / "data"
-CHILE_META = DATADIR / "chile-dynamic" / "legislator_metadata.csv"
-US90_META = DATADIR / "us-sen90" / "legislator_metadata.csv"
-USDYN_META = DATADIR / "us-dynamic-5p" / "legislator_metadata.csv"
+CHILE_META = ROOT / "data" / "chile-dynamic" / "legislator_metadata.csv"
+US90_META = ROOT / "engine-faithful" / "benchmarks" / "sen90" / "legislator_metadata.csv"
+USDYN_META = ROOT / "engine-faithful" / "benchmarks" / "us" / "cpp_input" / "legislator_metadata.csv"
 
 PARTY_LR = {
     "PRep": 1.0,
@@ -89,7 +85,7 @@ def load_party_maps() -> tuple[dict[int, str], dict[int, str]]:
 
 def load_coords(path: Path) -> pd.DataFrame:
     df = pd.read_csv(path)
-    out = df[["legislator_id", "period", "coord1D", "coord2D"]].copy()
+    out = df[["legislator_id", "period", "coord1D", "coord2D", "effective_model"]].copy()
     out["legislator_id"] = out["legislator_id"].astype(int)
     out["period"] = out["period"].astype(int)
     return out
@@ -134,7 +130,12 @@ def draw_disk_map(df: pd.DataFrame, title: str, subtitle: str, out_base: Path, *
     ax.axhline(0, color="#7f7f7f", lw=0.55, ls=":")
     ax.axvline(0, color="#7f7f7f", lw=0.55, ls=":")
 
-    lim = 1.05
+    # The unit disk is a reference for the constrained temporal intercept and
+    # roll-call midpoints, not a hard bound on every realised dynamic
+    # coordinate.  Never clip legitimate higher-order trajectories.
+    finite = df[["coord1D", "coord2D"]].to_numpy(dtype=float)
+    finite = finite[np.isfinite(finite)]
+    lim = max(1.05, 1.05 * float(np.max(np.abs(finite)))) if finite.size else 1.05
     ax.set_xlim(-lim, lim)
     ax.set_ylim(-lim, lim)
     ax.set_aspect("equal", "box")
@@ -172,12 +173,40 @@ def draw_disk_map(df: pd.DataFrame, title: str, subtitle: str, out_base: Path, *
     plt.close(fig)
 
 
-def mean_by_legislator(df: pd.DataFrame) -> pd.DataFrame:
-    return (
-        df.groupby("legislator_id", as_index=False)[["coord1D", "coord2D"]]
-        .mean()
-        .assign(period=1)
-    )
+def temporal_center_by_legislator(df: pd.DataFrame) -> pd.DataFrame:
+    """Recover beta_0 in the exact compact Legendre basis used by the engine.
+
+    For a linear trajectory beta_0 is also the arithmetic mean.  For a finite
+    quadratic trajectory it generally is not: mean(P2) = 1 / (S - 1).
+    Plotting the arithmetic mean as the constrained career centre would
+    therefore be misleading for model 2.
+    """
+    centers = []
+    for legislator_id, group in df.groupby("legislator_id"):
+        group = group.sort_values("period")
+        served = len(group)
+        order = int(group["effective_model"].iloc[0])
+        t = np.linspace(-1.0, 1.0, served) if served > 1 else np.array([-1.0])
+        basis = np.column_stack(
+            [
+                np.ones(served),
+                t,
+                (3.0 * t * t - 1.0) / 2.0,
+                (5.0 * t * t * t - 3.0 * t) / 2.0,
+            ][: order + 1]
+        )
+        coordinates = group[["coord1D", "coord2D"]].to_numpy(dtype=float)
+        beta = np.linalg.lstsq(basis, coordinates, rcond=None)[0]
+        centers.append(
+            {
+                "legislator_id": int(legislator_id),
+                "period": 1,
+                "coord1D": beta[0, 0],
+                "coord2D": beta[0, 1],
+                "effective_model": order,
+            }
+        )
+    return pd.DataFrame(centers)
 
 
 def main() -> None:
@@ -190,14 +219,14 @@ def main() -> None:
         "cl-dyn-leg353": ("chile-dyn-m2", 8, False, "Chile · legislatura 353 · panel dinámico de 23"),
         "cl-dyn-leg366": ("chile-dyn-m2", 21, False, "Chile · legislatura 366 · panel dinámico de 23"),
         "cl-dyn-leg368": ("chile-dyn-m2", 23, False, "Chile · legislatura 368 · panel dinámico de 23"),
-        "cl-dyn-carrera": ("chile-dyn-m2", "career", False, "Chile · promedio de carrera · panel dinámico de 23"),
+        "cl-dyn-carrera": ("chile-dyn-m2", "career", False, "Chile · centro temporal beta_0 · panel dinámico de 23"),
         "us-dyn-p5": ("us-dyn-5p", 5, True, "US Senate · último período del panel de 5"),
-        "us-dyn-carrera": ("us-dyn-5p", "career", True, "US Senate · promedio de carrera · panel dinámico de 5"),
+        "us-dyn-carrera": ("us-dyn-5p", "career", True, "US Senate · centro temporal beta_0 · panel dinámico de 5"),
     }
 
     modes = {
         "modern-local": "modern-ltr-local",
-        "modern-global": "modern-ltr-global",
+        "modern-global": "modern-global",
     }
 
     generated = []
@@ -205,10 +234,12 @@ def main() -> None:
     for base_name, (panel_dir, slice_spec, is_us, panel_title) in mapping.items():
         for mode_short, arm in modes.items():
             src = RESDIR / panel_dir / arm / "cpp_coordinates_all_periods_corrected.csv"
+            if not src.exists():
+                continue
             df = load_coords(src)
 
             if slice_spec == "career":
-                dfp = mean_by_legislator(df)
+                dfp = temporal_center_by_legislator(df)
             elif slice_spec is None:
                 dfp = df.copy()
             else:
@@ -219,15 +250,17 @@ def main() -> None:
                 dfp = orient_dim1(dfp, "party", {"R"})
                 subtitle = (
                     "corte transversal del ajuste de 5 períodos" if base_name == "us-dyn-p5"
-                    else "promedio sobre períodos servidos"
+                    else "intercepto de la trayectoria en base de Legendre"
                 )
             else:
                 dfp["party"] = dfp["legislator_id"].map(chile_party).fillna("IND")
                 dfp = orient_dim1(dfp, "party", {"UDI", "RN", "EVOP", "PRep"})
                 subtitle = (
                     "corte transversal del ajuste de 23 períodos" if "leg" in base_name
-                    else "promedio sobre períodos servidos"
+                    else "intercepto de la trayectoria en base de Legendre"
                 )
+                if set(dfp["party"].astype(str)) <= {"IND"}:
+                    subtitle += " · partidos no disponibles en los metadatos del repositorio"
 
             title = f"{panel_title} · C++ engine-modern ({'local' if mode_short == 'modern-local' else 'global'})"
             out_base = FIGDIR / f"{base_name}-{mode_short}"

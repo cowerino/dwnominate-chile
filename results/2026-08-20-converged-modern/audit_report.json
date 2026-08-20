@@ -16,6 +16,16 @@
     "infeasible_accepted_blocks": 0,
     "accepted_decreases": 0,
     "max_rollcall_midpoint_radius": 1.0000000000000007,
+    "temporal_center_audit": {
+      "legislators": 338,
+      "max_intercept_radius": 1.0000000000000004,
+      "intercepts_outside_unit_circle": 0,
+      "max_arithmetic_mean_radius": 1.0326040639506469,
+      "arithmetic_means_outside_unit_circle": 5,
+      "max_realised_radius": 2.9905186119597644,
+      "realised_positions_outside_unit_circle": 294,
+      "max_reconstruction_error": 1.3322676295501878e-15
+    },
     "boundary_parameters": ["beta"]
   },
   "us_dynamic_model1": {
@@ -28,6 +38,16 @@
     "infeasible_accepted_blocks": 0,
     "accepted_decreases": 0,
     "max_rollcall_midpoint_radius": 1.0000000000000007,
+    "temporal_center_audit": {
+      "legislators": 168,
+      "max_intercept_radius": 1.0000000000000002,
+      "intercepts_outside_unit_circle": 0,
+      "max_arithmetic_mean_radius": 1.0000000000000002,
+      "arithmetic_means_outside_unit_circle": 0,
+      "max_realised_radius": 1.1647694032496103,
+      "realised_positions_outside_unit_circle": 5,
+      "max_reconstruction_error": 8.881784197001252e-16
+    },
     "boundary_parameters": ["beta"]
   }
 }
