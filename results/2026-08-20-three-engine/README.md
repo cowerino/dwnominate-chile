@@ -167,3 +167,32 @@ intercept, while the per-period coordinate is the intercept plus Legendre terms 
 re-projected. Legislators serving a single period, where the polynomial is inactive, sit at radius
 exactly 1.0000 with none outside; multi-period legislators reach 2.4161 with 6.5 % outside. The
 canonical Fortran behaves the same way.
+
+## 2026-08-20: the Fortran arm was replaced, and the previous one was misaligned
+
+`chile-dyn-m2/fortran/` now holds a re-export fit on `data/chile-dynamic`, the panel every other arm
+in this directory uses. **The arm published here before was fit on a different panel.**
+
+It came from `test_23periods_global`, 13,583 roll calls against this panel's 12,952. The difference
+is an index shift, not a screen: the old panel's period *k* is byte-identical to this panel's period
+*k+1* for 22 of 22 periods, this panel prepending a 25-roll-call period and dropping the old final
+period of 656. So every period-sliced comparison put the Fortran arm one legislature away from the
+C++ arms beside it, and the `cl-dyn-leg368` slot compared against a period this panel does not
+contain.
+
+The re-export also carries `dwnominate_bill_parameters.csv`, the six-column `(session, ID, ...)`
+form, so this terminal state can be scored by the common evaluator. The five-column
+`bill_parameters.csv` is kept unchanged.
+
+| | previous arm | this arm |
+|---|---:|---:|
+| bill rows | 13,583 | **12,952**, equal to the panel |
+| coordinate rows | 7,820 | **7,774** |
+| `w2` | 0.386339 | **0.331298** |
+| `beta` | 8.318155 | **7.080462** |
+
+**The four `cl-dyn-*-fortran` figures are rebuilt from this arm.** The dimension-2 gauge against
+`engine-faithful` moves from `r = −0.02`, which the polarity guard rightly refused to act on, to
+`r = −0.305`, which it can pin. Note what that does and does not mean: the gauge is now
+determinable, and dimension-2 agreement between the Fortran and the C++ on this dynamic panel is
+still weak. Those are different claims.
