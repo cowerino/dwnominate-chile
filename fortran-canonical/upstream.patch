@@ -1,0 +1,11 @@
+--- a/src/DW-NOMINATE.f	(upstream wmay/dwnominate @ 02d0876)
++++ b/fortran_standalone/DW-NOMINATE.f	(quevotan-db local)
+@@ -3018,7 +3018,7 @@
+          GO TO 9377
+       ENDIF
+ C
+-C  SET-UP FOR GRID SEARCH FOR BEST CUTTING LINE 
++C  SET-UP FOR GRID SEARCH FOR BEST CUTTING LINE
+ C
+       NCUT=25
+       CALL SEARCH(IIII,JX,NCUT,NS,NP,NRCALL,KCUT,LCUT,KTT,KT,
