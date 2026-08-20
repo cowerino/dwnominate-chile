@@ -12,6 +12,8 @@ include(CTest)
 option(DWNOMINATE_FETCH_DEPENDENCIES
        "Download Eigen and NLopt when they are not installed" ON)
 option(DWNOMINATE_ENABLE_OPENMP "Parallelize independent model blocks" OFF)
+option(DWNOMINATE_ENABLE_REGRESSION_TESTS
+       "Run the committed Chile and US numerical regression panels" OFF)
 
 find_package(Eigen3 3.4 CONFIG QUIET)
 if(NOT Eigen3_FOUND)
@@ -110,4 +112,40 @@ if(BUILD_TESTING)
     add_executable(test_scalar_optimizer tests/test_scalar_optimizer.cpp)
     target_link_libraries(test_scalar_optimizer PRIVATE dwnominate_core)
     add_test(NAME scalar_optimizer COMMAND test_scalar_optimizer)
+
+    add_executable(test_legacy_input_rounding tests/test_legacy_input_rounding.cpp)
+    target_link_libraries(test_legacy_input_rounding PRIVATE dwnominate_core)
+    add_test(NAME legacy_input_rounding COMMAND test_legacy_input_rounding)
+
+    add_executable(test_cutplane_alignment tests/test_cutplane_alignment.cpp)
+    target_link_libraries(test_cutplane_alignment PRIVATE dwnominate_core)
+    add_test(NAME cutplane_alignment COMMAND test_cutplane_alignment)
+
+    add_executable(test_optimizer_gradients tests/test_optimizer_gradients.cpp)
+    target_link_libraries(test_optimizer_gradients PRIVATE dwnominate_core)
+    add_test(NAME optimizer_gradients COMMAND test_optimizer_gradients)
+
+    add_test(
+        NAME chile_static_alias_smoke
+        COMMAND dwnominate_modern
+            --input-dir=${CMAKE_CURRENT_SOURCE_DIR}/../data/chile-static/leg353
+            --output-dir=${CMAKE_CURRENT_BINARY_DIR}/test-output/chile353
+            --wnominate=${CMAKE_CURRENT_SOURCE_DIR}/../data/chile-static/leg353/wnominate_coordinates.csv
+            --model=0 --iterations=1 --dimensions=2
+            --block-solver=slsqp --scalar-search=local
+    )
+    set_tests_properties(chile_static_alias_smoke PROPERTIES TIMEOUT 60)
+
+    if(DWNOMINATE_ENABLE_REGRESSION_TESTS)
+        find_package(Python3 REQUIRED COMPONENTS Interpreter)
+        add_test(
+            NAME reference_panels
+            COMMAND ${Python3_EXECUTABLE}
+                ${CMAKE_CURRENT_SOURCE_DIR}/tools/validate_reference_panels.py
+                --binary=$<TARGET_FILE:dwnominate_modern>
+                --repo-root=${CMAKE_CURRENT_SOURCE_DIR}/..
+                --work-dir=${CMAKE_CURRENT_BINARY_DIR}/regression-output
+        )
+        set_tests_properties(reference_panels PROPERTIES TIMEOUT 300)
+    endif()
 endif()

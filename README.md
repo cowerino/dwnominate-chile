@@ -16,9 +16,40 @@ Society (SCCC / JCC 2026). Roberto Nieves Tocornal, Pablo Antivil Morales, Julio
 | path | what |
 |---|---|
 | `engine-faithful/` | **the paper's engine.** Our C++ port of `dwnom2004` at `quevotan-api@79031cf`, sources, build files, benchmarks and the exact compiler flags. Every number in the paper comes from this tree |
-| `engine-modern/` | the NLopt variant (COBYLA / BOBYQA), authored by Julio Rojas-Mora. **A second engine and a cross-check, never the faithful one.** Partial: the `.cpp` files and build as of 2026-08-13. Two headers (`optimizer_options.hpp`, `parameter_optimizer.hpp`) and the newer SLSQP revision are not here yet |
+| `engine-modern/` | the complete NLopt variant (COBYLA, SLSQP and BOBYQA), authored by Julio Rojas-Mora. **A second engine and a cross-check, never the paper-faithful one.** Includes analytic gradients, deterministic telemetry, local scalar trust regions, unit/regression tests and the hybrid runner |
 | `data/chile-static/` | **the Chilean roll calls used for the static tests**, legislaturas 353, 366 and 368: vote matrix (`votes_matrix_p1.csv`, the name the loader expects), W-NOMINATE seed and metadata each, with a README carrying the padding and screen caveats and our agreement numbers |
 | `experimental/` | **two pre-fix trees, kept deliberately, not for results.** `f01e747-prefix-trunk/` is the known-bad build the validation suite is calibrated against; `e27ec21-prefix-projections-restored/` records a measured negative result plus unmerged patches. See `experimental/README.md` |
+
+> **This is the `dev` branch.** It carries the complete `engine-modern` tree, which `main` does not.
+> `engine-faithful/` is identical on both branches. Paper numbers come from `engine-faithful/` only;
+> nothing here changes that.
+
+## The modern engine on this branch
+
+`engine-modern/` is the full tree rather than the partial `.cpp` subset that `main` ships: both
+previously-missing headers (`optimizer_options.hpp`, `parameter_optimizer.hpp`), the SLSQP revision
+with analytic gradients, adaptive tolerances, telemetry, the faithful-then-polish hybrid runner, and
+a unit and regression test suite.
+
+The modern engine now defaults to a local BOBYQA box for `w2` and `beta`. The box is re-centred at
+every outer cycle and preserves the effective 16-step reach of Fortran's `WINT` and `SIGMAS` (`0.16`
+and `1.6` respectively). This prevents an exact conditional scalar solve on the crude first-cycle
+state from sending `beta` to its global lower bound and changing the basin of every later block.
+`--scalar-search=global` retains the former behaviour for explicit experiments.
+
+It builds and tests independently of `engine-faithful`:
+
+```
+cmake -S engine-modern -B build/engine-modern -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
+cmake --build build/engine-modern --parallel
+ctest --test-dir build/engine-modern --output-on-failure
+```
+
+Add `-DDWNOMINATE_ENABLE_REGRESSION_TESTS=ON` to run all three committed Chile panels, a
+byte-repeatability check, and the five-period US comparison against the committed Fortran
+coordinates.
+
+---
 
 ## Status, 2026-08-20
 
@@ -119,6 +150,10 @@ three of four static panels.
   later corrected: the unit-ball projection it removed is real and lives one level up, in the grid
   search that calls the likelihood evaluator rather than in the evaluator itself. The projections are
   restored in this tree.
+- `engine-faithful` filters missing-vote rows before `CUTPLANE`. The canonical Fortran passes all
+  `NPC` rows, maps missing votes to code 9 internally, and excludes them only from classification
+  counts. `engine-modern` preserves the latter contract. The distinction is documented because it can
+  change `SEARCH` geometry without changing the likelihood data.
 - The engine is compiled with fast-math relaxations, and its linear-algebra path is now an explicit
   build option, `USE_REF_LAPACK` (default ON), rather than inferred from a file test. It is still
   conditional: the LAPACKE route is taken only when the option is ON **and**
@@ -129,8 +164,6 @@ three of four static panels.
 
 ## Not here yet
 
-- The newer `engine-modern` revision (SLSQP with analytic gradients, adaptive tolerances, telemetry,
-  and a faithful-then-polish hybrid). Its authoritative copy is Julio's.
 - `reference-fortran/`, the canonical 2004 Fortran. Redistributable under MIT from
   `wmay/dwnominate` with attribution to William May, Keith T. Poole and Nolan McCarty.
 - `reproduce/`, the extraction scripts and per-figure receipts.

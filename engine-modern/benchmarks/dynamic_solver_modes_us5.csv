@@ -1,0 +1,4 @@
+mode,block_solver,adaptive,threads,periods,temporal_model,log_likelihood,elapsed_seconds,w2,beta,active_positions_outside_unit_ball,max_active_position_radius,bill_midpoints_outside_unit_ball,max_bill_midpoint_radius
+cobyla_reference,cobyla,0,4,5,1,-37123.688755,16.77,1.132032,4.034787,22,1.241125370403,0,1.000000000000001
+slsqp_adaptive_serial,slsqp,1,1,5,1,-37182.105308,11.48,1.060788,4.058377,20,1.239692021107,0,1.000000000000001
+slsqp_adaptive_openmp4,slsqp,1,4,5,1,-37182.105308,5.19,1.060788,4.058377,20,1.239692021107,0,1.000000000000001

@@ -3,6 +3,7 @@
 #include <nlopt.hpp>
 
 #include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <stdexcept>
 #include <vector>
@@ -130,11 +131,6 @@ struct LegislatorObjective
         std::vector<double> &gradient,
         void *opaque)
     {
-        if (!gradient.empty())
-        {
-            std::fill(gradient.begin(), gradient.end(), 0.0);
-        }
-
         auto &self = *static_cast<LegislatorObjective *>(opaque);
         ++self.evaluations;
         TemporalCoefficients coefficients(self.dimensions);
@@ -144,21 +140,37 @@ struct LegislatorObjective
             self.dimensions,
             coefficients);
 
-        return computeLegislatorDerivatives(
-                   self.legislatorIndex,
-                   self.periodInfo,
-                   self.timeTrends,
-                   coefficients,
-                   self.rollCallMidpoints,
-                   self.rollCallSpreads,
-                   self.votes,
-                   self.validRollCalls,
-                   self.weights,
-                   self.normalCDF,
-                   self.model,
-                   self.firstPeriod,
-                   self.lastPeriod)
-            .logLikelihood;
+        const auto result = computeLegislatorDerivatives(
+            self.legislatorIndex,
+            self.periodInfo,
+            self.timeTrends,
+            coefficients,
+            self.rollCallMidpoints,
+            self.rollCallSpreads,
+            self.votes,
+            self.validRollCalls,
+            self.weights,
+            self.normalCDF,
+            self.model,
+            self.firstPeriod,
+            self.lastPeriod);
+
+        if (!gradient.empty())
+        {
+            constexpr double inverseSqrtTwoPi =
+                0.39894228040143267793994605993438;
+            const double scale =
+                -2.0 * self.weights(self.dimensions) * inverseSqrtTwoPi;
+            const Eigen::VectorXd historicalDirection =
+                result.getDerivativesForModel(self.model);
+            for (Eigen::Index i = 0; i < historicalDirection.size(); ++i)
+            {
+                gradient[static_cast<std::size_t>(i)] =
+                    scale * historicalDirection(i);
+            }
+        }
+
+        return result.logLikelihood;
     }
 };
 
@@ -206,6 +218,18 @@ void storeDervish(
     output.dervish.row(2) = (derivatives.derivatives2 / denominator).transpose();
     output.dervish.row(3) = (derivatives.derivatives3 / denominator).transpose();
 }
+
+bool isSuccessful(nlopt::result status)
+{
+    return static_cast<int>(status) > 0;
+}
+
+nlopt::algorithm nloptAlgorithm(BlockOptimizerAlgorithm algorithm)
+{
+    return algorithm == BlockOptimizerAlgorithm::Slsqp
+               ? nlopt::LD_SLSQP
+               : nlopt::LN_COBYLA;
+}
 } // namespace
 
 LegislatorOptimizationResult optimizeLegislator(
@@ -223,6 +247,7 @@ LegislatorOptimizationResult optimizeLegislator(
     int lastPeriod,
     const LegislatorOptimizerConfig &config)
 {
+    const auto started = std::chrono::steady_clock::now();
     const int dimensions = static_cast<int>(weights.size()) - 1;
     LegislatorOptimizationResult output(dimensions);
 
@@ -305,41 +330,100 @@ LegislatorOptimizationResult optimizeLegislator(
         dimensions};
     InterceptConstraint constraint{dimensions};
 
-    nlopt::opt optimizer(
-        nlopt::LN_COBYLA,
-        static_cast<unsigned int>(parameters.size()));
-    optimizer.set_max_objective(&LegislatorObjective::evaluate, &objective);
-    optimizer.add_inequality_constraint(
-        &InterceptConstraint::evaluate,
-        &constraint,
-        config.constraintTolerance);
-    optimizer.set_maxeval(config.maxEvaluations);
-    optimizer.set_xtol_rel(config.relativeXTolerance);
-    optimizer.set_ftol_rel(config.relativeFTolerance);
-
-    std::vector<double> initialStep(parameters.size(), config.temporalInitialStep);
-    for (int k = 0; k < dimensions; ++k)
-    {
-        initialStep[static_cast<std::size_t>(k)] = config.interceptInitialStep;
-    }
-    optimizer.set_initial_step(initialStep);
-
+    const std::vector<double> initialParameters = parameters;
     std::vector<double> noGradient;
     double optimum =
         LegislatorObjective::evaluate(parameters, noGradient, &objective);
+    output.initialLogLikelihood = optimum;
 
-    nlopt::result status = nlopt::FAILURE;
-    try
+    auto runSolver = [&](BlockOptimizerAlgorithm algorithm,
+                         std::vector<double> &candidate,
+                         double &candidateOptimum) {
+        nlopt::opt optimizer(
+            nloptAlgorithm(algorithm),
+            static_cast<unsigned int>(candidate.size()));
+        optimizer.set_max_objective(&LegislatorObjective::evaluate, &objective);
+        optimizer.add_inequality_constraint(
+            &InterceptConstraint::evaluate,
+            &constraint,
+            config.constraintTolerance);
+        optimizer.set_maxeval(config.maxEvaluations);
+        optimizer.set_xtol_rel(config.relativeXTolerance);
+        optimizer.set_ftol_rel(config.relativeFTolerance);
+
+        if (algorithm == BlockOptimizerAlgorithm::Cobyla)
+        {
+            std::vector<double> initialStep(
+                candidate.size(), config.temporalInitialStep);
+            for (int k = 0; k < dimensions; ++k)
+            {
+                initialStep[static_cast<std::size_t>(k)] =
+                    config.interceptInitialStep;
+            }
+            optimizer.set_initial_step(initialStep);
+        }
+
+        nlopt::result status = nlopt::FAILURE;
+        try
+        {
+            status = optimizer.optimize(candidate, candidateOptimum);
+        }
+        catch (const nlopt::roundoff_limited &)
+        {
+            status = nlopt::ROUNDOFF_LIMITED;
+        }
+        catch (const nlopt::forced_stop &)
+        {
+            status = nlopt::FORCED_STOP;
+        }
+        catch (const std::exception &)
+        {
+            status = nlopt::FAILURE;
+        }
+        return status;
+    };
+
+    BlockOptimizerAlgorithm algorithmUsed = config.algorithm;
+    nlopt::result status = runSolver(algorithmUsed, parameters, optimum);
+
+    auto candidateLikelihood = [&]() {
+        TemporalCoefficients candidateCoefficients(dimensions);
+        copyParametersToCoefficients(
+            parameters, terms, dimensions, candidateCoefficients);
+        candidateCoefficients.beta.row(0) =
+            projectToInterior(
+                candidateCoefficients.beta.row(0).transpose(), 1.0)
+                .transpose();
+        return computeLegislatorDerivatives(
+                   legislatorIndex,
+                   periodInfo,
+                   trends,
+                   candidateCoefficients,
+                   rollCallMidpoints,
+                   rollCallSpreads,
+                   votes,
+                   validRollCalls,
+                   weights,
+                   normalCDF,
+                   model,
+                   firstPeriod,
+                   lastPeriod)
+            .logLikelihood;
+    };
+
+    const bool unusableSlsqp =
+        config.algorithm == BlockOptimizerAlgorithm::Slsqp &&
+        (!std::isfinite(optimum) ||
+         (!(isSuccessful(status) || status == nlopt::ROUNDOFF_LIMITED)) ||
+         candidateLikelihood() + 1e-8 < output.initialLogLikelihood);
+    if (unusableSlsqp && config.fallbackToCobyla)
     {
-        status = optimizer.optimize(parameters, optimum);
-    }
-    catch (const nlopt::roundoff_limited &)
-    {
-        status = nlopt::ROUNDOFF_LIMITED;
-    }
-    catch (const nlopt::forced_stop &)
-    {
-        status = nlopt::FORCED_STOP;
+        parameters = initialParameters;
+        optimum = output.initialLogLikelihood;
+        status = runSolver(
+            BlockOptimizerAlgorithm::Cobyla, parameters, optimum);
+        algorithmUsed = BlockOptimizerAlgorithm::Cobyla;
+        output.fallbackUsed = true;
     }
 
     TemporalCoefficients coefficients(dimensions);
@@ -371,8 +455,12 @@ LegislatorOptimizationResult optimizeLegislator(
     output.periodCoordinates = final.periodCoordinates;
     output.objectiveEvaluations = objective.evaluations;
     output.optimizerStatus = static_cast<int>(status);
-    output.converged = static_cast<int>(status) > 0 ||
+    output.algorithmUsed = algorithmUsed;
+    output.converged = isSuccessful(status) ||
                        status == nlopt::ROUNDOFF_LIMITED;
+    output.elapsedMilliseconds = std::chrono::duration<double, std::milli>(
+                                     std::chrono::steady_clock::now() - started)
+                                     .count();
 
     output.covariance0 = invertInformation(final.infoMatrix0, config.eigenThreshold);
     if (model >= TemporalModel::Linear)

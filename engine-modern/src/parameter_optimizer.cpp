@@ -63,6 +63,16 @@ ParameterOptimizationResult optimizeParameter(
         config.upperBound);
     context.weights(paramIndex) = output.initialValue;
 
+    double effectiveLower = config.lowerBound;
+    double effectiveUpper = config.upperBound;
+    if (config.localRadius > 0.0)
+    {
+        effectiveLower = std::max(
+            effectiveLower, output.initialValue - config.localRadius);
+        effectiveUpper = std::min(
+            effectiveUpper, output.initialValue + config.localRadius);
+    }
+
     output.initialLL = computeLogLikelihoodParallel(
                            context.legislatorCoords,
                            context.rollCallParams,
@@ -75,8 +85,8 @@ ParameterOptimizationResult optimizeParameter(
     ScalarObjective objective{context, paramIndex};
     nlopt::opt optimizer(nlopt::LN_BOBYQA, 1U);
     optimizer.set_max_objective(&ScalarObjective::evaluate, &objective);
-    optimizer.set_lower_bounds(std::vector<double>{config.lowerBound});
-    optimizer.set_upper_bounds(std::vector<double>{config.upperBound});
+    optimizer.set_lower_bounds(std::vector<double>{effectiveLower});
+    optimizer.set_upper_bounds(std::vector<double>{effectiveUpper});
     optimizer.set_initial_step(std::vector<double>{config.initialStep});
     optimizer.set_xtol_rel(config.relativeXTolerance);
     optimizer.set_ftol_rel(config.relativeFTolerance);
@@ -98,7 +108,7 @@ ParameterOptimizationResult optimizeParameter(
         status = nlopt::FORCED_STOP;
     }
 
-    output.value = std::clamp(x.front(), config.lowerBound, config.upperBound);
+    output.value = std::clamp(x.front(), effectiveLower, effectiveUpper);
     context.weights(paramIndex) = output.value;
     output.logLikelihood = computeLogLikelihoodParallel(
                                context.legislatorCoords,
@@ -108,10 +118,23 @@ ParameterOptimizationResult optimizeParameter(
                                context.normalCDF,
                                context.validRollCalls)
                                .logLikelihood;
+    // A failed or roundoff-limited local solve must never make the outer
+    // alternating trajectory worse. Keep the pre-solve state as the accepted
+    // point unless NLopt returns a finite non-decreasing objective.
+    const bool objectiveDidNotDecrease =
+        std::isfinite(output.logLikelihood) &&
+        output.logLikelihood + 1e-12 >= output.initialLL;
+    if (!objectiveDidNotDecrease)
+    {
+        output.value = output.initialValue;
+        context.weights(paramIndex) = output.initialValue;
+        output.logLikelihood = output.initialLL;
+    }
     output.iterations = objective.evaluations;
     output.optimizerStatus = static_cast<int>(status);
-    output.converged = static_cast<int>(status) > 0 ||
-                       status == nlopt::ROUNDOFF_LIMITED;
+    output.converged = objectiveDidNotDecrease &&
+                       (static_cast<int>(status) > 0 ||
+                        status == nlopt::ROUNDOFF_LIMITED);
     output.direction = (output.value > output.initialValue) -
                        (output.value < output.initialValue);
     return output;
