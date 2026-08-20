@@ -18,6 +18,22 @@
 > `cpp_coordinates_all_periods_corrected.csv`, never the raw export.** Mixing the two silently
 > mirrors a map, and dimension-2 polarity is not corrected downstream.
 
+> ## The Fortran dynamic export is padded too, rebuilt 2026-08-20
+>
+> Same defect, same fix. The canonical Fortran coordinate export carries **7,820** rows on the
+> Chilean dynamic panel against 2,855 served cells, so the published `cl-dyn-*-fortran` slots were
+> drawn with 340 points per cross-section instead of 121 / 155 / 161. Rebuilt via
+> `generate_fortran_dyn_maps.py`. Static Fortran slots were never padded and are untouched.
+>
+> Filtering changes the Fortran's own out-of-disk story: **244 outside (3.12 %, max r 2.1089)
+> unfiltered, against 68 (2.38 %, max 1.4694) on the served cells.**
+>
+> **Dimension-2 gauge against the Fortran is ambiguous on this panel**: its career-level dim-2
+> correlates `r = -0.02` with `engine-faithful`. The polarity guard deliberately does **not** fire
+> below `|r| = 0.3`, because flipping on the sign of a near-zero correlation is arbitrary. Treat any
+> Fortran-versus-C++ dimension-2 comparison on this panel as unresolved until the export frames are
+> reconciled: this Fortran export is labelled `global` while our corrected C++ export is at local t.
+
 ## Original defect report, kept for the record
 
 > ## STOP: the dynamic engine-modern maps are contaminated and must be rebuilt
