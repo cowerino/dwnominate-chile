@@ -1,0 +1,431 @@
+{
+ "figure_family": "fig2-admissibility",
+ "spec": "FIGURE-DESIGN-2026-08-11.md section 3, fig2-admissibility (rank 3, essential)",
+ "generated_utc": "2026-08-11T16:30:49+00:00",
+ "generator": "C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\figgen-2026-08-11\\fig2-admissibility.py",
+ "generating_command": "python \"C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\figgen-2026-08-11\\fig2-admissibility.py\" --figdir \"C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\figs\\v2026-08-11\"",
+ "python": "3.14.3",
+ "matplotlib": "3.10.8",
+ "numpy": "2.4.4",
+ "include_width": {
+  "figsize_in": [
+   3.5,
+   null
+  ],
+  "columnwidth_pt": 252,
+  "bbox_inches": null,
+  "pad_inches": 0.01,
+  "note": "authored at scale 1.0; never use bbox_inches='tight'"
+ },
+ "pdf_fonttype": 42,
+ "font_family": [
+  "sans-serif"
+ ],
+ "panel": {
+  "name": "chile 23-period panel",
+  "legislaturas": "346-368",
+  "periods": 23,
+  "valid_votes": 692839,
+  "input_dir": "reproduce/out/chile/cpp_input/",
+  "numerator_legislaturas": [
+   366,
+   367,
+   368
+  ],
+  "data_contract": "DATA-CONTRACT-2026-08-05.md section 4 and section 8"
+ },
+ "alignment": {
+  "fortran_artifact_read": null,
+  "banned_artifact": "dwnom2004_chile (347-369 panel, us.num line 1 '1 103 120 120')",
+  "assertion": "legislatura_map.csv period_index 1->346, 21->366, 22->367, 23->368; asserted in assert_panel_alignment(), SystemExit on mismatch",
+  "procrustes_operator": "uncentred orthogonal Procrustes onto the QueVotan reference, single global rotation over the stacked (legislatura, legislator) set, no scaling (_joint_niter4.py:50-51, proc())",
+  "procrustes_note": "FIGURE-DESIGN 5.4 item 2: tab:fidelity uses CENTRED Procrustes. This figure's numerator is UNCENTRED. Do not call both 'Procrustes-aligned' without saying which.",
+  "padding": "the ratios inherit _joint_niter4.py's key join, which is the intersection of the reference roster with every admitted fit (482 keys); padded rows never enter"
+ },
+ "lopsidedness_screen": {
+  "side": "post-screen; this figure counts frames, not roll calls or votes",
+  "threshold": 0.025,
+  "sites": [
+   "main_cli.cpp:471",
+   "dwnominate.cpp:187",
+   "dwnom2004.f:324-326"
+  ],
+  "roll_calls_total": 12952,
+  "roll_calls_dropped": 6094,
+  "roll_calls_kept": 6858
+ },
+ "denominator": {
+  "constant_name": "DENOM_MED_SE_DIM2",
+  "value": 0.0706,
+  "label": "route2_bigB, B=150",
+  "base_fit": "cpp_run_chile",
+  "artifact": "reproduce/out/chile/julio_test/route2_bigB/w{0,1,2}/*.npy (150 replicates)",
+  "swap_note": "pablo-10 may replace this with a bootstrap on canary_fseed_i4; that is a one-line edit at the top of the generator (PABLO-HANDOFF-2026-08-11.md D1)",
+  "envelope": [
+   "route2 B=50 CONST",
+   "canon B=50",
+   "canon B=100",
+   "bigB B=150 CONST"
+  ],
+  "excluded_from_envelope": [
+   "p24 B=50"
+  ],
+  "exclusion_grounds": "DESK-PLAN-2026-08-06.md 1.3: base fit not in the ensemble; 43.4% of placements at radius > 0.99; unit-dispersion rescaling inverts it from smallest to largest ratio"
+ },
+ "sources": {
+  "C:\\Users\\cow\\Documents\\GitHub\\quevotan-db\\reproduce\\scripts\\_adm_ll_table.json": {
+   "md5": "568cc138bb334ed05a40cb91001d4458",
+   "bytes": 38119
+  },
+  "C:\\Users\\cow\\.claude\\jobs\\b43b64d6\\tmp\\_joint_niter4.out": {
+   "md5": "cbf8f332a93b3482de2c75d0afaa4437",
+   "bytes": 4035
+  },
+  "C:\\Users\\cow\\Documents\\GitHub\\quevotan-db\\output\\legislatura_map.csv": {
+   "md5": "bb958cc7334820d2857504b88445762e",
+   "bytes": 482
+  },
+  "C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\R4-FRAME-ENSEMBLE-2026-08-05.md": {
+   "md5": "11636fb36387098fb05948b199ffd473",
+   "bytes": 17904
+  },
+  "C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\SEC-IV-admissibility-2026-08-06.tex": {
+   "md5": "05c360c6dd3f3cb9a9333f7868d55a92",
+   "bytes": 4810
+  }
+ },
+ "ladder": [
+  {
+   "name": "canary_fseed_i4",
+   "lineage": "fortran-seed",
+   "tmodel": "tm2",
+   "logL": -100221.32902,
+   "pct": 93.3085,
+   "tol_deficit": 0.0,
+   "pct_deficit": 0.5326
+  },
+  {
+   "name": "cpp_run_chile_constseed",
+   "lineage": "constant-space-seed",
+   "tmodel": "tm2",
+   "logL": -101045.44047,
+   "pct": 93.8411,
+   "tol_deficit": 10.286634,
+   "pct_deficit": 0.0
+  },
+  {
+   "name": "cpp_run_chile_lapack_cubic",
+   "lineage": "base-binary",
+   "tmodel": "tm3",
+   "logL": -108532.317229,
+   "pct": 91.9475,
+   "tol_deficit": 103.180134,
+   "pct_deficit": 1.8936
+  },
+  {
+   "name": "cpp_run_chile_ninc25_iter4",
+   "lineage": "chain-seed",
+   "tmodel": "tm2",
+   "logL": -109253.28226,
+   "pct": 91.9437,
+   "tol_deficit": 112.072642,
+   "pct_deficit": 1.8974
+  },
+  {
+   "name": "cpp_run_chile_cdfmatch_iter4",
+   "lineage": "cdf-match",
+   "tmodel": "tm2",
+   "logL": -109255.628898,
+   "pct": 91.9421,
+   "tol_deficit": 112.101571,
+   "pct_deficit": 1.899
+  },
+  {
+   "name": "canary_eps",
+   "lineage": "base-binary",
+   "tmodel": "tm2",
+   "logL": -109512.849608,
+   "pct": 91.8916,
+   "tol_deficit": 115.271926,
+   "pct_deficit": 1.9495
+  },
+  {
+   "name": "cpp_run_chile_lapack_linear",
+   "lineage": "base-binary",
+   "tmodel": "tm1",
+   "logL": -111435.99992,
+   "pct": 91.8115,
+   "tol_deficit": 138.938315,
+   "pct_deficit": 2.0296
+  },
+  {
+   "name": "cpp_run_chile_fixed",
+   "lineage": "fixed-binary",
+   "tmodel": "tm2",
+   "logL": -124729.392028,
+   "pct": 91.2006,
+   "tol_deficit": 300.743338,
+   "pct_deficit": 2.6405
+  },
+  {
+   "name": "cpp_run_chile_full_seeds",
+   "lineage": "full-seeds",
+   "tmodel": "tm2",
+   "logL": -143855.756458,
+   "pct": 88.6435,
+   "tol_deficit": 528.16658,
+   "pct_deficit": 5.1976
+  }
+ ],
+ "ladder_provenance": {
+  "recomputed_from": "C:\\Users\\cow\\Documents\\GitHub\\quevotan-db\\reproduce\\scripts\\_adm_ll_table.json",
+  "formula": "GMP = exp(logL / 692839); deficit = (GMP_best - GMP_fit) / 1e-4",
+  "convergence_tol_site": "optimize_legislators.hpp:23, convergenceTol = 1e-4",
+  "nats_per_tolerance_step": 80.07,
+  "cross_check": "reproduces the ladder printed in _joint_niter4.out (0, 10, 103, 112, 112, 115, 139, 301, 528); SystemExit on mismatch",
+  "fits_considered": {
+   "raw": 29,
+   "distinct_payloads": 18,
+   "cell_representatives": 9,
+   "best": "canary_fseed_i4"
+  }
+ },
+ "compute": "none. No fit, no bootstrap, no Procrustes, no engine invocation. The only arithmetic is exp(logL/N) over log-likelihoods already on disk.",
+ "figure": "fig2-admissibility-gmp",
+ "rendered": [
+  "fig2-admissibility-gmp_v1.png",
+  "fig2-admissibility-gmp_v1.pdf"
+ ],
+ "panels": [
+  "(a) ladder, tolerance rule shaded",
+  "(b) response curve, tolerance rule"
+ ],
+ "variant": {
+  "variant": "GMP convergence-tolerance screen",
+  "rule": "admit a fit whose GMP sits within k convergence-tolerance steps of the best fit on the same panel, plus the external QueVotan reference",
+  "ruling": "DESK-PLAN-2026-08-06.md section 2.1 (unsigned as of 2026-08-11)",
+  "admitted_threshold_interval": [
+   11.0,
+   102.0
+  ],
+  "why_that_interval": "the ladder has a hole: retained fits at 0 and 10.29 steps, the next at 103.18, so every k in [11,102] gives the same partition. The rule's only free parameter moves by a factor of nine and the answer does not move.",
+  "ensemble_construction": "one representative per (seed lineage x temporal order) cell, representative chosen by highest log-likelihood, then gated (_joint_niter4.py:39-42)",
+  "rows": 482,
+  "roster": "482 (legislatura, legislator) keys on legs 366-368",
+  "columns_plotted": 4,
+  "denominator_columns": [
+   "route2 B=50 CONST",
+   "canon B=50",
+   "canon B=100",
+   "bigB B=150 CONST"
+  ],
+  "x_axis": {
+   "quantity": "admissibility threshold k, convergence-tolerance steps",
+   "scale": "symlog, linthresh 1",
+   "range": [
+    0,
+    650.0
+   ]
+  },
+  "y_axis": {
+   "quantity": "median cross-frame dim-2 SD / median bootstrap dim-2 SE",
+   "range": [
+    2.1,
+    3.62
+   ]
+  },
+  "step_table": [
+   {
+    "k_interval": [
+     0.0,
+     10.2866
+    ],
+    "F": 2,
+    "sampled_k": [
+     1,
+     8,
+     10
+    ],
+    "ratio_dim2_reported_denominator": 3.0,
+    "envelope_dim2": [
+     2.78,
+     3.0
+    ],
+    "ratios_all_denominators": {
+     "route2 B=50 CONST": 2.92,
+     "canon B=100": 2.78,
+     "canon B=50": 2.81,
+     "p24 B=50": 1.97,
+     "bigB B=150 CONST": 3.0
+    },
+    "sd2": 0.2119,
+    "sd1": 0.0962,
+    "flip1": 0.04,
+    "flip2": 0.48,
+    "status": "measured"
+   },
+   {
+    "k_interval": [
+     10.2866,
+     103.1801
+    ],
+    "F": 3,
+    "sampled_k": [
+     16,
+     32,
+     50,
+     100
+    ],
+    "ratio_dim2_reported_denominator": 2.75,
+    "envelope_dim2": [
+     2.55,
+     2.75
+    ],
+    "ratios_all_denominators": {
+     "route2 B=50 CONST": 2.68,
+     "canon B=100": 2.55,
+     "canon B=50": 2.58,
+     "p24 B=50": 1.81,
+     "bigB B=150 CONST": 2.75
+    },
+    "sd2": 0.1944,
+    "sd1": 0.1416,
+    "flip1": 0.05,
+    "flip2": 0.53,
+    "status": "measured"
+   },
+   {
+    "k_interval": [
+     103.18013377290214,
+     112.07264194112331
+    ],
+    "F": 4,
+    "ratio_dim2": null,
+    "status": "NOT SAMPLED, drawn dotted"
+   },
+   {
+    "k_interval": [
+     112.07264194112331,
+     112.10157067682913
+    ],
+    "F": 5,
+    "ratio_dim2": null,
+    "status": "NOT SAMPLED, drawn dotted"
+   },
+   {
+    "k_interval": [
+     112.10157067682913,
+     115.27192598437819
+    ],
+    "F": 6,
+    "ratio_dim2": null,
+    "status": "NOT SAMPLED, drawn dotted"
+   },
+   {
+    "k_interval": [
+     115.27192598437819,
+     138.93831541854863
+    ],
+    "F": 7,
+    "ratio_dim2": null,
+    "status": "NOT SAMPLED, drawn dotted"
+   },
+   {
+    "k_interval": [
+     138.9383,
+     300.7433
+    ],
+    "F": 8,
+    "sampled_k": [
+     200,
+     300
+    ],
+    "ratio_dim2_reported_denominator": 2.38,
+    "envelope_dim2": [
+     2.21,
+     2.38
+    ],
+    "ratios_all_denominators": {
+     "route2 B=50 CONST": 2.32,
+     "canon B=100": 2.21,
+     "canon B=50": 2.23,
+     "p24 B=50": 1.57,
+     "bigB B=150 CONST": 2.38
+    },
+    "sd2": 0.1684,
+    "sd1": 0.1073,
+    "flip1": 0.05,
+    "flip2": 0.6,
+    "status": "measured"
+   },
+   {
+    "k_interval": [
+     300.7433,
+     528.1666
+    ],
+    "F": 9,
+    "sampled_k": [
+     400
+    ],
+    "ratio_dim2_reported_denominator": 2.55,
+    "envelope_dim2": [
+     2.36,
+     2.55
+    ],
+    "ratios_all_denominators": {
+     "route2 B=50 CONST": 2.48,
+     "canon B=100": 2.36,
+     "canon B=50": 2.39,
+     "p24 B=50": 1.67,
+     "bigB B=150 CONST": 2.55
+    },
+    "sd2": 0.1799,
+    "sd1": 0.1027,
+    "flip1": 0.05,
+    "flip2": 0.67,
+    "status": "measured"
+   },
+   {
+    "k_interval": [
+     528.1666,
+     null
+    ],
+    "F": 10,
+    "sampled_k": [
+     10000
+    ],
+    "ratio_dim2_reported_denominator": 3.44,
+    "envelope_dim2": [
+     3.19,
+     3.44
+    ],
+    "ratios_all_denominators": {
+     "route2 B=50 CONST": 3.35,
+     "canon B=100": 3.19,
+     "canon B=50": 3.22,
+     "p24 B=50": 2.26,
+     "bigB B=150 CONST": 3.44
+    },
+    "sd2": 0.243,
+    "sd1": 0.1272,
+    "flip1": 0.22,
+    "flip2": 0.87,
+    "status": "measured"
+   }
+  ],
+  "departure_from_spec": "FIGURE-DESIGN 3 says x runs 1 to 400. This runs 0 to 650 so the ungated plateau (k >= 528.17, F=10, 3.44x, measured at the k=10000 row) is drawn and panel (a) and panel (b) share one x quantity. No value is invented by the extension.",
+  "not_interpolated": "the plateaus at F=4,5,6,7 (k in [103.18, 138.94]) are not sampled by _joint_niter4.out and are drawn as a dotted connector, not as a value"
+ },
+ "figsize_in": [
+  3.5,
+  3.15
+ ],
+ "panel_b_disagreement": {
+  "status": "UNRESOLVED, and this figure must not resolve it",
+  "level": "the tolerance rule reports 2.55x to 2.75x on its plateau; the classification rule reports 2.80x census and 3.30x balanced. 3.30 / 2.55 = 1.29.",
+  "direction": "under the tolerance rule the ratio FALLS as the screen loosens over k in [11, 300] (2.75 -> 2.38) and only rises once the screen is effectively off. SEC-IV states the opposite for its rule: 'a referee who prefers a laxer rule gets a larger number, not a smaller one'.",
+  "reach": "the classification rule admits fits 138.9 tolerance steps behind the best; the tolerance rule admits none past 10.3. Panel (a) of each variant shades its own rule's reach on the same ladder.",
+  "who_decides": "Roberto. DESK-PLAN section 2.1 recommends the tolerance rule; it is unsigned as of 2026-08-11."
+ },
+ "caption_draft": "Fig. 2. Admissibility and its consequence, legislaturas 346 to 368, second dimension on the 482 placements of legislaturas 366 to 368. (a) Each candidate fit at its geometric-mean-probability deficit from the best fit at the prescribed iteration count, in convergence-tolerance steps of the estimator's own criterion; filled marks are admitted, the shaded span is the admitted region. (b) The second-dimension spread divided by the bootstrap standard error as a function of the threshold, solid line on the reported denominator, pale band across the other in-ensemble denominators; the dotted stretch is not sampled. The dashed rule is the published value. The threshold falls in an empty interval."
+}

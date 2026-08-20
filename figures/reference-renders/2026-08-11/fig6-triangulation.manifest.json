@@ -1,0 +1,578 @@
+{
+  "figure": "fig6-triangulation",
+  "title": "Three lineages, one pole",
+  "carries": "P5, triangulation of the static second-dimension cleavage",
+  "generated_utc": "2026-08-11T16:33:00+00:00",
+  "generator": "C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\figgen-2026-08-11\\fig6-triangulation.py",
+  "generating_command": "C:\\Users\\cow\\AppData\\Local\\Programs\\Python\\Python314\\python.exe \"C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\figgen-2026-08-11\\fig6-triangulation.py\"",
+  "python": "3.14.3",
+  "numpy": "2.4.4",
+  "pandas": "3.0.2",
+  "matplotlib": "3.10.8",
+  "panel_and_span": {
+    "figure_span_stated_in_caption": "legislaturas 366-368",
+    "slot1_ours": {
+      "artifact": "C:\\Users\\cow\\Documents\\GitHub\\quevotan-db\\reproduce\\out\\chile\\subperiod25\\statics_party_means.csv",
+      "span": "legislaturas 366-368, 25-unit sub-period split (units 21-25)",
+      "sub_periods": {
+        "P1": "units 21-22 (leg 366 + 367 pre-estallido)",
+        "P2": "units 23-24 (367 post-estallido + 368 pre-plebiscito)",
+        "P3": "unit 25 (368 post-plebiscito, truncated 2021-03-10)"
+      },
+      "engine": "our C++ DW-NOMINATE CLI, temporal model 0 (constant), 1 period, 2 dimensions, 4 iterations -> a static W-NOMINATE per sub-period",
+      "legislators_per_fit": {
+        "P1": 155,
+        "P2": 158,
+        "P3": 158
+      },
+      "note": "each of the three fits was rotated onto the QueVotan reference pooled frame inside _req013_analysis.py:174-182 BEFORE the party means were written; this generator does not re-rotate it"
+    },
+    "slot2_reference": {
+      "artifact": "C:\\Users\\cow\\Documents\\GitHub\\quevotan-db\\reproduce\\out\\chile\\julio_reference_periodo9_by_leg.csv",
+      "span": "legislaturas 366, 367, 368 only; the artifact also holds 369 and this generator drops it and asserts the drop",
+      "roster_per_leg": {
+        "366": 163,
+        "367": 163,
+        "368": 162
+      },
+      "distinct_legislators": 163,
+      "estimator": "QueVotan production per-votacion accumulating W-NOMINATE, served by the platform, expert-ratified",
+      "independence": "INDEPENDENT ESTIMATOR AND LINEAGE, NOT INDEPENDENT DATA. It reads the same MongoDB dump as our panel (build_julio_reference.py:37,:46 -> quevotanEtiquetado/new_wnominate.bson). DESK-PLAN 5.3. Must never be drawn or captioned as an independent vote record.",
+      "aggregation": "per legislator, mean of that legislator's per-legislatura medians over 366-368; then party mean",
+      "aggregation_alternative_checked": "equal weight per legislatura; max |difference| 0.0049 over the plotted parties"
+    },
+    "slot2_alternative_variant_D": {
+      "artifact": "C:\\Users\\cow\\Documents\\GitHub\\quevotan-db\\reproduce\\out\\chile\\subperiod25\\ried_grain\\indep_party_means_aligned.csv",
+      "what_it_is": "three INDEPENDENT R wnominate runs on OUR P1/P2/P3 matrices (_req017_ried_grain.py), anchor-only frame alignment, then per-run Procrustes onto the reference pooled frame",
+      "warning": "this is a different CODE lineage on the SAME curation. It is not the QueVotan reference and must not be labelled as one. The existing off-paper PNG plots this in slot 2."
+    },
+    "slot3_fabrega": {
+      "artifact": "C:\\Users\\cow\\Documents\\GitHub\\quevotan-db\\reproduce\\out\\chile\\fabrega\\fabrega_wnom2d_2018_22.csv",
+      "span": "his full 2018-2022 period matrix = legislaturas 366-369, ONE LEGISLATURA BEYOND our 366-368 panel. DATA-CONTRACT section 5 records that his votes run past our snapshot. Not sliceable here.",
+      "curation": "independently curated vote record (only ~10 percent roll-call id overlap with ours, DATA-CONTRACT section 2)",
+      "estimator": "OUR estimator (R wnominate, 2 dimensions, replica of his pipeline). His published estimates are 1D only (A_Ideology_Estimation.R:96 dims = 1) and are NOT used.",
+      "legislators": 163,
+      "party_crosswalk": "julio_reference_periodo9_pooled.csv, first-observed (static) party label per legislator"
+    }
+  },
+  "alignment_operator": {
+    "slot1_ours": "centred orthogonal Procrustes (rotation + reflection, no scaling) onto the QueVotan reference pooled coordinates, applied per sub-period upstream in _req013_analysis.py:24-28,174-182",
+    "slot2_reference": "none; it is the target frame",
+    "slot3_fabrega_variants_A_C": "centred orthogonal Procrustes onto the QueVotan reference pooled coordinates over the 163 shared legislators; det(R) = -1.000000; post-align r1 = 0.9979, r2 = 0.8326 (paper cites 0.833)",
+    "slot3_fabrega_variants_B_D": "reflection of dimension 2 only, sign chosen so the RD party mean is negative (build_fig_f1_poles.py:49); flip = -1. Under this gauge RD's marker is DEFINITIONAL and carries no evidence.",
+    "gauge_frame_source": "julio_reference_periodo9_pooled.csv, which pools legs 366-369. Used as a FRAME (a gauge choice), never as a plotted series.",
+    "padding": "not applicable; no correlation over a padded 340-row matrix is computed. All means are over rows present in each artifact.",
+    "fortran_arm": "none. This figure never touches dwnom2004_chile or dwnom2004_chile_per_period, so the one-legislatura offset class of FIGURE-DESIGN 5.1/5.2 cannot arise. Asserted at gate 0."
+  },
+  "denominator_constant": {
+    "value": null,
+    "reason": "fig6 plots no ratio and no error band, so it has no denominator. DENOM_MED_SE_DIM2 is declared at the top of the generator anyway so the pablo-10 swap stays a one-line edit if this figure ever grows an error bar. Never inline it."
+  },
+  "lopsidedness_screen": {
+    "threshold": 0.025,
+    "sites": [
+      "main_cli.cpp:471",
+      "dwnominate.cpp:187",
+      "dwnom2004.f:324-326"
+    ],
+    "does_this_figure_count_roll_calls_or_votes": false,
+    "which_side_of_the_screen": {
+      "slot1_ours": "POST-SCREEN. 2,665 roll calls loaded across P1+P2+P3 (1,125 + 1,081 + 459); 1,772 carry a non-zero estimated cutline, 893 are zeroed by the screen. Valid votes as loaded: 84,056 + 97,677 + 43,584 = 225,317.",
+      "slot2_reference": "UNVERIFIED. 2,217 votaciones as served by the platform (build_julio_reference.py docstring). The QueVotan production pipeline's own screening was not inspected.",
+      "slot3_fabrega": "POST-SCREEN. 3,520 roll calls in his matrix; R wnominate dropped 1,227; 2,293 used (fabrega/run.log)."
+    }
+  },
+  "rows_and_columns": {
+    "rows": 11,
+    "row_unit": "party",
+    "parties": [
+      "CS",
+      "DC",
+      "EVOP",
+      "IND",
+      "PC",
+      "PPD",
+      "PRad",
+      "PS",
+      "RD",
+      "RN",
+      "UDI"
+    ],
+    "party_inclusion_rule": "the 11 parties with n >= 4 legislators in statics_party_means.csv (_req013_analysis.py:189)",
+    "columns": 3,
+    "column_unit": "estimation lineage (three vertical slots inside each row)",
+    "markers_per_row": 3,
+    "total_markers": 33,
+    "row_order": "ascending by our lineage's second-dimension mean, negative pole at the bottom"
+  },
+  "crossing_fold": {
+    "what_was_folded_in": "fig:crossing's transferable content, i.e. two arrows and one count",
+    "arrows": "the QueVotan reference's own legislatura 366 -> 368 movement, drawn on the UDI and EVOP rows only, in the reference's colour, through the reference marker",
+    "mover_track_reference_per_leg": {
+      "UDI": {
+        "366": 0.1546,
+        "367": -0.2545,
+        "368": -0.2489
+      },
+      "EVOP": {
+        "366": -0.3597,
+        "367": 0.5043,
+        "368": 0.4284
+      }
+    },
+    "count_recomputed_here": "25 of 29 UDI members change second-dimension sign between legislaturas 366 and 367 in julio_reference_periodo9_by_leg.csv",
+    "count_published_in_the_paper": "22 of 26",
+    "discrepancy": "the two do not agree. The published 22 of 26 is derived in analysis/MAP3-udi-decomposition.md on a service-filtered set; _investigation-2026-08-06/recovered3.md:1066 also records 23 of 26 under contemporaneous party labels and 25 of 29 under static labels, which is what this artifact reproduces. The figure prints no count. Whichever number the caption uses must name its filter.",
+    "control_parties_flips_over_n": {
+      "RD": [
+        0,
+        7
+      ],
+      "CS": [
+        0,
+        4
+      ],
+      "PC": [
+        0,
+        10
+      ],
+      "PS": [
+        0,
+        17
+      ]
+    }
+  },
+  "sign_agreement": {
+    "note": "FIGURE-DESIGN's stated three-second read, 'for every party the three markers land on the same side of the zero rule', is NOT what the data shows. Seven of eleven parties agree in sign across the three lineages; four split, and the four are the right-bloc parties plus IND. RD, CS and PC, which are the parties the claim is about, do agree.",
+    "per_variant": {
+      "fig6-triangulation": {
+        "CS": true,
+        "DC": true,
+        "EVOP": false,
+        "IND": false,
+        "PC": true,
+        "PPD": true,
+        "PRad": true,
+        "PS": true,
+        "RD": true,
+        "RN": false,
+        "UDI": false
+      },
+      "fig6-triangulation-B-rdgauge": {
+        "CS": true,
+        "DC": true,
+        "EVOP": false,
+        "IND": false,
+        "PC": true,
+        "PPD": true,
+        "PRad": true,
+        "PS": true,
+        "RD": true,
+        "RN": false,
+        "UDI": false
+      },
+      "fig6-triangulation-C-noarrows": {
+        "CS": true,
+        "DC": true,
+        "EVOP": false,
+        "IND": false,
+        "PC": true,
+        "PPD": true,
+        "PRad": true,
+        "PS": true,
+        "RD": true,
+        "RN": false,
+        "UDI": false
+      },
+      "fig6-triangulation-D-indepslot": {
+        "CS": true,
+        "DC": false,
+        "EVOP": false,
+        "IND": false,
+        "PC": true,
+        "PPD": true,
+        "PRad": true,
+        "PS": true,
+        "RD": true,
+        "RN": false,
+        "UDI": false
+      }
+    }
+  },
+  "values_plotted": {
+    "fig6-triangulation": {
+      "row_order_bottom_to_top": [
+        "RD",
+        "EVOP",
+        "CS",
+        "RN",
+        "IND",
+        "UDI",
+        "PC",
+        "PPD",
+        "DC",
+        "PS",
+        "PRad"
+      ],
+      "slot1_ours": {
+        "RD": -0.4693,
+        "EVOP": -0.4467,
+        "CS": -0.413,
+        "RN": -0.1887,
+        "IND": 0.1137,
+        "UDI": 0.131,
+        "PC": 0.1787,
+        "PPD": 0.187,
+        "DC": 0.1927,
+        "PS": 0.348,
+        "PRad": 0.4587
+      },
+      "slot2": {
+        "RD": -0.499,
+        "EVOP": 0.191,
+        "CS": -0.4189,
+        "RN": -0.06,
+        "IND": -0.0674,
+        "UDI": -0.1163,
+        "PC": 0.5436,
+        "PPD": 0.2385,
+        "DC": 0.1907,
+        "PS": 0.3667,
+        "PRad": 0.5722
+      },
+      "slot3_fabrega": {
+        "RD": -0.342,
+        "EVOP": 0.4643,
+        "CS": -0.383,
+        "RN": 0.1371,
+        "IND": -0.0644,
+        "UDI": -0.3991,
+        "PC": 0.5778,
+        "PPD": 0.1611,
+        "DC": 0.2492,
+        "PS": 0.283,
+        "PRad": 0.3027
+      },
+      "sign_agreement": {
+        "CS": true,
+        "DC": true,
+        "EVOP": false,
+        "IND": false,
+        "PC": true,
+        "PPD": true,
+        "PRad": true,
+        "PS": true,
+        "RD": true,
+        "RN": false,
+        "UDI": false
+      },
+      "arrows_drawn": {
+        "UDI": {
+          "366": 0.1546,
+          "367": -0.2545,
+          "368": -0.2489
+        },
+        "EVOP": {
+          "366": -0.3597,
+          "367": 0.5043,
+          "368": 0.4284
+        }
+      }
+    },
+    "fig6-triangulation-B-rdgauge": {
+      "row_order_bottom_to_top": [
+        "RD",
+        "EVOP",
+        "CS",
+        "RN",
+        "IND",
+        "UDI",
+        "PC",
+        "PPD",
+        "DC",
+        "PS",
+        "PRad"
+      ],
+      "slot1_ours": {
+        "RD": -0.4693,
+        "EVOP": -0.4467,
+        "CS": -0.413,
+        "RN": -0.1887,
+        "IND": 0.1137,
+        "UDI": 0.131,
+        "PC": 0.1787,
+        "PPD": 0.187,
+        "DC": 0.1927,
+        "PS": 0.348,
+        "PRad": 0.4587
+      },
+      "slot2": {
+        "RD": -0.499,
+        "EVOP": 0.191,
+        "CS": -0.4189,
+        "RN": -0.06,
+        "IND": -0.0674,
+        "UDI": -0.1163,
+        "PC": 0.5436,
+        "PPD": 0.2385,
+        "DC": 0.1907,
+        "PS": 0.3667,
+        "PRad": 0.5722
+      },
+      "slot3_fabrega": {
+        "RD": -0.39,
+        "EVOP": 0.504,
+        "CS": -0.4342,
+        "RN": 0.1771,
+        "IND": -0.0789,
+        "UDI": -0.3583,
+        "PC": 0.5307,
+        "PPD": 0.1223,
+        "DC": 0.2396,
+        "PS": 0.2452,
+        "PRad": 0.2785
+      },
+      "sign_agreement": {
+        "CS": true,
+        "DC": true,
+        "EVOP": false,
+        "IND": false,
+        "PC": true,
+        "PPD": true,
+        "PRad": true,
+        "PS": true,
+        "RD": true,
+        "RN": false,
+        "UDI": false
+      },
+      "arrows_drawn": {
+        "UDI": {
+          "366": 0.1546,
+          "367": -0.2545,
+          "368": -0.2489
+        },
+        "EVOP": {
+          "366": -0.3597,
+          "367": 0.5043,
+          "368": 0.4284
+        }
+      }
+    },
+    "fig6-triangulation-C-noarrows": {
+      "row_order_bottom_to_top": [
+        "RD",
+        "EVOP",
+        "CS",
+        "RN",
+        "IND",
+        "UDI",
+        "PC",
+        "PPD",
+        "DC",
+        "PS",
+        "PRad"
+      ],
+      "slot1_ours": {
+        "RD": -0.4693,
+        "EVOP": -0.4467,
+        "CS": -0.413,
+        "RN": -0.1887,
+        "IND": 0.1137,
+        "UDI": 0.131,
+        "PC": 0.1787,
+        "PPD": 0.187,
+        "DC": 0.1927,
+        "PS": 0.348,
+        "PRad": 0.4587
+      },
+      "slot2": {
+        "RD": -0.499,
+        "EVOP": 0.191,
+        "CS": -0.4189,
+        "RN": -0.06,
+        "IND": -0.0674,
+        "UDI": -0.1163,
+        "PC": 0.5436,
+        "PPD": 0.2385,
+        "DC": 0.1907,
+        "PS": 0.3667,
+        "PRad": 0.5722
+      },
+      "slot3_fabrega": {
+        "RD": -0.342,
+        "EVOP": 0.4643,
+        "CS": -0.383,
+        "RN": 0.1371,
+        "IND": -0.0644,
+        "UDI": -0.3991,
+        "PC": 0.5778,
+        "PPD": 0.1611,
+        "DC": 0.2492,
+        "PS": 0.283,
+        "PRad": 0.3027
+      },
+      "sign_agreement": {
+        "CS": true,
+        "DC": true,
+        "EVOP": false,
+        "IND": false,
+        "PC": true,
+        "PPD": true,
+        "PRad": true,
+        "PS": true,
+        "RD": true,
+        "RN": false,
+        "UDI": false
+      },
+      "arrows_drawn": null
+    },
+    "fig6-triangulation-D-indepslot": {
+      "row_order_bottom_to_top": [
+        "RD",
+        "EVOP",
+        "CS",
+        "RN",
+        "IND",
+        "UDI",
+        "PC",
+        "PPD",
+        "DC",
+        "PS",
+        "PRad"
+      ],
+      "slot1_ours": {
+        "RD": -0.4693,
+        "EVOP": -0.4467,
+        "CS": -0.413,
+        "RN": -0.1887,
+        "IND": 0.1137,
+        "UDI": 0.131,
+        "PC": 0.1787,
+        "PPD": 0.187,
+        "DC": 0.1927,
+        "PS": 0.348,
+        "PRad": 0.4587
+      },
+      "slot2": {
+        "RD": -0.4407,
+        "EVOP": 0.303,
+        "CS": -0.3437,
+        "RN": 0.126,
+        "IND": -0.0123,
+        "UDI": -0.3127,
+        "PC": 0.4497,
+        "PPD": 0.14,
+        "DC": -0.0283,
+        "PS": 0.334,
+        "PRad": 0.2337
+      },
+      "slot3_fabrega": {
+        "RD": -0.39,
+        "EVOP": 0.504,
+        "CS": -0.4342,
+        "RN": 0.1771,
+        "IND": -0.0789,
+        "UDI": -0.3583,
+        "PC": 0.5307,
+        "PPD": 0.1223,
+        "DC": 0.2396,
+        "PS": 0.2452,
+        "PRad": 0.2785
+      },
+      "sign_agreement": {
+        "CS": true,
+        "DC": false,
+        "EVOP": false,
+        "IND": false,
+        "PC": true,
+        "PPD": true,
+        "PRad": true,
+        "PS": true,
+        "RD": true,
+        "RN": false,
+        "UDI": false
+      },
+      "arrows_drawn": null
+    }
+  },
+  "variants": {
+    "fig6-triangulation": "A. slot 2 = QueVotan reference; Fabrega gauged by Procrustes onto the reference frame; the two crossing arrows drawn. RECOMMENDED.",
+    "fig6-triangulation-B-rdgauge": "B. as A but Fabrega gauged by the RD-anchored reflection used at build_fig_f1_poles.py:49. RD's Fabrega marker is definitional here.",
+    "fig6-triangulation-C-noarrows": "C. as A with the crossing arrows removed. Does the fold earn its ink?",
+    "fig6-triangulation-D-indepslot": "D. faithful restyle of the existing off-paper F1_three_pipeline_dim2_poles.png: slot 2 is R wnominate on OUR matrices, NOT the QueVotan reference."
+  },
+  "visual_system": {
+    "palette": {
+      "slot1_ours": "#2a78d6",
+      "slot2": "#eb6834",
+      "slot3_fabrega": "#4a3aa7",
+      "band": "#e1e0d9",
+      "primary_ink": "#0b0b0b",
+      "muted_ink": "#898781",
+      "zero_rule": "#898781"
+    },
+    "palette_validation": "node scripts/validate_palette.js \"#2a78d6,#eb6834,#4a3aa7\" --mode light --surface \"#ffffff\" --pairs all  ->  ALL CHECKS PASS (worst all-pairs CVD dE 13.0 deutan, normal-vision 16.3, all >= 3:1 contrast). Re-run 2026-08-11.",
+    "alpha_used": false,
+    "authored_width_in": 3.5,
+    "figure_height_in": 3.35,
+    "include_width": "\\columnwidth = 252 pt; include at width=\\columnwidth, scale 1.0",
+    "estimated_col_pt": 241,
+    "bbox_inches": null,
+    "pad_inches": 0.01,
+    "pdf_fonttype": 42,
+    "font_sizes": {
+      "base": 8,
+      "axis_label": 8,
+      "tick": 7,
+      "legend": 7
+    },
+    "numbers_inside_the_figure": "none (FIGURE-DESIGN 7.1); axis tick values only",
+    "secondary_encoding": "marker shape carries lineage identity in parallel with hue (o / square / triangle); legend always present; verified in greyscale and under reader inversion in the rendercheck PNG"
+  },
+  "sources": {
+    "ours_static_party_means": {
+      "path": "C:\\Users\\cow\\Documents\\GitHub\\quevotan-db\\reproduce\\out\\chile\\subperiod25\\statics_party_means.csv",
+      "md5": "0287470f5ce7da1de3ff79ac9ddc6037",
+      "bytes": 679
+    },
+    "indep_rwnom_party_means_aligned": {
+      "path": "C:\\Users\\cow\\Documents\\GitHub\\quevotan-db\\reproduce\\out\\chile\\subperiod25\\ried_grain\\indep_party_means_aligned.csv",
+      "md5": "79fdbd56499cfa40149abbe3f6b60776",
+      "bytes": 682
+    },
+    "quevotan_reference_by_leg": {
+      "path": "C:\\Users\\cow\\Documents\\GitHub\\quevotan-db\\reproduce\\out\\chile\\julio_reference_periodo9_by_leg.csv",
+      "md5": "803febd1ac5d89bc4b6a60ae51c6cb02",
+      "bytes": 18607
+    },
+    "quevotan_reference_pooled_GAUGE_AND_CROSSWALK_ONLY": {
+      "path": "C:\\Users\\cow\\Documents\\GitHub\\quevotan-db\\reproduce\\out\\chile\\julio_reference_periodo9_pooled.csv",
+      "md5": "2a9642ebdf600ef9d66c0f763c08715b",
+      "bytes": 4749
+    },
+    "fabrega_wnom2d_2018_22": {
+      "path": "C:\\Users\\cow\\Documents\\GitHub\\quevotan-db\\reproduce\\out\\chile\\fabrega\\fabrega_wnom2d_2018_22.csv",
+      "md5": "0bb20017fa949166973c1924ce4f7ead",
+      "bytes": 7290
+    }
+  },
+  "outputs": [
+    "C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\figs\\v2026-08-11\\fig6-triangulation_v1.png",
+    "C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\figs\\v2026-08-11\\fig6-triangulation_v1.pdf",
+    "C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\figs\\v2026-08-11\\fig6-triangulation-B-rdgauge_v1.png",
+    "C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\figs\\v2026-08-11\\fig6-triangulation-B-rdgauge_v1.pdf",
+    "C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\figs\\v2026-08-11\\fig6-triangulation-C-noarrows_v1.png",
+    "C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\figs\\v2026-08-11\\fig6-triangulation-C-noarrows_v1.pdf",
+    "C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\figs\\v2026-08-11\\fig6-triangulation-D-indepslot_v1.png",
+    "C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\figs\\v2026-08-11\\fig6-triangulation-D-indepslot_v1.pdf",
+    "C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\figs\\v2026-08-11\\fig6-triangulation.pdf",
+    "C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\figs\\v2026-08-11\\fig6-triangulation-variants_v1.png",
+    "C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\figs\\v2026-08-11\\fig6-triangulation-rendercheck_v1.png"
+  ],
+  "gaps": [
+    "The paper's published UDI crossing count (22 of 26) is not reproducible from julio_reference_periodo9_by_leg.csv, which gives 25 of 29. Not resolved here.",
+    "The QueVotan reference's own lopsidedness screening is unverified.",
+    "The Fabrega leg spans legislaturas 366-369 while the other two span 366-368. The artifact is not sliceable by legislatura without re-running his fit, which this run is forbidden to do.",
+    "Slot 1 is Procrustes-rotated onto the reference frame upstream, so the two lineages' global dimension-2 gauge is shared by construction. Only the PATTERN across parties is evidence, not any single party's sign."
+  ]
+}

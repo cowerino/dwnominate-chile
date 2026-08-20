@@ -1,0 +1,486 @@
+{
+  "figure": "fig7-declined-trajectory-GATE",
+  "generated_utc": "2026-08-11T16:32:15+00:00",
+  "generating_command": "python fig7-declined-trajectory.py",
+  "generator": "C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\figgen-2026-08-11\\fig7-declined-trajectory.py",
+  "python": "3.14.3",
+  "matplotlib": "3.10.8",
+  "numpy": "2.4.4",
+  "pandas": "3.0.2",
+  "status": "DIAGNOSTIC. NOT A PAPER FIGURE.",
+  "gate": {
+    "verdict": "FAILED",
+    "reason": "FIGURE-DESIGN 3(fig7) premise: the admitted frames' trajectory fan is as wide as the ~1.1-unit reported movement. MEASURED: RD fan 0.0800 (7% of reported), CS fan 0.0438 (5%). Premise not supported. The specified paper figure is NOT drawn.",
+    "specified_figure_drawn": false,
+    "spec": "FIGURE-DESIGN-2026-08-11.md section 3, fig7-declined-trajectory",
+    "spec_warning_honoured": "FIGURE-DESIGN section 8: 'fig7's fan width is unmeasured ... it should be run before the figure is drafted, not after, because it could come back narrow.' It came back narrow.",
+    "headline_reproduction": {
+      "sd1": 0.1416,
+      "sd2": 0.1944,
+      "flip1": 0.0456,
+      "flip2": 0.5332,
+      "targets": {
+        "sd1": 0.1416,
+        "sd2": 0.1944,
+        "flip1": 0.05,
+        "flip2": 0.53
+      },
+      "source_of_targets": "_joint_niter4.out at k=16, via FIGURE-DESIGN 3(fig1)"
+    }
+  },
+  "panel": {
+    "name": "reproduce/out/chile/cpp_input/",
+    "legislatura_span": "346-368",
+    "valid_votes": 692839,
+    "rollcalls": 12952,
+    "figure_legislaturas": [
+      366,
+      367,
+      368
+    ],
+    "period_to_legislatura": {
+      "21": 366,
+      "22": 367,
+      "23": 368
+    },
+    "asserted_in_code": "P2LEG[21,22,23] == 366,367,368; AssertionError otherwise",
+    "data_contract": "DATA-CONTRACT-2026-08-05.md sections 4 and 8",
+    "note": "This figure never reads a Fortran run, so dwnom2004_chile vs dwnom2004_chile_per_period does not arise. The offset class it CAN hit is the C++ 346-368 vs 347-369 panel swap, which is asserted."
+  },
+  "frames": {
+    "admitted_set": [
+      "julio_reference",
+      "canary_fseed_i4",
+      "cpp_run_chile_constseed"
+    ],
+    "rule": "k in [11,102] tolerance steps: 0 (canary_fseed_i4), 10 (cpp_run_chile_constseed), plus the external QueVotan reference. F=3.",
+    "excluded": {
+      "cpp_run_chile": "317 tolerance steps",
+      "cpp_run_chile_p24_canon": "24-period fit, 743,910 votes, wrong panel"
+    }
+  },
+  "alignment_operator": "uncentred orthogonal Procrustes, SINGLE GLOBAL rotation over the stacked (legislatura, legislator) set of all 482 active placements on legs 366-368, each C++ frame onto julio_reference. Per-period rotation is NOT used: it hides cross-frame disagreement (recorded policy).",
+  "rotations": {
+    "canary_fseed_i4": [
+      [
+        0.987532,
+        -0.15742
+      ],
+      [
+        -0.15742,
+        -0.987532
+      ]
+    ],
+    "cpp_run_chile_constseed": [
+      [
+        0.782879,
+        0.622174
+      ],
+      [
+        -0.622174,
+        0.782879
+      ]
+    ]
+  },
+  "rotation_determinants": {
+    "canary_fseed_i4": -1.0,
+    "cpp_run_chile_constseed": 1.0
+  },
+  "rows_and_columns": {
+    "active_placements_total": 482,
+    "per_legislatura": {
+      "366": 161,
+      "367": 161,
+      "368": 160
+    },
+    "padded_rows_excluded": "yes; roster = julio_reference active rows (340-row matrices carry 155/155/161 active). Alignment rule 5.4 clause 3.",
+    "parties_measured": 17,
+    "parties_plotted_in_panel_c": 11,
+    "min_party_n_at_leg_366": 4,
+    "parties_dropped_for_size": [
+      "COM",
+      "FRVS",
+      "PEV",
+      "PH",
+      "PL",
+      "PRep"
+    ]
+  },
+  "denominator_constants": {
+    "DENOM_MED_SE_DIM2": 0.0706,
+    "DENOM_MED_SE_DIM1": 0.033,
+    "source": "route2_bigB, B=150, base cpp_run_chile, CLPRR convention (centred on X-hat, divisor B-1) per _den_bigB.py:se_from; median over the 482 active placements of legs 366-368",
+    "recomputed_not_transcribed": true,
+    "swap_note": "pablo-10 may replace this with a bootstrap on canary_fseed_i4: edit BOOT_BANK and these two constants. One-line each. Never inlined.",
+    "used_in_this_figure": "NOT DRAWN. Printed only, as a scale for the fan."
+  },
+  "claimed_movement": {
+    "values": {
+      "RD": 1.103,
+      "CS": 0.947
+    },
+    "span": "legs 367->369 (the conjecture's span; NOT this paper's panel)",
+    "provenance": "DIGITIZED FROM A SLIDE DECK. analysis/b2_pablo_run/build_fig_arrival_test.py:37, flagged as digitized by FIGURE-DESIGN 3(fig7). Prose twin at main-rewrite-2026-08-05.tex:517 ('more than a full unit').",
+    "drawn_as": "a LENGTH only (double-headed arrow / vertical rule), never a position, because it lives in the conjecture's own frame and its span (367-369) is not this paper's panel."
+  },
+  "lopsidedness_screen": {
+    "threshold": 0.025,
+    "dropped_of_total": [
+      6094,
+      12952
+    ],
+    "sources": [
+      "main_cli.cpp:471",
+      "dwnominate.cpp:187",
+      "dwnom2004.f:324-326"
+    ],
+    "which_side": "DOWNSTREAM. This figure counts legislator-period placements and party members, not roll calls or votes. The screen has already been applied upstream by both engines and no quantity plotted here is a roll-call count."
+  },
+  "numbers_plotted": {
+    "quantity": "second-dimension party mean, per legislatura, per admitted frame, after the single global Procrustes",
+    "rd_cs_detail": {
+      "RD": {
+        "n_members": {
+          "366": 7,
+          "367": 7,
+          "368": 6
+        },
+        "means": {
+          "julio_reference": {
+            "366": -0.4452,
+            "367": -0.5343,
+            "368": -0.5028
+          },
+          "canary_fseed_i4": {
+            "366": -0.3293,
+            "367": -0.3229,
+            "368": -0.3301
+          },
+          "cpp_run_chile_constseed": {
+            "366": -0.4234,
+            "367": -0.4183,
+            "368": -0.4009
+          }
+        },
+        "delta_366_to_368": {
+          "julio_reference": -0.0575,
+          "canary_fseed_i4": -0.0008,
+          "cpp_run_chile_constseed": 0.0225
+        },
+        "cross_frame_trajectory_fan": 0.08,
+        "median_cross_frame_level_fan": 0.1727,
+        "reported_movement": 1.103,
+        "fan_as_share_of_reported": 0.0725
+      },
+      "CS": {
+        "n_members": {
+          "366": 4,
+          "367": 4,
+          "368": 4
+        },
+        "means": {
+          "julio_reference": {
+            "366": -0.4117,
+            "367": -0.4049,
+            "368": -0.4402
+          },
+          "canary_fseed_i4": {
+            "366": -0.0822,
+            "367": -0.0751,
+            "368": -0.0692
+          },
+          "cpp_run_chile_constseed": {
+            "366": -0.5248,
+            "367": -0.5175,
+            "368": -0.5096
+          }
+        },
+        "delta_366_to_368": {
+          "julio_reference": -0.0286,
+          "canary_fseed_i4": 0.013,
+          "cpp_run_chile_constseed": 0.0152
+        },
+        "cross_frame_trajectory_fan": 0.0438,
+        "median_cross_frame_level_fan": 0.4424,
+        "reported_movement": 0.947,
+        "fan_as_share_of_reported": 0.0462
+      }
+    },
+    "by_party_ranked": {
+      "EVOP": {
+        "n_366": 6,
+        "traj_fan": 0.7881,
+        "max_abs_delta": 0.7881,
+        "level_fan_med": 0.9931,
+        "delta_per_frame": {
+          "julio_reference": 0.7881,
+          "canary_fseed_i4": 0.0,
+          "cpp_run_chile_constseed": 0.0
+        }
+      },
+      "UDI": {
+        "n_366": 27,
+        "traj_fan": 0.45,
+        "max_abs_delta": 0.4335,
+        "level_fan_med": 0.5526,
+        "delta_per_frame": {
+          "julio_reference": -0.4335,
+          "canary_fseed_i4": 0.0165,
+          "cpp_run_chile_constseed": 0.0054
+        }
+      },
+      "PRad": {
+        "n_366": 4,
+        "traj_fan": 0.4483,
+        "max_abs_delta": 0.4398,
+        "level_fan_med": 0.5094,
+        "delta_per_frame": {
+          "julio_reference": 0.4398,
+          "canary_fseed_i4": 0.0021,
+          "cpp_run_chile_constseed": -0.0084
+        }
+      },
+      "RN": {
+        "n_366": 35,
+        "traj_fan": 0.2876,
+        "max_abs_delta": 0.2776,
+        "level_fan_med": 0.4719,
+        "delta_per_frame": {
+          "julio_reference": 0.2776,
+          "canary_fseed_i4": -0.01,
+          "cpp_run_chile_constseed": 0.0035
+        }
+      },
+      "PC": {
+        "n_366": 10,
+        "traj_fan": 0.1304,
+        "max_abs_delta": 0.1112,
+        "level_fan_med": 0.5643,
+        "delta_per_frame": {
+          "julio_reference": 0.1112,
+          "canary_fseed_i4": -0.0192,
+          "cpp_run_chile_constseed": -0.017
+        }
+      },
+      "PS": {
+        "n_366": 17,
+        "traj_fan": 0.1232,
+        "max_abs_delta": 0.0672,
+        "level_fan_med": 0.4324,
+        "delta_per_frame": {
+          "julio_reference": 0.0672,
+          "canary_fseed_i4": -0.056,
+          "cpp_run_chile_constseed": -0.03
+        }
+      },
+      "RD": {
+        "n_366": 7,
+        "traj_fan": 0.08,
+        "max_abs_delta": 0.0575,
+        "level_fan_med": 0.1727,
+        "delta_per_frame": {
+          "julio_reference": -0.0575,
+          "canary_fseed_i4": -0.0008,
+          "cpp_run_chile_constseed": 0.0225
+        }
+      },
+      "CS": {
+        "n_366": 4,
+        "traj_fan": 0.0438,
+        "max_abs_delta": 0.0286,
+        "level_fan_med": 0.4424,
+        "delta_per_frame": {
+          "julio_reference": -0.0286,
+          "canary_fseed_i4": 0.013,
+          "cpp_run_chile_constseed": 0.0152
+        }
+      },
+      "IND": {
+        "n_366": 20,
+        "traj_fan": 0.0365,
+        "max_abs_delta": 0.0264,
+        "level_fan_med": 0.0755,
+        "delta_per_frame": {
+          "julio_reference": -0.0264,
+          "canary_fseed_i4": 0.0101,
+          "cpp_run_chile_constseed": 0.0016
+        }
+      },
+      "DC": {
+        "n_366": 12,
+        "traj_fan": 0.0342,
+        "max_abs_delta": 0.0416,
+        "level_fan_med": 0.5327,
+        "delta_per_frame": {
+          "julio_reference": 0.0074,
+          "canary_fseed_i4": 0.0416,
+          "cpp_run_chile_constseed": 0.0203
+        }
+      },
+      "PPD": {
+        "n_366": 8,
+        "traj_fan": 0.0296,
+        "max_abs_delta": 0.0502,
+        "level_fan_med": 0.345,
+        "delta_per_frame": {
+          "julio_reference": -0.0416,
+          "canary_fseed_i4": -0.0502,
+          "cpp_run_chile_constseed": -0.0205
+        }
+      }
+    },
+    "robustness": {
+      "balanced_roster_only": {
+        "RD": 0.0868,
+        "CS": 0.0437,
+        "note": "members present in all three legislaturas, n=480"
+      },
+      "centred_procrustes": {
+        "RD": 0.0801,
+        "CS": 0.0442
+      },
+      "subspan_367_to_368": {
+        "RD": 0.0387,
+        "CS": 0.0433
+      },
+      "note": "verdict is unchanged under every variant; computed in the gate run, not re-emitted by this script"
+    },
+    "variant": "frames encoded by LIGHTNESS within party hue (as FIGURE-DESIGN 3(fig7) specifies) plus marker shape"
+  },
+  "source_artifacts": {
+    "legislatura_map": {
+      "path": "C:\\Users\\cow\\Documents\\GitHub\\quevotan-db\\output\\legislatura_map.csv",
+      "md5": "bb958cc7334820d2857504b88445762e",
+      "note": "24-period map; period_index 1 = leg 346. reproduce/input/legislatura_map.csv is the OTHER panel (347-369) and is NOT used."
+    },
+    "julio_reference_periodo9_by_leg": {
+      "path": "C:\\Users\\cow\\Documents\\GitHub\\quevotan-db\\reproduce\\out\\chile\\julio_reference_periodo9_by_leg.csv",
+      "md5": "803febd1ac5d89bc4b6a60ae51c6cb02"
+    },
+    "canary_fseed_i4": {
+      "path": "C:\\Users\\cow\\Documents\\GitHub\\quevotan-db\\reproduce\\out\\chile\\canary_fseed_i4\\cpp_coordinates_all_periods.csv",
+      "md5": "1e7ee365e4761f0484cbbf68a729a936"
+    },
+    "cpp_run_chile_constseed": {
+      "path": "C:\\Users\\cow\\Documents\\GitHub\\quevotan-db\\reproduce\\out\\chile\\cpp_run_chile_constseed\\cpp_coordinates_all_periods.csv",
+      "md5": "d4072c87645a71376773da222e90377b"
+    },
+    "route2_bigB_keys": {
+      "path": "C:\\Users\\cow\\Documents\\GitHub\\quevotan-db\\reproduce\\out\\chile\\julio_test\\route2_bigB\\keys.npy",
+      "md5": "f269b3a694ddff1ce67fc018b5da1181"
+    },
+    "route2_bigB_Xref": {
+      "path": "C:\\Users\\cow\\Documents\\GitHub\\quevotan-db\\reproduce\\out\\chile\\julio_test\\route2_bigB\\Xref.npy",
+      "md5": "e06bd43d1710255397fc26e93b14a240"
+    },
+    "route2_bigB_replicates": {
+      "path": "C:\\Users\\cow\\Documents\\GitHub\\quevotan-db\\reproduce\\out\\chile\\julio_test\\route2_bigB/w{0,1,2}/t*.npy",
+      "n_files": 150,
+      "B": 150,
+      "md5_of_ordered_concat": "15c68b6742aa8a26403812fe9e6d931e"
+    }
+  },
+  "files": [
+    "C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\figs\\v2026-08-11\\fig7-declined-trajectory-GATE_v1.png",
+    "C:\\Users\\cow\\Documents\\Thesis - QueVotan\\papers\\jcc-2026\\figs\\v2026-08-11\\fig7-declined-trajectory-GATE_v1.pdf"
+  ],
+  "panels": [
+    {
+      "id": "a",
+      "content": "RD and CS dim-2 party means, legs 366-368, one line per admitted frame, y-axis spanning the reported movement; the reported movement drawn once as a length"
+    },
+    {
+      "id": "b",
+      "content": "identical series, y-axis zoomed to the fits, so the level fan is legible"
+    },
+    {
+      "id": "c",
+      "content": "cross-frame trajectory fan and largest single-frame movement, one row per party with n>=4 at leg 366, ranked"
+    }
+  ],
+  "visual_system": {
+    "authored_width_in": 3.5,
+    "column_width_pt": 252,
+    "include_at": "\\includegraphics[width=\\columnwidth]{...} scale 1.0",
+    "bbox_inches": null,
+    "pad_inches": 0.01,
+    "pdf.fonttype": 42,
+    "palette": {
+      "blue": "#2a78d6",
+      "orange": "#eb6834",
+      "ink": "#0b0b0b",
+      "muted": "#898781",
+      "grid": "#e1e0d9",
+      "ramp_blue": [
+        "#17417a",
+        "#2a78d6",
+        "#7fa9e8"
+      ],
+      "ramp_orange": [
+        "#9c3d13",
+        "#eb6834",
+        "#f0a07c"
+      ]
+    },
+    "palette_validation": "validate_palette.js '#2a78d6,#eb6834,#4a3aa7' --mode light --surface '#ffffff' --pairs all -> ALL PASS; both within-hue ramps --ordinal -> ALL PASS (2026-08-11)",
+    "alpha_used": false,
+    "viridis_used": false,
+    "white_halos": false,
+    "deliberate_departures": [
+      "FIGURE-DESIGN 7.1 'no numbers inside any figure' is broken by the verdict header and the reference-magnitude label. This is a desk diagnostic whose job is a verdict.",
+      "Three-panel height exceeds any paper float budget. Not intended as a float."
+    ]
+  },
+  "not_established": [
+    "Whether the flatness of the two C++ frames is an identification result or a model-order artifact. 17 of 20 RD and 9 of 12 CS placements carry effective_model = 0 (constant trajectory) in BOTH admitted C++ frames, so most of those members cannot move by construction. Measured, not inferred: see per_member_model_order.",
+    "Whether the UDI/EVOP byproduct is an identification failure or an estimator-class difference. julio_reference is an independent per-legislatura scaling with no cross-period constraint; the C++ frames are DW-NOMINATE polynomial trajectories with order selection. Those classes are not expected to agree on movement a priori.",
+    "The bootstrap SE of the party-mean trajectory is computed on the route2_bigB bank whose base is cpp_run_chile, NOT an admitted frame. Scale only."
+  ],
+  "per_member_model_order": {
+    "note": "effective_model column of cpp_coordinates_all_periods.csv; 0 = constant, 2 = quadratic. Counted over active placements on legs 366-368.",
+    "canary_fseed_i4": {
+      "RD": {
+        "0": 17,
+        "2": 3
+      },
+      "CS": {
+        "0": 9,
+        "2": 3
+      },
+      "UDI": {
+        "0": 24,
+        "2": 57
+      },
+      "EVOP": {
+        "0": 18
+      }
+    },
+    "cpp_run_chile_constseed": {
+      "RD": {
+        "0": 17,
+        "2": 3
+      },
+      "CS": {
+        "0": 9,
+        "2": 3
+      },
+      "UDI": {
+        "0": 24,
+        "2": 57
+      },
+      "EVOP": {
+        "0": 18
+      }
+    }
+  },
+  "bootstrap_se_of_plotted_trajectory": {
+    "RD": {
+      "se": 0.02020901763020855,
+      "point": -0.006692573226533993
+    },
+    "CS": {
+      "se": 0.011693149365724706,
+      "point": 0.011312858006212737
+    }
+  }
+}
