@@ -1,33 +1,55 @@
-# figures
+# Mapas de disco unitario, 2026-08-20
 
-Working figure tree for the JCC / SCCC 2026 paper: the generators, the renders they produce, and
-the design rules both answer to. Published here so the three of us are testing against the same
-images rather than against screenshots.
+**Una proyección de disco unitario por figura. Una.** Puntos coloreados por partido, leyenda de
+partidos debajo. Generador `map_disk.py` (no incluido aquí). PDF + PNG.
 
-| path | what |
-|---|---|
-| `CONVENTION.md` | the figure convention. Ten acceptance tests; a figure is not accepted until all ten pass |
-| `INTENT.md` | per-figure intent: what claim each figure carries and what form it should take |
-| `generators/` | one script per figure, matplotlib, emitting vector PDF. `check_convention.py` runs the tests |
-| `renders/` | output, in dated directories. The newest date is the live one |
-| `reference-renders/` | earlier accepted renders kept for comparison, with `.manifest.json` receipts |
+Sigue la convención ya establecida en `quevotan-db/maps_2026-05-24/make_maps.py`: color de partido
+desde un puntaje izquierda-derecha a través de la rampa `coolwarm`, dimensión 1 orientada para que el
+bloque de derecha quede positivo (la polaridad es un gauge libre), ejes punteados por el origen.
+Agregado aquí: el círculo unitario como regla de referencia.
 
-## Manifests
+## Las 20 figuras
 
-Renders carry a `.manifest.json` recording the generating command, every input path with its MD5,
-the alignment operator, and the screens applied. Read the manifest before quoting a number off an
-image. The manifests record absolute paths from the machine that produced them; treat those as
-provenance, not as a path you can follow.
+**Chile, estático (un ajuste por legislatura)** — `cl-static-leg{353,366,368}-{fortran,ours}`
 
-## Status of the modern-engine arm, 2026-08-20
+**US, estático, motores corregidos** — `us-static-sen90-{fortran,ours}`
 
-**Every `modern` series in this tree was produced by a pre-fix `dwnominate-modern` build.** No
-output on disk carries the `scalar_search` row that the current engine writes unconditionally, and
-the `[UC5TRACE]` lines in the run logs show the scalar search running on global bounds
-(`w2 [0, 1.5]`, `beta [0.05, 25]`) rather than the re-centred local box the current engine defaults
-to. The runs are dated 2026-08-17; the fixed binary was built 2026-08-19 and has not been re-run.
+**Chile, dinámico (panel de 23 períodos)** — `cl-dyn-leg{353,366,368}-{fortran,ours}` son cortes
+transversales del ajuste conjunto en las mismas tres legislaturas que tienen ajuste estático, de modo
+que el par estático/dinámico es directamente comparable. `cl-dyn-carrera-{fortran,ours}` es el
+promedio sobre los períodos servidos, 2002-2021.
 
-This matters most in `renders/2026-08-19-engine-comparison/`, which attributes modern's dim-2
-collapse on legislatura 366 to COBYLA linearising the ball constraint. That attribution is not
-settled: see the correction note in that directory. Do not quote the modern arm as a property of
-the modern engine until it has been re-run.
+**US, dinámico (panel de 5 períodos)** — `us-dyn-p5-{fortran,ours}` y `us-dyn-carrera-{fortran,ours}`.
+
+## Procedencia
+
+Todos los brazos C++ se corrieron el 2026-08-20 con el binario **completamente corregido**:
+absence-fix, códigos de voto canónicos, exportador (t local, orden polinómico efectivo, sin relleno)
+y semilla de respaldo en el origen. `quevotan-api@79031cf`.
+
+| panel | LL | placements |
+|---|---|---|
+| Chile leg 353 / 366 / 368 | −1132.370286 / −6276.201346 / −13296.521959 | 121 / 155 / 161 |
+| US Senate 90 | −15457.166891 | 102 |
+| Chile 23 períodos | −98603.656973 | 2,855 |
+| US 5 períodos | −38462.783549 | 523 |
+
+Los conteos de placements del panel dinámico coinciden **exactamente** con los del Fortran, panel por
+panel (US: 111/102/105/100/105 en los cinco períodos; Chile: 2,855), porque el exportador corregido
+emite sólo los períodos servidos, igual que `us_legout.dat`.
+
+## Dos cosas que un lector va a preguntar
+
+1. **En el panel dinámico hay puntos fuera del círculo, y es normal.** El Fortran llega a radio
+   máximo 2.3509 con 188 de 2,855 fuera; nosotros 2.4161 con 185. Es una propiedad del polinomio
+   temporal, compartida por ambos motores. En los paneles **estáticos** todos los motores C++ están
+   en radio máximo **exactamente 1.000000**, ninguno fuera; el 1.0002-1.0006 del Fortran es su
+   redondeo de salida a 3 decimales.
+2. **En US Senate 90 los partidos se separan en diagonal, no a lo largo de la dimensión 1.** Está
+   igual en el Fortran. Es una propiedad del ajuste, no un problema de orientación.
+
+## Formas rechazadas
+
+`../rejected-2026-08-20/` guarda las dos series anteriores del mismo día: las de segmentos de
+desplazamiento (tres estilos de datos en un panel) y las facetadas por partido (muchos discos por
+figura). Ambas rechazadas por Roberto. **Un disco por figura.**
