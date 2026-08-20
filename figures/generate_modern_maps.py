@@ -194,6 +194,32 @@ def filter_served(df: pd.DataFrame, panel_dir: str) -> pd.DataFrame:
     return kept
 
 
+def orient_dim2_to_reference(df: pd.DataFrame, panel_dir: str) -> pd.DataFrame:
+    """Pin dimension-2 polarity to the engine-faithful arm.
+
+    Dimension-2 orientation is a free gauge: nothing in the model fixes its sign, and
+    orient_dim1() normalises dimension 1 only. An arm read from a differently signed
+    export therefore renders as a mirror across the x axis while dimension 1 still
+    agrees perfectly, which is how the interim rerun set differed from this one
+    (dim1 r = +1.000000, dim2 r = -1.000000 on the same underlying run).
+
+    This is a declared comparison gauge so the series is readable side by side. It is
+    NOT a claim that dimension 2 has an intrinsic direction; the paper's position is
+    that its orientation is analyst-supplied.
+    """
+    ref = load_coords(RESDIR / panel_dir / "faithful" / "cpp_coordinates_all_periods_corrected.csv")
+    j = df.merge(ref, on=["legislator_id", "period"], suffixes=("", "_ref"))
+    if len(j) < 3:
+        return df
+    r = np.corrcoef(j["coord2D"], j["coord2D_ref"])[0, 1]
+    if np.isfinite(r) and r < 0:
+        out = df.copy()
+        out["coord2D"] = -out["coord2D"]
+        print(f"    dim2 polarity flipped to match faithful ({panel_dir}, r={r:+.4f})")
+        return out
+    return df
+
+
 def mean_by_legislator(df: pd.DataFrame) -> pd.DataFrame:
     return (
         df.groupby("legislator_id", as_index=False)[["coord1D", "coord2D"]]
@@ -232,6 +258,7 @@ def main() -> None:
             src = RESDIR / panel_dir / arm / "cpp_coordinates_all_periods_corrected.csv"
             df = load_coords(src)
             df = filter_served(df, panel_dir)
+            df = orient_dim2_to_reference(df, panel_dir)
 
             if slice_spec == "career":
                 dfp = mean_by_legislator(df)
