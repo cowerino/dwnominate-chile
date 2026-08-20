@@ -1,0 +1,58 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 24,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "release",
+      "displayName": "Release, deterministic",
+      "binaryDir": "${sourceDir}/build/release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_TESTING": "ON",
+        "DWNOMINATE_ENABLE_OPENMP": "OFF"
+      }
+    },
+    {
+      "name": "release-openmp",
+      "displayName": "Release with parallel independent blocks",
+      "binaryDir": "${sourceDir}/build/release-openmp",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_TESTING": "ON",
+        "DWNOMINATE_ENABLE_OPENMP": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "release",
+      "configurePreset": "release",
+      "jobs": 4
+    },
+    {
+      "name": "release-openmp",
+      "configurePreset": "release-openmp",
+      "jobs": 4
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "release",
+      "configurePreset": "release",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "release-openmp",
+      "configurePreset": "release-openmp",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}

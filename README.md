@@ -191,5 +191,19 @@ Check the configure output for `Reference LAPACK found at ...` before trusting a
 see `USE_REF_LAPACK=OFF` or no LAPACK line at all, you are on the Jacobi path and your numbers will
 not match the ones reported above.
 
+### engine-modern, and one Windows trap
+
+```
+cmake -S engine-modern -B engine-modern/build -DCMAKE_BUILD_TYPE=Release
+cmake --build engine-modern/build -j
+ctest --test-dir engine-modern/build --output-on-failure
+```
+
+NLopt is fetched and built by the configure step, so it does not need to be supplied. On
+Windows/MinGW it lands as `engine-modern/build/_deps/nlopt-build/libnlopt.dll`, which is **not**
+beside the test binaries and is not found through an RPATH the way it is on Linux. Every test then
+fails with `0xc0000135`, `STATUS_DLL_NOT_FOUND`, which reads like a broken build and is not one. Put
+that directory and the MinGW `bin` on `PATH` for the test run and the suite passes 9/9.
+
 See `engine-faithful/CMakeLists.txt` for the flags and `engine-faithful/SEEDS.md` for the seeding
 contract, which matters: the frame the seed supplies is the frame the fit keeps.

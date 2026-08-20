@@ -23,6 +23,18 @@ punto medio de cada votación al disco unitario. Los términos temporales no est
 restringidos; por ello una posición reconstruida para un período puede quedar
 fuera del círculo sin que el retorno del optimizador sea inviable.
 
+La FAQ original describe ese intercepto como la media de los scores. Esto es
+exacto para el modelo lineal sobre la malla simétrica de períodos servidos. Para
+el modelo cuadrático y una cantidad finita `S` de períodos,
+
+```text
+media(x) = beta_0 + beta_2 / (S - 1),
+```
+
+porque la media discreta de `P2(t)=(3t^2-1)/2` es `1/(S-1)`. Por consiguiente,
+la implementación y la auditoría denominan *centro restringido* a `beta_0`, sin
+identificarlo en general con el promedio aritmético.
+
 Las corridas publicadas usan SLSQP para los bloques restringidos y BOBYQA para
 los escalares. Ningún retorno materialmente inviable es proyectado y aceptado:
 los retornos fuera de tolerancia son rechazados. Una corrección radial sólo puede
@@ -54,12 +66,20 @@ nueva prueba de sensibilidad.
   y la de EE. UU. con diferencia `2.18e-11`.
 - Las nueve pruebas de CTest pasan, incluida una prueba dinámica de exportación,
   recarga y reevaluación común.
+- La reconstrucción de los coeficientes desde los CSV tiene error máximo
+  `1.33e-15` en Chile y `8.88e-16` en EE. UU.
+- Los 338 interceptos chilenos y los 168 estadounidenses cumplen el disco
+  unitario. El máximo es `1 + 4e-16`, residuo de punto flotante.
+- En Chile hay 294 posiciones legislatura-a-legislatura fuera del círculo y
+  cinco promedios aritméticos fuera de él, pero ningún intercepto fuera. En
+  EE. UU. hay cinco posiciones temporales fuera y ningún intercepto fuera.
 
 ## Gráficas
 
 El círculo unitario de las figuras es una referencia para las cantidades que sí
 están restringidas; no es una frontera para las coordenadas dinámicas realizadas.
-El generador ajusta los ejes para no ocultar trayectorias legítimas fuera del
+La figura de carrera representa ahora `beta_0`, no el promedio aritmético, y el
+generador ajusta los ejes para no ocultar trayectorias legítimas fuera del
 círculo. El archivo `data/chile-dynamic/legislator_metadata.csv` de `main` tiene
 vacíos los campos `nombres` y `partido`. Por eso las figuras chilenas se publican
 en gris y lo declaran en el subtítulo; no se imputaron etiquetas partidarias.
@@ -81,46 +101,3 @@ engine-modern/build/dwnominate-modern \
   --convergence-abs=1 --convergence-patience=2 \
   --block-solver=slsqp --scalar-search=global --threads=1
 ```
-
----
-
-## Verificación independiente, 2026-08-20
-
-Medido sobre los CSV publicados aquí, sin volver a correr el motor.
-
-**Las dos correcciones de exportación se confirman.** Chile entrega 2.855 filas y EE. UU. 523, que
-coinciden exactamente con los pares `(legislator_id, period)` servidos según la exportación de
-`engine-faithful`. Cero filas rellenadas. Este defecto se había detectado por separado el mismo día
-en `engine-modern`, en el motor Fortran y en las figuras derivadas de ambos.
-
-**El objeto restringido queda dentro del disco.** El nivel de carrera, que es lo que el modelo
-restringe:
-
-| panel | radio máximo | fuera del disco |
-|---|---:|---:|
-| EE. UU. dinámico | **1.0000** | **0 de 168** |
-| Chile dinámico | 1.0326 | 5 de 338 |
-
-Los cinco casos chilenos exceden por menos de 3,3 %, consistente con que el promedio sobre períodos
-servidos es una aproximación del término constante y no el término mismo.
-
-**Las reconstrucciones por período siguen saliendo, y deben hacerlo.** Chile 294 de 2.855 (10,30 %),
-máximo 2,9905. La masa está concentrada en el inicio del panel y decae de forma monótona:
-
-| período | 1 | 2 | 3 | 4 | 5 | 21 | 23 |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| fuera | 42,0 % | 27,5 % | 18,3 % | 15,7 % | 13,9 % | 0,0 % | 0,6 % |
-
-**Advertencia para las figuras**: los cortes publicados (períodos 8, 21 y 23) caen en la zona limpia,
-con 16, 0 y 1 punto fuera respectivamente. Una figura de esos cortes no representa la tasa del panel
-completo. Debe citarse el 10,30 % junto a cualquier corte.
-
-**Lo que estas corridas no son.** `beta` termina en su cota superior de 20 en ambos paneles, como el
-propio documento advierte, y `w2` llega a 1,5264 en Chile frente a la referencia de 0,5063. Medido
-contra `engine-faithful`: `r1 = +0,9803`, `r2 = +0,7763`, y la dispersión de la dimensión 2 queda en
-**0,718 veces** la de `engine-faithful`, es decir, la compresión de la segunda dimensión persiste en
-esta corrida global convergida.
-
-**No son comparables con la tabla de `2026-08-20-three-engine/`**, que fija 4 ciclos en los tres
-motores. Estas pararon por criterio de mejora, 238 ciclos en Chile y 62 en EE. UU., y se ejecutaron
-con 4 hilos, de modo que ni el número de ciclos ni el tiempo de pared son comparables.
