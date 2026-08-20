@@ -171,6 +171,29 @@ def draw_disk_map(df: pd.DataFrame, title: str, subtitle: str, out_base: Path, *
     plt.close(fig)
 
 
+def served_keys(panel_dir: str) -> set:
+    """Roster of (legislator_id, period) pairs the member actually served.
+
+    engine-faithful carries the export-frame fix and emits only served cells;
+    engine-modern does not and pads every legislator to every period. Keying off
+    the faithful export is therefore the roster of record.
+    """
+    src = RESDIR / panel_dir / "faithful" / "cpp_coordinates_all_periods_corrected.csv"
+    f = load_coords(src)
+    return set(zip(f["legislator_id"], f["period"]))
+
+
+def filter_served(df: pd.DataFrame, panel_dir: str) -> pd.DataFrame:
+    """Drop padded phantom placements. Inert on an already-served export."""
+    keys = served_keys(panel_dir)
+    idx = pd.MultiIndex.from_frame(df[["legislator_id", "period"]])
+    kept = df[idx.isin(keys)].copy()
+    if len(kept) != len(df):
+        print(f"    filtered {panel_dir}: {len(df)} -> {len(kept)} rows "
+              f"({len(df) - len(kept)} phantom)")
+    return kept
+
+
 def mean_by_legislator(df: pd.DataFrame) -> pd.DataFrame:
     return (
         df.groupby("legislator_id", as_index=False)[["coord1D", "coord2D"]]
@@ -208,6 +231,7 @@ def main() -> None:
         for mode_short, arm in modes.items():
             src = RESDIR / panel_dir / arm / "cpp_coordinates_all_periods_corrected.csv"
             df = load_coords(src)
+            df = filter_served(df, panel_dir)
 
             if slice_spec == "career":
                 dfp = mean_by_legislator(df)

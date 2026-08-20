@@ -1,3 +1,25 @@
+> ## RESOLVED 2026-08-20: dynamic modern maps rebuilt with a served-pair filter
+>
+> Both defects below are fixed in `generate_modern_maps.py`, which now calls `filter_served()` on
+> every arm before slicing. Rebuilt cross-sections match `engine-faithful` exactly: 121 / 155 / 161
+> points for legs 353 / 366 / 368 and 105 for `us-dyn-p5`; the career maps now average 8.45 periods
+> per Chilean legislator and 3.11 per US senator, not 23.00 and 5.00. Static panels were never
+> affected and the filter is inert on them.
+>
+> **Second defect, found while verifying: a polarity flip between the two modern figure sets.** The
+> interim set under `figures/rerun-2026-08-20/` was filtered from the **raw** export, whose sign is
+> the negation of the `_corrected` export. Checked: keys identical, and every coordinate matches
+> after negation to `0.00e+00`, correlation exactly `-1.000000`. It is the same run, mirrored, not a
+> different one. `orient_dim1()` pins dimension 1 by party but nothing pins dimension 2, so the two
+> sets rendered as vertical mirrors of each other. The interim directory has been removed; the
+> top-level slots are canonical because they read the same `_corrected` export as the `ours` figures.
+>
+> **Rule going forward: every engine in a comparison series reads
+> `cpp_coordinates_all_periods_corrected.csv`, never the raw export.** Mixing the two silently
+> mirrors a map, and dimension-2 polarity is not corrected downstream.
+
+## Original defect report, kept for the record
+
 > ## STOP: the dynamic engine-modern maps are contaminated and must be rebuilt
 >
 > `engine-modern` lacks the export-frame fix. On the Chilean dynamic panel it emits **7,774** rows
