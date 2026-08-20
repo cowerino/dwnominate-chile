@@ -1,0 +1,74 @@
+﻿=== audit p8 scalar=local start 2026-08-20T12:12:15 ===
+binary: C:\Users\cow\Documents\GitHub\dwnominate-chile-julio-audit\engine-modern\build\release\dwnominate-modern.exe
+============================================================
+  DW-NOMINATE C++ CLI
+============================================================
+
+Configuracion:
+  Input:      C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\static_panels\p8
+  Output:     C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-local
+  WNOMINATE:  C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\static_panels\p8\wnominate_coordinates.csv
+  Modelo:     0 (constante)
+  Iteraciones:4
+  Periodos:   1
+  Dimensiones:2
+  Beta:       5.9539
+  W2:         0.3463
+
+  Redondeo:   precision completa
+  NLopt:      standard (xtol=1e-08, ftol=1e-10)
+  Maxeval:    scalar=120, rollcall=400, legislador=600
+  Solver:     slsqp (fallback COBYLA)
+  Escalares:  local (caja SIGMAS/WINT)
+  Modo:       estimacion
+  Schedule:   fijo
+  Threads:    1
+
+Cargando datos...
+  Ref. R:     output_R_dwnominate_model0
+  Legisladores filtrados (sin votos no-missing en ningun periodo): 219 de 340 totales
+  Pesos iniciales: W1=1.0, W2=0.3463, Beta=5.9539
+  W-NOMINATE: Cargadas 115 coordenadas iniciales desde C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\static_panels\p8\wnominate_coordinates.csv
+  Coordenadas aplicadas: 0 per-(leg,periodo), 115 per-legislador, 6 fallback
+dwnominate-modern.exe : Advertencia: No se puede abrir output_R_dwnominate_model0/dwnominate_bill_parameters.csv
+At line:22 char:7
++       & "$bld\dwnominate-modern.exe" "--input-dir=$in" "--output-dir= ...
++       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Advertencia: No..._parameters.csv:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Legisladores: 121
+  Roll calls:   298
+
+Ejecutando DW-NOMINATE...
+[TIMING iter 1] WINT=0.0038734s, SIGMAS=0.0037367s, RC=0.0948065s, LEG=0.0193531s, LL=-1205.36, Total=0.125102s
+[TIMING iter 2] WINT=0.0073801s, SIGMAS=0.008548s, RC=0.159596s, LEG=0.0436603s, LL=-1136.39, Total=0.225563s
+[TIMING iter 3] WINT=0.0102562s, SIGMAS=0.0127058s, RC=0.233792s, LEG=0.0754923s, LL=-1103.45, Total=0.341637s
+[TIMING iter 4] WINT=0.0131092s, SIGMAS=0.0164746s, RC=0.307501s, LEG=0.0957028s, LL=-1081.94, Total=0.445265s
+
+========== RESUMEN DE TIEMPOS ==========
+  WINT (pesos):      0.0131092 segundos
+  SIGMAS (beta):     0.0164746 segundos
+  RC (roll calls):   0.307501 segundos
+  LEG (legisladores):0.0957028 segundos
+  TOTAL FASES:       0.432787 segundos
+==========================================
+
+
+Resultados:
+  Log-likelihood: -1081.9392
+  Iteraciones:    4
+  Clasificacion:  7396/7858 (94.12%)
+  W1=1.0000, W2=0.5420, Beta=6.6718
+  Tiempo: 0.5s
+
+Exportando resultados...
+Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-local/cpp_coordinates_all_periods.csv (121 registros)
+Exportado (polaridad corregida): C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-local/cpp_coordinates_all_periods_corrected.csv (121 registros)
+Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-local/cpp_bill_parameters.csv (298 roll calls)
+Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-local/cpp_summary.csv
+Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-local/cpp_convergence_trace.csv
+Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-static-p8\modern-audit-local/cpp_optimizer_trace.csv
+
+Completado exitosamente.
+EXIT=0 ELAPSED_S=0.49

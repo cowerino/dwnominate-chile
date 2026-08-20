@@ -1,0 +1,76 @@
+﻿=== strict-audit dwnominate-modern chile dyn 23p, scalar-search=local, start 2026-08-20T12:09:53 ===
+binary: C:\Users\cow\Documents\GitHub\dwnominate-chile-julio-audit\engine-modern\build\release\dwnominate-modern.exe
+============================================================
+  DW-NOMINATE C++ CLI
+============================================================
+
+Configuracion:
+  Input:      C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\cpp_input
+  Output:     C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-audit-local
+  WNOMINATE:  C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\cpp_input\wnominate_coordinates.csv
+  SeedPP:     C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\cpp_input\wnominate_coordinates_per_period.csv
+  Modelo:     2 (cuadratico)
+  Iteraciones:4
+  Periodos:   23
+  Dimensiones:2
+  Beta:       5.9539
+  W2:         0.3463
+
+  Redondeo:   precision completa
+  NLopt:      standard (xtol=1e-08, ftol=1e-10)
+  Maxeval:    scalar=120, rollcall=400, legislador=600
+  Solver:     slsqp (fallback COBYLA)
+  Escalares:  local (caja SIGMAS/WINT)
+  Modo:       estimacion
+  Schedule:   fijo
+  Threads:    1
+
+Cargando datos...
+  Ref. R:     output_R_dwnominate_model2
+  Legisladores filtrados (sin votos no-missing en ningun periodo): 2 de 340 totales
+  Pesos iniciales: W1=1.0, W2=0.3463, Beta=5.9539
+  W-NOMINATE: Cargadas 340 coordenadas iniciales desde C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\cpp_input\wnominate_coordinates.csv
+  W-NOMINATE per-period: Cargadas 2685 coordenadas (leg, periodo) desde C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\cpp_input\wnominate_coordinates_per_period.csv
+  Coordenadas aplicadas: 2685 per-(leg,periodo), 170 per-legislador, 0 fallback
+dwnominate-modern.exe : Advertencia: No se puede abrir output_R_dwnominate_model2/dwnominate_bill_parameters.csv
+At line:16 char:3
++   & $exe "--input-dir=$in" "--output-dir=$out" "--wnominate=$in\wnomi ...
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Advertencia: No..._parameters.csv:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Legisladores: 2855
+  Roll calls:   12952
+
+Ejecutando DW-NOMINATE...
+[TIMING iter 1] WINT=0.879238s, SIGMAS=0.844057s, RC=12.3295s, LEG=2.68338s, LL=-106869, Total=17.0867s
+[TIMING iter 2] WINT=1.64262s, SIGMAS=1.5051s, RC=24.1455s, LEG=5.06729s, LL=-96311.3, Total=33.0439s
+[TIMING iter 3] WINT=2.23845s, SIGMAS=2.3946s, RC=35.4943s, LEG=7.32988s, LL=-93041.2, Total=48.473s
+[TIMING iter 4] WINT=2.95517s, SIGMAS=3.17051s, RC=47.4628s, LEG=9.67626s, LL=-91181.1, Total=64.6059s
+
+========== RESUMEN DE TIEMPOS ==========
+  WINT (pesos):      2.95517 segundos
+  SIGMAS (beta):     3.17051 segundos
+  RC (roll calls):   47.4628 segundos
+  LEG (legisladores):9.67626 segundos
+  TOTAL FASES:       63.2648 segundos
+==========================================
+
+
+Resultados:
+  Log-likelihood: -91181.1365
+  Iteraciones:    4
+  Clasificacion:  655808/692839 (94.66%)
+  W1=1.0000, W2=0.5179, Beta=5.7715
+  Tiempo: 65.4s
+
+Exportando resultados...
+Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-audit-local/cpp_coordinates_all_periods.csv (7774 registros)
+Exportado (polaridad corregida): C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-audit-local/cpp_coordinates_all_periods_corrected.csv (7774 registros)
+Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-audit-local/cpp_bill_parameters.csv (12952 roll calls)
+Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-audit-local/cpp_summary.csv
+Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-audit-local/cpp_convergence_trace.csv
+Exportado: C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\final-2026-08-21\chile-dyn-m2\modern-audit-local/cpp_optimizer_trace.csv
+
+Completado exitosamente.
+EXIT=0 ELAPSED_S=65.85

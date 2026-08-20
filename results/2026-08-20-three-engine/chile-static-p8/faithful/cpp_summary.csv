@@ -1,0 +1,13 @@
+parameter,value
+log_likelihood,-1132.370286
+iterations,4
+valid_votes,7858
+correct_classifications,7373
+classification_pct,93.8279
+w1,1.000000
+w2,0.542550
+beta,6.328900
+temporal_model,0
+dimensions,2
+periods,1
+elapsed_seconds,0.45

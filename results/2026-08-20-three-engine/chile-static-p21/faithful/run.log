@@ -1,0 +1,81 @@
+﻿============================================================
+  DW-NOMINATE C++ CLI
+============================================================
+
+Configuracion:
+  Input:      C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\static_panels\p21
+  Output:     C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\p21
+  WNOMINATE:  C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\static_panels\p21\wnominate_coordinates.csv
+  Modelo:     0 (constante)
+  Iteraciones:4
+  Periodos:   1
+  Dimensiones:2
+  Beta:       5.9539
+  W2:         0.3463
+
+Cargando datos...
+  Ref. R:     output_R_dwnominate_model0
+  Legisladores filtrados (sin votos no-missing en ningun periodo): 185 de 340 totales
+  Pesos iniciales: W1=1.0, W2=0.3463, Beta=5.9539
+  W-NOMINATE: Cargadas 155 coordenadas iniciales desde C:\Users\cow\Documents\GitHub\quevotan-db\reproduce\out\chile\static_panels\p21\wnominate_coordinates.csv
+  Coordenadas aplicadas: 0 per-(leg,periodo), 155 per-legislador, 0 fallback
+dwnominate.exe : Advertencia: No se puede abrir output_R_dwnominate_model0/dwnominate_bill_parameters.csv
+At line:18 char:3
++   & $exe "--input-dir=$($j.i)" "--output-dir=$o" "--wnominate=$w" "-- ...
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Advertencia: No..._parameters.csv:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Legisladores: 155
+  Roll calls:   716
+
+Ejecutando DW-NOMINATE...
+ LESS THAN 0.5 leg=803 gmp_before=0.481403 gmp_after=0.596642 x1=-0.3 x2=0.9
+ LESS THAN 0.5 leg=972 gmp_before=0.46373 gmp_after=0.82396 x1=-0.9 x2=0.4
+ LESS THAN 0.5 leg=987 gmp_before=0.438919 gmp_after=0.823021 x1=-0.7 x2=0.7
+ LESS THAN 0.5 leg=1008 gmp_before=0.420308 gmp_after=0.780105 x1=-0.9 x2=0.4
+ LESS THAN 0.5 leg=1018 gmp_before=0.471487 gmp_after=0.851951 x1=-0.7 x2=0.7
+ LESS THAN 0.5 leg=1015 gmp_before=0.479161 gmp_after=0.856109 x1=-0.7 x2=0.7
+ LESS THAN 0.5 leg=1023 gmp_before=0.491109 gmp_after=0.853472 x1=-0.7 x2=0.7
+ LESS THAN 0.5 leg=1033 gmp_before=0.452174 gmp_after=0.844235 x1=-0.7 x2=0.7
+ LESS THAN 0.5 leg=1037 gmp_before=0.473175 gmp_after=0.816111 x1=-0.9 x2=0.4
+ LESS THAN 0.5 leg=1036 gmp_before=0.434089 gmp_after=0.797787 x1=-0.9 x2=0.4
+ LESS THAN 0.5 leg=1039 gmp_before=0.253233 gmp_after=0.530565 x1=-0.9 x2=0.4
+ LESS THAN 0.5 leg=1051 gmp_before=0.449964 gmp_after=0.801642 x1=-0.9 x2=0.4
+ LESS THAN 0.5 leg=1058 gmp_before=0.478106 gmp_after=0.83944 x1=-0.7 x2=0.7
+ LESS THAN 0.5 leg=1063 gmp_before=0.461994 gmp_after=0.844657 x1=-0.7 x2=0.7
+ LESS THAN 0.5 leg=1068 gmp_before=0.458591 gmp_after=0.804171 x1=-0.9 x2=0.4
+ LESS THAN 0.5 leg=1085 gmp_before=0.46121 gmp_after=0.827166 x1=-0.7 x2=0.7
+ LESS THAN 0.5 leg=1086 gmp_before=0.423646 gmp_after=0.786706 x1=-0.9 x2=0.4
+ LESS THAN 0.5 leg=1087 gmp_before=0.441871 gmp_after=0.810543 x1=-0.9 x2=0.4
+[TIMING iter 1] WINT=0.007837s, SIGMAS=0.0074126s, RC=0.539077s, LEG=0.134552s, Total=0.707113s
+ LESS THAN 0.5 leg=1039 gmp_before=0.416688 gmp_after=0.628251 x1=-0.9 x2=0.4
+[TIMING iter 2] WINT=0.0176824s, SIGMAS=0.0182731s, RC=0.960817s, LEG=0.208437s, Total=1.24216s
+ LESS THAN 0.5 leg=1039 gmp_before=0.402618 gmp_after=0.641713 x1=-0.9 x2=0.4
+[TIMING iter 3] WINT=0.0194675s, SIGMAS=0.0281755s, RC=1.38775s, LEG=0.280749s, Total=1.77135s
+ LESS THAN 0.5 leg=1039 gmp_before=0.390477 gmp_after=0.647915 x1=-0.9 x2=0.4
+[TIMING iter 4] WINT=0.0213809s, SIGMAS=0.0376596s, RC=1.81124s, LEG=0.352996s, Total=2.30603s
+
+========== RESUMEN DE TIEMPOS ==========
+  WINT (pesos):      0.0213809 segundos
+  SIGMAS (beta):     0.0376596 segundos
+  RC (roll calls):   1.81124 segundos
+  LEG (legisladores):0.352996 segundos
+  TOTAL FASES:       2.22327 segundos
+==========================================
+
+
+Resultados:
+  Log-likelihood: -6276.2013
+  Iteraciones:    4
+  Clasificacion:  49440/52079 (94.93%)
+  W1=1.0000, W2=0.4963, Beta=6.2039
+  Tiempo: 2.3s
+
+Exportando resultados...
+Exportado: C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\p21/cpp_coordinates_all_periods.csv (155 registros)
+Exportado (polaridad corregida): C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\p21/cpp_coordinates_all_periods_corrected.csv (155 registros)
+Exportado: C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\p21/cpp_bill_parameters.csv (716 roll calls)
+Exportado: C:\Users\cow\.claude\jobs\ea44c598\tmp\verify\p21/cpp_summary.csv
+
+Completado exitosamente.
