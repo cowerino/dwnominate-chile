@@ -1,0 +1,33 @@
+{
+  "criterion": {
+    "absolute_log_likelihood_improvement": 1.0,
+    "patience_cycles": 2,
+    "minimum_cycles": 4,
+    "beta_bounds": [0.05, 20.0],
+    "weight2_bounds": [0.01, 2.0]
+  },
+  "chile_dynamic_model2": {
+    "cycles": 238,
+    "log_likelihood": -81521.360301641762,
+    "serial_reload_difference": 0.0,
+    "coordinate_rows": 2855,
+    "unique_coordinate_keys": 2855,
+    "accepted_blocks_in_final_segment": 849364,
+    "infeasible_accepted_blocks": 0,
+    "accepted_decreases": 0,
+    "max_rollcall_midpoint_radius": 1.0000000000000007,
+    "boundary_parameters": ["beta"]
+  },
+  "us_dynamic_model1": {
+    "cycles": 62,
+    "log_likelihood": -33166.396767284117,
+    "serial_reload_difference": -2.1827872842550278e-11,
+    "coordinate_rows": 523,
+    "unique_coordinate_keys": 523,
+    "accepted_blocks": 166780,
+    "infeasible_accepted_blocks": 0,
+    "accepted_decreases": 0,
+    "max_rollcall_midpoint_radius": 1.0000000000000007,
+    "boundary_parameters": ["beta"]
+  }
+}
