@@ -18,6 +18,7 @@ struct RollCallOptimizerConfig
     double relativeXTolerance = 1e-8;
     double relativeFTolerance = 1e-10;
     double constraintTolerance = 1e-10;
+    double acceptanceTolerance = 1e-8;
     double midpointInitialStep = 0.05;
     double spreadInitialStep = 0.05;
     BlockOptimizerAlgorithm algorithm = BlockOptimizerAlgorithm::Cobyla;
@@ -41,6 +42,14 @@ struct RollCallOptimizationResult
     int optimizerStatus = 0;
     BlockOptimizerAlgorithm algorithmUsed = BlockOptimizerAlgorithm::Cobyla;
     bool fallbackUsed = false;
+    bool accepted = false;
+    bool rawReturnFeasible = false;
+    bool numericalCorrectionApplied = false;
+    double rawFinalRadius = 0.0;
+    double rawConstraintViolation = 0.0;
+    double feasibilityCorrectionNorm = 0.0;
+    int infeasibleObjectiveEvaluations = 0;
+    double maxObjectiveConstraintViolation = 0.0;
     double elapsedMilliseconds = 0.0;
 
     int totalVotes = 0;

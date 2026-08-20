@@ -1,0 +1,78 @@
+﻿============================================================
+  DW-NOMINATE C++ CLI
+============================================================
+
+Configuracion:
+  Input:      <QUEVOTAN-DB>\reproduce\out\chile\cpp_input
+  Output:     <SCRATCH>\chile_dyn_A_79031cf
+  WNOMINATE:  <QUEVOTAN-DB>\reproduce\out\chile\cpp_input\wnominate_coordinates.csv
+  SeedPP:     <QUEVOTAN-DB>\reproduce\out\chile\cpp_input\wnominate_coordinates_per_period.csv
+  Modelo:     2 (cuadratico)
+  Iteraciones:4
+  Periodos:   23
+  Dimensiones:2
+  Beta:       5.9539
+  W2:         0.3463
+
+Cargando datos...
+  Ref. R:     output_R_dwnominate_model2
+  Legisladores filtrados (sin votos no-missing en ningun periodo): 2 de 340 totales
+  Pesos iniciales: W1=1.0, W2=0.3463, Beta=5.9539
+  W-NOMINATE: Cargadas 340 coordenadas iniciales desde <QUEVOTAN-DB>\reproduce\out\chile\cpp_input\wnominate_coordinates.csv
+  W-NOMINATE per-period: Cargadas 2685 coordenadas (leg, periodo) desde <QUEVOTAN-DB>\reproduce\out\chile\cpp_input\wnominate_coordinates_per_period.csv
+  Coordenadas aplicadas: 2685 per-(leg,periodo), 170 per-legislador, 0 fallback
+dwnominate.exe : Advertencia: No se puede abrir output_R_dwnominate_model2/dwnominate_bill_parameters.csv
+At line:12 char:1
++ & $exe "--input-dir=$in" "--output-dir=$outA" "--wnominate=$wnom" "-- ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Advertencia: No..._parameters.csv:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Legisladores: 2855
+  Roll calls:   12952
+
+Ejecutando DW-NOMINATE...
+ LESS THAN 0.5 leg=826 gmp_before=0.320577 gmp_after=0.376585 x1=-0.2 x2=-0.9
+ LESS THAN 0.5 leg=853 gmp_before=0.418702 gmp_after=0.529543 x1=-1.38778e-16 x2=-0.9
+ LESS THAN 0.5 leg=948 gmp_before=0.445939 gmp_after=0.512978 x1=0.3 x2=0.9
+ LESS THAN 0.5 leg=972 gmp_before=0.450947 gmp_after=0.628375 x1=-0.7 x2=0.7
+ LESS THAN 0.5 leg=1008 gmp_before=0.402504 gmp_after=0.761973 x1=-0.9 x2=0.4
+ LESS THAN 0.5 leg=1015 gmp_before=0.497985 gmp_after=0.86112 x1=-0.7 x2=0.7
+ LESS THAN 0.5 leg=1033 gmp_before=0.412344 gmp_after=0.78902 x1=-0.7 x2=0.7
+ LESS THAN 0.5 leg=1039 gmp_before=0.325812 gmp_after=0.734178 x1=-0.9 x2=0.4
+ LESS THAN 0.5 leg=1063 gmp_before=0.498628 gmp_after=0.860551 x1=-0.7 x2=0.7
+ LESS THAN 0.5 leg=1093 gmp_before=0.0117137 gmp_after=0.838838 x1=-0.9 x2=0.4
+ LESS THAN 0.5 leg=1091 gmp_before=0.14364 gmp_after=0.700602 x1=-0.9 x2=-0.1
+[TIMING iter 1] WINT=0.315215s, SIGMAS=0.344694s, RC=15.7153s, LEG=2.73058s, Total=19.4462s
+ LESS THAN 0.5 leg=826 gmp_before=0.457161 gmp_after=0.467741 x1=-0.1 x2=-0.9
+[TIMING iter 2] WINT=0.379239s, SIGMAS=0.722258s, RC=28.5994s, LEG=5.47909s, Total=35.8773s
+ LESS THAN 0.5 leg=826 gmp_before=0.437984 gmp_after=0.444616 x1=-0.1 x2=-0.9
+ LESS THAN 0.5 leg=972 gmp_before=0.499538 gmp_after=0.625029 x1=-0.7 x2=0.7
+[TIMING iter 3] WINT=0.456457s, SIGMAS=1.18736s, RC=42.1835s, LEG=7.86525s, Total=52.7716s
+ LESS THAN 0.5 leg=826 gmp_before=0.422767 gmp_after=0.426375 x1=-0.1 x2=-0.9
+ LESS THAN 0.5 leg=972 gmp_before=0.48909 gmp_after=0.622696 x1=-0.7 x2=0.7
+[TIMING iter 4] WINT=0.518306s, SIGMAS=1.5601s, RC=53.8218s, LEG=10.172s, Total=67.4955s
+
+========== RESUMEN DE TIEMPOS ==========
+  WINT (pesos):      0.518306 segundos
+  SIGMAS (beta):     1.5601 segundos
+  RC (roll calls):   53.8218 segundos
+  LEG (legisladores):10.172 segundos
+  TOTAL FASES:       66.0721 segundos
+==========================================
+
+
+Resultados:
+  Log-likelihood: -98603.6570
+  Iteraciones:    4
+  Clasificacion:  652410/692839 (94.16%)
+  W1=1.0000, W2=0.5063, Beta=5.2539
+  Tiempo: 68.2s
+
+Exportando resultados...
+Exportado: <SCRATCH>\chile_dyn_A_79031cf/cpp_coordinates_all_periods.csv (2855 registros)
+Exportado (polaridad corregida): <SCRATCH>\chile_dyn_A_79031cf/cpp_coordinates_all_periods_corrected.csv (2855 registros)
+Exportado: <SCRATCH>\chile_dyn_A_79031cf/cpp_bill_parameters.csv (12952 roll calls)
+Exportado: <SCRATCH>\chile_dyn_A_79031cf/cpp_summary.csv
+
+Completado exitosamente.

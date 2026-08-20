@@ -105,6 +105,7 @@ set_target_properties(dwnominate_modern PROPERTIES OUTPUT_NAME dwnominate-modern
 target_link_libraries(dwnominate_modern PRIVATE dwnominate_core)
 
 if(BUILD_TESTING)
+    find_package(Python3 REQUIRED COMPONENTS Interpreter)
     add_executable(test_unit_ball tests/test_unit_ball.cpp)
     target_link_libraries(test_unit_ball PRIVATE dwnominate_core)
     add_test(NAME unit_ball_constraints COMMAND test_unit_ball)
@@ -125,6 +126,10 @@ if(BUILD_TESTING)
     target_link_libraries(test_optimizer_gradients PRIVATE dwnominate_core)
     add_test(NAME optimizer_gradients COMMAND test_optimizer_gradients)
 
+    add_executable(test_feasibility_contract tests/test_feasibility_contract.cpp)
+    target_link_libraries(test_feasibility_contract PRIVATE dwnominate_core)
+    add_test(NAME feasibility_contract COMMAND test_feasibility_contract)
+
     add_test(
         NAME chile_static_alias_smoke
         COMMAND dwnominate_modern
@@ -136,8 +141,27 @@ if(BUILD_TESTING)
     )
     set_tests_properties(chile_static_alias_smoke PROPERTIES TIMEOUT 60)
 
+    add_test(
+        NAME convergence_and_served_export
+        COMMAND ${Python3_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_convergence_and_export.py
+            $<TARGET_FILE:dwnominate_modern>
+            ${CMAKE_CURRENT_SOURCE_DIR}/../data/chile-static/leg353
+            ${CMAKE_CURRENT_BINARY_DIR}/test-output/convergence-chile353
+    )
+    set_tests_properties(convergence_and_served_export PROPERTIES TIMEOUT 120)
+
+    add_test(
+        NAME dynamic_state_roundtrip
+        COMMAND ${Python3_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_dynamic_roundtrip.py
+            $<TARGET_FILE:dwnominate_modern>
+            ${CMAKE_CURRENT_SOURCE_DIR}/../engine-faithful/benchmarks/us/cpp_input
+            ${CMAKE_CURRENT_BINARY_DIR}/test-output/dynamic-roundtrip
+    )
+    set_tests_properties(dynamic_state_roundtrip PROPERTIES TIMEOUT 180)
+
     if(DWNOMINATE_ENABLE_REGRESSION_TESTS)
-        find_package(Python3 REQUIRED COMPONENTS Interpreter)
         add_test(
             NAME reference_panels
             COMMAND ${Python3_EXECUTABLE}

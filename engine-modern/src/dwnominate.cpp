@@ -279,6 +279,8 @@ DWNominateResult DWNominate::run()
     optimizerTrace_.clear();
 
     auto iterStart = std::chrono::high_resolution_clock::now();
+    double previousCycleLogLikelihood = -std::numeric_limits<double>::infinity();
+    int convergedCycles = 0;
 
 #ifdef _OPENMP
     omp_set_dynamic(0);
@@ -362,6 +364,34 @@ DWNominateResult DWNominate::run()
             ns >= 2 ? weights_(1) : 1.0,
             weights_(weights_.size() - 1)});
 
+        const double cycleImprovement = std::isfinite(previousCycleLogLikelihood)
+                                            ? currentLogLikelihood_ - previousCycleLogLikelihood
+                                            : std::numeric_limits<double>::infinity();
+        result.finalLogLikelihoodImprovement = cycleImprovement;
+        if (std::isfinite(previousCycleLogLikelihood) && cycleImprovement < -1e-8)
+        {
+            throw std::runtime_error(
+                "la likelihood global disminuyo entre ciclos: " +
+                std::to_string(cycleImprovement));
+        }
+        const double convergenceThreshold =
+            config_.convergenceAbsoluteTolerance +
+            config_.convergenceRelativeTolerance *
+                std::max(1.0, std::abs(previousCycleLogLikelihood));
+        const bool convergenceEnabled =
+            config_.convergenceAbsoluteTolerance > 0.0 ||
+            config_.convergenceRelativeTolerance > 0.0;
+        if (convergenceEnabled && ihappy >= config_.minimumIterations &&
+            cycleImprovement >= 0.0 && cycleImprovement <= convergenceThreshold)
+        {
+            ++convergedCycles;
+        }
+        else
+        {
+            convergedCycles = 0;
+        }
+        previousCycleLogLikelihood = currentLogLikelihood_;
+
         // Reporte de tiempos por iteración
         auto iterNow = std::chrono::high_resolution_clock::now();
         double elapsedSec = std::chrono::duration<double>(iterNow - iterStart).count();
@@ -372,6 +402,14 @@ DWNominateResult DWNominate::run()
                   << "LEG=" << (g_legTimeMs / 1000.0) << "s, "
                   << "LL=" << currentLogLikelihood_ << ", "
                   << "Total=" << elapsedSec << "s\n";
+
+        if (convergenceEnabled && convergedCycles >= config_.convergencePatience)
+        {
+            result.converged = true;
+            log("Convergencia alcanzada tras " + std::to_string(ihappy) +
+                " ciclos; mejora final=" + std::to_string(cycleImprovement));
+            break;
+        }
     }
     // Fin bucle 9999
 
@@ -394,9 +432,32 @@ DWNominateResult DWNominate::run()
     result.finalStats = globalStats_;
     result.optimizerTrace = optimizerTrace_;
 
-    // Asignar estadisticas de clasificacion (correccion bug reporte)
-    result.totalValidVotes = lastTotalVotes_;
-    result.classificationAfter = lastClassificationAfter_;
+    for (const auto &presence : legislatorPresence_)
+    {
+        if (presence.uniqueId < 0)
+        {
+            continue;
+        }
+        auto &periods = result.servedPeriods[presence.uniqueId];
+        for (const auto &[period, dataIndex] : presence.congressToDataIndex)
+        {
+            (void)dataIndex;
+            periods.push_back(period + 1);
+        }
+    }
+
+    // Evaluate-only mode has no roll-call phase from which to populate the
+    // historical classification counters. Preserve the established reporting
+    // path for fitted runs and use the common evaluator only when required.
+    const bool evaluateOnly = config_.fixGlobalParams &&
+                              config_.fixRollCalls &&
+                              config_.fixLegislators;
+    result.totalValidVotes = evaluateOnly
+                                 ? globalStats_.totalVotes
+                                 : lastTotalVotes_;
+    result.classificationAfter = evaluateOnly
+                                     ? globalStats_.correctClassified
+                                     : lastClassificationAfter_;
 
     // Recopilar estadisticas por legislador
     int numLegislators = static_cast<int>(legislatorCoords_.rows());
@@ -523,6 +584,25 @@ void DWNominate::executeWeightPhase(int iteration)
     // Ejecutar optimizacion
     WeightOptimizationResult result = optimizeWeight2(context, config);
 
+    BlockOptimizationTraceEntry trace;
+    trace.iteration = iteration;
+    trace.block = "weight2";
+    trace.itemIndex = 1;
+    trace.objectiveEvaluations = result.iterations;
+    trace.optimizerStatus = result.optimizerStatus;
+    trace.initialLogLikelihood = result.initialLL;
+    trace.finalLogLikelihood = result.logLikelihood;
+    trace.improvement = result.logLikelihood - result.initialLL;
+    trace.algorithm = "bobyqa";
+    trace.attempted = true;
+    trace.accepted = result.accepted;
+    trace.rawReturnFeasible = result.rawReturnFeasible;
+    trace.numericalCorrectionApplied = result.numericalCorrectionApplied;
+    trace.constraintTolerance = config.feasibilityTolerance;
+    trace.rawConstraintViolation = result.rawConstraintViolation;
+    trace.feasibilityCorrectionNorm = result.feasibilityCorrection;
+    optimizerTrace_.push_back(trace);
+
     // weights_ ya fue modificado in-place por optimizeWeight2 a traves del context
     // Actualizar log-likelihood actual
     currentLogLikelihood_ = result.logLikelihood;
@@ -587,6 +667,25 @@ void DWNominate::executeBetaPhase(int iteration)
 
     // Ejecutar optimizacion
     BetaOptimizationResult result = optimizeBeta(context, config);
+
+    BlockOptimizationTraceEntry trace;
+    trace.iteration = iteration;
+    trace.block = "beta";
+    trace.itemIndex = static_cast<int>(weights_.size()) - 1;
+    trace.objectiveEvaluations = result.iterations;
+    trace.optimizerStatus = result.optimizerStatus;
+    trace.initialLogLikelihood = result.initialLL;
+    trace.finalLogLikelihood = result.logLikelihood;
+    trace.improvement = result.logLikelihood - result.initialLL;
+    trace.algorithm = "bobyqa";
+    trace.attempted = true;
+    trace.accepted = result.accepted;
+    trace.rawReturnFeasible = result.rawReturnFeasible;
+    trace.numericalCorrectionApplied = result.numericalCorrectionApplied;
+    trace.constraintTolerance = config.feasibilityTolerance;
+    trace.rawConstraintViolation = result.rawConstraintViolation;
+    trace.feasibilityCorrectionNorm = result.feasibilityCorrection;
+    optimizerTrace_.push_back(trace);
 
     // weights_ ya fue modificado in-place por optimizeBeta a traves del context
     // Actualizar log-likelihood actual
@@ -1065,6 +1164,18 @@ void DWNominate::processRollCallParallel(
     trace.elapsedMilliseconds = rcResult.elapsedMilliseconds;
     trace.algorithm = toString(rcResult.algorithmUsed);
     trace.fallbackUsed = rcResult.fallbackUsed;
+    trace.attempted = rcResult.totalIterations > 0;
+    trace.accepted = rcResult.accepted;
+    trace.rawReturnFeasible = rcResult.rawReturnFeasible;
+    trace.numericalCorrectionApplied =
+        rcResult.numericalCorrectionApplied;
+    trace.constraintTolerance = rcConfig.constraintTolerance;
+    trace.rawConstraintViolation = rcResult.rawConstraintViolation;
+    trace.feasibilityCorrectionNorm = rcResult.feasibilityCorrectionNorm;
+    trace.infeasibleObjectiveEvaluations =
+        rcResult.infeasibleObjectiveEvaluations;
+    trace.maxObjectiveConstraintViolation =
+        rcResult.maxObjectiveConstraintViolation;
 }
 
 // Prepara datos para un roll call.
@@ -1476,6 +1587,18 @@ BlockOptimizationTraceEntry DWNominate::processLegislator(
     trace.elapsedMilliseconds = legResult.elapsedMilliseconds;
     trace.algorithm = toString(legResult.algorithmUsed);
     trace.fallbackUsed = legResult.fallbackUsed;
+    trace.attempted = legResult.objectiveEvaluations > 0;
+    trace.accepted = legResult.accepted;
+    trace.rawReturnFeasible = legResult.rawReturnFeasible;
+    trace.numericalCorrectionApplied =
+        legResult.numericalCorrectionApplied;
+    trace.constraintTolerance = legConfig.constraintTolerance;
+    trace.rawConstraintViolation = legResult.rawConstraintViolation;
+    trace.feasibilityCorrectionNorm = legResult.feasibilityCorrectionNorm;
+    trace.infeasibleObjectiveEvaluations =
+        legResult.infeasibleObjectiveEvaluations;
+    trace.maxObjectiveConstraintViolation =
+        legResult.maxObjectiveConstraintViolation;
     return trace;
 }
 

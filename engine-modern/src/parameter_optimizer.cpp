@@ -1,4 +1,5 @@
 #include "parameter_optimizer.hpp"
+#include "feasibility.hpp"
 
 #include <nlopt.hpp>
 
@@ -108,33 +109,53 @@ ParameterOptimizationResult optimizeParameter(
         status = nlopt::FORCED_STOP;
     }
 
-    output.value = std::clamp(x.front(), effectiveLower, effectiveUpper);
-    context.weights(paramIndex) = output.value;
-    output.logLikelihood = computeLogLikelihoodParallel(
-                               context.legislatorCoords,
-                               context.rollCallParams,
-                               context.votes,
-                               context.weights,
-                               context.normalCDF,
-                               context.validRollCalls)
-                               .logLikelihood;
+    BoundFeasibilityAudit feasibility;
+    double acceptedValue = output.initialValue;
+    output.rawReturnFeasible = acceptBoundReturn(
+        x.front(),
+        effectiveLower,
+        effectiveUpper,
+        config.feasibilityTolerance,
+        acceptedValue,
+        feasibility);
+    output.rawConstraintViolation = feasibility.constraintViolation;
+    output.feasibilityCorrection = feasibility.correction;
+    output.numericalCorrectionApplied = feasibility.correctionApplied;
+
+    context.weights(paramIndex) = acceptedValue;
+    output.logLikelihood = output.rawReturnFeasible
+                               ? computeLogLikelihoodParallel(
+                                     context.legislatorCoords,
+                                     context.rollCallParams,
+                                     context.votes,
+                                     context.weights,
+                                     context.normalCDF,
+                                     context.validRollCalls)
+                                     .logLikelihood
+                               : output.initialLL;
     // A failed or roundoff-limited local solve must never make the outer
     // alternating trajectory worse. Keep the pre-solve state as the accepted
     // point unless NLopt returns a finite non-decreasing objective.
+    const bool acceptableStatus = static_cast<int>(status) > 0 ||
+                                  status == nlopt::ROUNDOFF_LIMITED;
     const bool objectiveDidNotDecrease =
         std::isfinite(output.logLikelihood) &&
-        output.logLikelihood + 1e-12 >= output.initialLL;
-    if (!objectiveDidNotDecrease)
+        output.logLikelihood + config.acceptanceTolerance >= output.initialLL;
+    output.accepted = output.rawReturnFeasible && acceptableStatus &&
+                      objectiveDidNotDecrease;
+    if (!output.accepted)
     {
         output.value = output.initialValue;
         context.weights(paramIndex) = output.initialValue;
         output.logLikelihood = output.initialLL;
     }
+    else
+    {
+        output.value = acceptedValue;
+    }
     output.iterations = objective.evaluations;
     output.optimizerStatus = static_cast<int>(status);
-    output.converged = objectiveDidNotDecrease &&
-                       (static_cast<int>(status) > 0 ||
-                        status == nlopt::ROUNDOFF_LIMITED);
+    output.converged = output.accepted;
     output.direction = (output.value > output.initialValue) -
                        (output.value < output.initialValue);
     return output;

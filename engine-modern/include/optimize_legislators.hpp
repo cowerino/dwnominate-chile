@@ -14,6 +14,7 @@ struct LegislatorOptimizerConfig
     double relativeXTolerance = 1e-8;
     double relativeFTolerance = 1e-10;
     double constraintTolerance = 1e-10;
+    double acceptanceTolerance = 1e-8;
     double interceptInitialStep = 0.05;
     double temporalInitialStep = 0.02;
     double initialInteriorRadius = 0.75;
@@ -45,6 +46,14 @@ struct LegislatorOptimizationResult
     double initialLogLikelihood = 0.0;
     BlockOptimizerAlgorithm algorithmUsed = BlockOptimizerAlgorithm::Cobyla;
     bool fallbackUsed = false;
+    bool accepted = false;
+    bool rawReturnFeasible = false;
+    bool numericalCorrectionApplied = false;
+    double rawFinalRadius = 0.0;
+    double rawConstraintViolation = 0.0;
+    double feasibilityCorrectionNorm = 0.0;
+    int infeasibleObjectiveEvaluations = 0;
+    double maxObjectiveConstraintViolation = 0.0;
     double elapsedMilliseconds = 0.0;
 
     explicit LegislatorOptimizationResult(int dimensions)

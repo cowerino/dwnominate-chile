@@ -22,6 +22,11 @@ struct ParameterOptimizationResult
     bool converged = false;
     int direction = 0;
     int optimizerStatus = 0;
+    bool accepted = false;
+    bool rawReturnFeasible = false;
+    bool numericalCorrectionApplied = false;
+    double rawConstraintViolation = 0.0;
+    double feasibilityCorrection = 0.0;
 };
 
 using BetaOptimizationResult = ParameterOptimizationResult;
@@ -38,6 +43,8 @@ struct ScalarOptimizerConfig
     double initialStep = 0.05;
     double relativeXTolerance = 1e-8;
     double relativeFTolerance = 1e-10;
+    double feasibilityTolerance = 1e-12;
+    double acceptanceTolerance = 1e-8;
     int maxEvaluations = 120;
     bool verbose = false; // retained for CLI compatibility
 };

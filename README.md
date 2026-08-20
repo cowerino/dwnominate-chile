@@ -16,7 +16,9 @@ Society (SCCC / JCC 2026). Roberto Nieves Tocornal, Pablo Antivil Morales, Julio
 | path | what |
 |---|---|
 | `engine-faithful/` | **the paper's engine.** Our C++ port of `dwnom2004` at `quevotan-api@79031cf`, sources, build files, benchmarks and the exact compiler flags. Every number in the paper comes from this tree |
-| `engine-modern/` | the complete NLopt variant (COBYLA, SLSQP and BOBYQA), authored by Julio Rojas-Mora. **A second engine and a cross-check, never the paper-faithful one.** Includes analytic gradients, deterministic telemetry, local scalar trust regions, unit/regression tests and the hybrid runner |
+| `engine-modern/` | the complete NLopt variant (COBYLA, SLSQP and BOBYQA), authored by Julio Rojas-Mora. **A second engine and a cross-check, never the paper-faithful one.** Includes analytic gradients, deterministic telemetry, local scalar trust regions, a solver-return feasibility contract, unit/regression tests and the hybrid runner |
+| `fortran-canonical/` | **the third engine.** Both canonical Fortran sources unmodified: Poole/Rosenthal's original 2004 distribution and the `wmay/dwnominate` core the paper's `*-fortran` numbers come from, plus the stub and harness that let each link outside R. Same estimation core, verified subroutine by subroutine |
+| `data/` | **every panel any engine here is run on**, with real rosters: the four Chilean panels (23-period dynamic plus legislaturas 353, 366, 368) and the two US panels (Senate 90, and the 5-congress dynamic). See `data/README.md` |
 | `data/chile-static/` | **the Chilean roll calls used for the static tests**, legislaturas 353, 366 and 368: vote matrix (`votes_matrix_p1.csv`, the name the loader expects), W-NOMINATE seed and metadata each, with a README carrying the padding and screen caveats and our agreement numbers |
 | `experimental/` | **two pre-fix trees, kept deliberately, not for results.** `f01e747-prefix-trunk/` is the known-bad build the validation suite is calibrated against; `e27ec21-prefix-projections-restored/` records a measured negative result plus unmerged patches. See `experimental/README.md` |
 
@@ -164,11 +166,31 @@ three of four static panels.
 
 ## Not here yet
 
-- `reference-fortran/`, the canonical 2004 Fortran. Redistributable under MIT from
-  `wmay/dwnominate` with attribution to William May, Keith T. Poole and Nolan McCarty.
-- `reproduce/`, the extraction scripts and per-figure receipts.
+- `reproduce/`, the extraction scripts and per-figure receipts. This includes the input
+  marshalling for `fortran-canonical/`: the CSV-to-legacy-7-file generator the 2004 engine
+  needs, and the R driver that produced the published Fortran arm.
 - A licence file. Proposed: MIT for the code, CC BY 4.0 for data and reproduction scripts. Not yet
   agreed by all three authors.
+
+## Reproducibility of this package itself, 2026-08-20
+
+Three defects that made the package unreproducible off the authoring machine are fixed, all of them
+found by reading it as an outsider would.
+
+- **Metadata was skeletonised.** Every `legislator_metadata.csv` carried IDs and blank name, party,
+  region and district columns, and the figure scripts compensated by reading the real rosters from a
+  sibling checkout via a hard-coded `C:/Users/...` path. Rosters are real in `data/` now and the
+  scripts read them from there. All 20 map slots regenerate **byte-identical PNGs**, which is the
+  check that the substitution is faithful rather than merely plausible.
+- **The US panels were missing** while `results/` carried US arms. Added as `data/us-sen90/` and
+  `data/us-dynamic-5p/`.
+- **The Fortran arm of the comparison lived outside the repository.** Its coordinate, bill-parameter
+  and summary exports are now at `results/2026-08-20-three-engine/chile-dyn-m2/fortran/`, so the
+  three-engine directory holds three engines.
+
+Absolute local paths are gone from every tracked file. Run logs keep their meaning through
+placeholders (`<QUEVOTAN-DB>`, `<SCRATCH>`, `<HOME>`) rather than being stripped, so a log still
+records which input a run consumed.
 
 ## Building
 
@@ -201,6 +223,20 @@ cmake --build build -j
 Check the configure output for `Reference LAPACK found at ...` before trusting a fit. If instead you
 see `USE_REF_LAPACK=OFF` or no LAPACK line at all, you are on the Jacobi path and your numbers will
 not match the ones reported above.
+
+### engine-modern, and one Windows trap
+
+```
+cmake -S engine-modern -B engine-modern/build -DCMAKE_BUILD_TYPE=Release
+cmake --build engine-modern/build -j
+ctest --test-dir engine-modern/build --output-on-failure
+```
+
+NLopt is fetched and built by the configure step, so it does not need to be supplied. On
+Windows/MinGW it lands as `engine-modern/build/_deps/nlopt-build/libnlopt.dll`, which is **not**
+beside the test binaries and is not found through an RPATH the way it is on Linux. Every test then
+fails with `0xc0000135`, `STATUS_DLL_NOT_FOUND`, which reads like a broken build and is not one. Put
+that directory and the MinGW `bin` on `PATH` for the test run and the suite passes 9/9.
 
 See `engine-faithful/CMakeLists.txt` for the flags and `engine-faithful/SEEDS.md` for the seeding
 contract, which matters: the frame the seed supplies is the frame the fit keeps.

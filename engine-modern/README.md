@@ -47,11 +47,15 @@ not visit the same grid points or reach the same local optimum as `RCINT2`,
 
 ## Geometric invariants
 
-Three checks from the Fortran caller are enforced explicitly:
+Four checks from the Fortran caller and the declared optimization domain are
+enforced explicitly:
 
 1. a preloaded roll-call midpoint is made feasible before evaluation;
 2. the midpoint returned by CUTPLANE is projected before optimization;
-3. the nonlinear unit-ball constraint remains active throughout COBYLA.
+3. the nonlinear unit-ball constraint is supplied to every constrained block
+   solver;
+4. a returned point outside the declared constraint tolerance is rejected,
+   rather than projected into the feasible set and accepted retroactively.
 
 CUTPLANE also preserves the original `XMAT`/`LDATA` row contract. Coordinates
 and vote codes remain aligned until the routine sorts their projections, and
@@ -65,6 +69,43 @@ coordinate is exactly its constrained intercept. In dynamic models, as in the
 original formulation, the intercept is constrained but the temporal
 coefficients are not; a reconstructed time-specific coordinate can therefore
 leave the unit ball.
+
+The word *mean* in the original FAQ is exact for a linear trajectory on the
+equally spaced, symmetric grid used by `XINT`.  For a quadratic trajectory with
+`S` served periods, however, the finite-grid identity is
+`mean(x) = beta_0 + beta_2/(S-1)`, because the discrete mean of the second
+Legendre polynomial is `1/(S-1)`.  Thus the quantity constrained by the code is
+specifically `beta_0`; it need not equal the arithmetic mean in model 2.  The
+CLI exports this quantity and all active temporal coefficients in
+`cpp_temporal_coefficients.csv`.
+
+### Strict solver-return contract
+
+For a unit-ball block the recorded violation is
+`max(0, ||x||^2 - 1)`. A raw solver return is handled as follows:
+
+- violation greater than the configured tolerance: reject the return and keep
+  the exact feasible pre-solve state;
+- violation between zero and the tolerance: permit only a numerical boundary
+  snap and record its norm;
+- feasible return: accept only if its independently recomputed block
+  log-likelihood is finite and does not decrease by more than the acceptance
+  tolerance.
+
+The scalar BOBYQA blocks apply the same rule to their bounds. Consequently, a
+materially infeasible candidate can no longer become an accepted result merely
+because it looks better after projection. `cpp_optimizer_trace.csv` exposes
+`attempted`, `accepted`, `raw_return_feasible`, the raw violation, the
+correction norm, and the before/after likelihood for every block.
+
+This return contract is distinct from the solver's *internal path*. SLSQP and
+COBYLA are allowed to call the objective at infeasible trial points while they
+construct a constrained step. The objective callbacks count these calls and
+their maximum violation. The final state can therefore pass the strict return
+contract while `internal_feasible_objective_path` fails. That distinction is
+deliberate and machine-tested; an experiment that requires every likelihood
+evaluation to be feasible must use the corresponding audit gate rather than
+infer it from the final radius.
 
 ## Dependencies
 
@@ -134,6 +175,68 @@ The scalar trajectory is selected independently:
 dwnominate-modern ... --scalar-search=local   # default, Fortran-reach box
 dwnominate-modern ... --scalar-search=global  # experimental full bounds
 ```
+
+`--evaluate-only` loads coordinates, bill parameters, `beta`, and `w2`, then
+evaluates that state without running any optimizer. The audit framework uses
+this mode to score modern and reference terminal states with the same C++
+likelihood implementation.
+
+## Optimization-contract audit
+
+The audit runner separates four questions that must not be collapsed into a
+single correlation coefficient:
+
+1. Were all accepted solver returns feasible within their declared numerical
+   tolerance?
+2. Did the solver ever evaluate the likelihood outside the feasible domain
+   internally?
+3. Which terminal state has the larger likelihood under one common evaluator?
+4. Are the complete parameter states numerically equal in their common
+   starting frame?
+
+Run it against the reproducible faithful C++ trajectory proxy with:
+
+```bash
+python engine-modern/tools/audit_optimization_contract.py \
+  --modern-binary=build/engine-modern/dwnominate-modern \
+  --reference-binary=build/engine-faithful/dwnominate \
+  --reference-label=faithful-cpp-proxy \
+  --repo-root=. --work-dir=build/optimization-audit --iterations=4
+```
+
+To answer the stricter Fortran question, first export each canonical Fortran
+terminal state into `leg353`, `leg366`, and `leg368` directories containing
+`cpp_coordinates_all_periods.csv`, `cpp_bill_parameters.csv`, and
+`cpp_summary.csv`, then replace the reference arguments with:
+
+```bash
+--reference-output-root=<standardized-fortran-root> \
+--reference-label=canonical-fortran-2004 \
+--reference-is-actual-fortran
+```
+
+The runner produces `optimization_audit.json`, a panel CSV, and a vote-bin
+sensitivity CSV. It always aborts if an infeasible return was accepted or an
+accepted block decreased beyond tolerance. Add
+`--require-numerical-equivalence` to return status 2 when the objective or any
+raw parameter differs beyond tolerance. Add
+`--require-feasible-objective-evaluations` to return status 3 when a solver
+evaluates even one materially infeasible internal trial.
+
+The current four-cycle Chile run against the faithful C++ proxy gives:
+
+| legislature | accepted returns outside tolerance | infeasible internal evaluations | common LL difference, modern - proxy | numerically equal | members with <25 votes |
+|---:|---:|---:|---:|:---:|---:|
+| 353 | 0 / 904 | 21,417 | +57.528 | no | 6 / 121 |
+| 366 | 0 / 2,280 | 38,723 | +459.872 | no | 0 / 155 |
+| 368 | 0 / 3,596 | 80,416 | +412.229 | no | 2 / 161 |
+
+Thus the tested modern endpoints are feasible and have higher *in-sample*
+likelihood under the common evaluator, but they are not the same solution.
+This is not evidence of a global optimum, better inference, or superiority to
+the canonical Fortran, because the checked reference here is the faithful C++
+proxy. The committed machine-readable snapshot is
+`benchmarks/optimization_contract_chile_faithful_cpp.json`.
 
 ## Performance options
 

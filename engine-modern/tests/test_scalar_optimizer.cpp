@@ -61,6 +61,12 @@ int main()
         std::cerr << "scalar optimizer reduced the likelihood\n";
         return 1;
     }
+    if (!result.accepted || !result.rawReturnFeasible ||
+        result.rawConstraintViolation > localConfig.feasibilityTolerance)
+    {
+        std::cerr << "local scalar return violated the strict feasibility contract\n";
+        return 1;
+    }
 
     // The global mode remains available for explicit experiments and must
     // preserve the same monotonicity and identification guarantees.
@@ -71,7 +77,9 @@ int main()
     if (!std::isfinite(globalResult.logLikelihood) ||
         globalResult.value < globalConfig.lowerBound ||
         globalResult.value > globalConfig.upperBound ||
-        globalResult.logLikelihood + 1e-8 < globalResult.initialLL)
+        globalResult.logLikelihood + 1e-8 < globalResult.initialLL ||
+        !globalResult.accepted || !globalResult.rawReturnFeasible ||
+        globalResult.rawConstraintViolation > globalConfig.feasibilityTolerance)
     {
         std::cerr << "global scalar mode violated its contract\n";
         return 1;

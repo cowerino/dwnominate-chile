@@ -1,0 +1,53 @@
+{
+  "criterion": {
+    "absolute_log_likelihood_improvement": 1.0,
+    "patience_cycles": 2,
+    "minimum_cycles": 4,
+    "beta_bounds": [0.05, 20.0],
+    "weight2_bounds": [0.01, 2.0]
+  },
+  "chile_dynamic_model2": {
+    "cycles": 238,
+    "log_likelihood": -81521.360301641762,
+    "serial_reload_difference": 0.0,
+    "coordinate_rows": 2855,
+    "unique_coordinate_keys": 2855,
+    "accepted_blocks_in_final_segment": 849364,
+    "infeasible_accepted_blocks": 0,
+    "accepted_decreases": 0,
+    "max_rollcall_midpoint_radius": 1.0000000000000007,
+    "temporal_center_audit": {
+      "legislators": 338,
+      "max_intercept_radius": 1.0000000000000004,
+      "intercepts_outside_unit_circle": 0,
+      "max_arithmetic_mean_radius": 1.0326040639506469,
+      "arithmetic_means_outside_unit_circle": 5,
+      "max_realised_radius": 2.9905186119597644,
+      "realised_positions_outside_unit_circle": 294,
+      "max_reconstruction_error": 1.3322676295501878e-15
+    },
+    "boundary_parameters": ["beta"]
+  },
+  "us_dynamic_model1": {
+    "cycles": 62,
+    "log_likelihood": -33166.396767284117,
+    "serial_reload_difference": -2.1827872842550278e-11,
+    "coordinate_rows": 523,
+    "unique_coordinate_keys": 523,
+    "accepted_blocks": 166780,
+    "infeasible_accepted_blocks": 0,
+    "accepted_decreases": 0,
+    "max_rollcall_midpoint_radius": 1.0000000000000007,
+    "temporal_center_audit": {
+      "legislators": 168,
+      "max_intercept_radius": 1.0000000000000002,
+      "intercepts_outside_unit_circle": 0,
+      "max_arithmetic_mean_radius": 1.0000000000000002,
+      "arithmetic_means_outside_unit_circle": 0,
+      "max_realised_radius": 1.1647694032496103,
+      "realised_positions_outside_unit_circle": 5,
+      "max_reconstruction_error": 8.881784197001252e-16
+    },
+    "boundary_parameters": ["beta"]
+  }
+}

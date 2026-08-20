@@ -1,0 +1,59 @@
+﻿============================================================
+  DW-NOMINATE C++ CLI
+============================================================
+
+Configuracion:
+  Input:      <HOME>\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\sen90
+  Output:     <SCRATCH>\verify\sen90
+  WNOMINATE:  <HOME>\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\sen90\wnominate_coordinates.csv
+  Modelo:     0 (constante)
+  Iteraciones:4
+  Periodos:   1
+  Dimensiones:2
+  Beta:       5.9539
+  W2:         0.3463
+
+Cargando datos...
+  Ref. R:     output_R_dwnominate_model0
+  Pesos iniciales: W1=1.0, W2=0.3463, Beta=5.9539
+  W-NOMINATE: Cargadas 102 coordenadas iniciales desde <HOME>\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\sen90\wnominate_coordinates.csv
+  Coordenadas aplicadas: 0 per-(leg,periodo), 102 per-legislador, 0 fallback
+dwnominate.exe : Advertencia: No se puede abrir output_R_dwnominate_model0/dwnominate_bill_parameters.csv
+At line:18 char:3
++   & $exe "--input-dir=$($j.i)" "--output-dir=$o" "--wnominate=$w" "-- ...
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Advertencia: No..._parameters.csv:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Legisladores: 102
+  Roll calls:   596
+
+Ejecutando DW-NOMINATE...
+[TIMING iter 1] WINT=0.0069398s, SIGMAS=0.0062559s, RC=0.560093s, LEG=0.0680057s, Total=0.658666s
+[TIMING iter 2] WINT=0.0086678s, SIGMAS=0.0149628s, RC=0.994605s, LEG=0.134046s, Total=1.19233s
+[TIMING iter 3] WINT=0.0104694s, SIGMAS=0.0235455s, RC=1.43937s, LEG=0.199647s, Total=1.72949s
+[TIMING iter 4] WINT=0.0121623s, SIGMAS=0.0334489s, RC=1.87621s, LEG=0.266169s, Total=2.26187s
+
+========== RESUMEN DE TIEMPOS ==========
+  WINT (pesos):      0.0121623 segundos
+  SIGMAS (beta):     0.0334489 segundos
+  RC (roll calls):   1.87621 segundos
+  LEG (legisladores):0.266169 segundos
+  TOTAL FASES:       2.18799 segundos
+==========================================
+
+
+Resultados:
+  Log-likelihood: -15457.1669
+  Iteraciones:    4
+  Clasificacion:  39363/46440 (84.76%)
+  W1=1.0000, W2=0.5063, Beta=4.7664
+  Tiempo: 2.3s
+
+Exportando resultados...
+Exportado: <SCRATCH>\verify\sen90/cpp_coordinates_all_periods.csv (102 registros)
+Exportado (polaridad corregida): <SCRATCH>\verify\sen90/cpp_coordinates_all_periods_corrected.csv (102 registros)
+Exportado: <SCRATCH>\verify\sen90/cpp_bill_parameters.csv (596 roll calls)
+Exportado: <SCRATCH>\verify\sen90/cpp_summary.csv
+
+Completado exitosamente.

@@ -1,4 +1,5 @@
 #include "optimize_legislators.hpp"
+#include "feasibility.hpp"
 
 #include <nlopt.hpp>
 
@@ -124,7 +125,10 @@ struct LegislatorObjective
     int lastPeriod;
     int terms;
     int dimensions;
+    double constraintTolerance;
     int evaluations = 0;
+    int infeasibleEvaluations = 0;
+    double maxConstraintViolation = 0.0;
 
     static double evaluate(
         const std::vector<double> &parameters,
@@ -139,6 +143,22 @@ struct LegislatorObjective
             self.terms,
             self.dimensions,
             coefficients);
+
+        double interceptNormSquared = 0.0;
+        for (int k = 0; k < self.dimensions; ++k)
+        {
+            interceptNormSquared +=
+                parameters[static_cast<std::size_t>(k)] *
+                parameters[static_cast<std::size_t>(k)];
+        }
+        const double violation =
+            std::max(0.0, interceptNormSquared - 1.0);
+        self.maxConstraintViolation =
+            std::max(self.maxConstraintViolation, violation);
+        if (violation > self.constraintTolerance)
+        {
+            ++self.infeasibleEvaluations;
+        }
 
         const auto result = computeLegislatorDerivatives(
             self.legislatorIndex,
@@ -327,7 +347,8 @@ LegislatorOptimizationResult optimizeLegislator(
         firstPeriod,
         lastPeriod,
         terms,
-        dimensions};
+        dimensions,
+        config.constraintTolerance};
     InterceptConstraint constraint{dimensions};
 
     const std::vector<double> initialParameters = parameters;
@@ -386,37 +407,69 @@ LegislatorOptimizationResult optimizeLegislator(
     BlockOptimizerAlgorithm algorithmUsed = config.algorithm;
     nlopt::result status = runSolver(algorithmUsed, parameters, optimum);
 
-    auto candidateLikelihood = [&]() {
+    UnitBallFeasibilityAudit returnAudit;
+    TemporalCoefficients acceptedCoefficients = initialCoefficients;
+    double acceptedLikelihood = output.initialLogLikelihood;
+
+    auto auditSolverReturn = [&](nlopt::result currentStatus) {
+        Eigen::VectorXd rawIntercept(dimensions);
+        for (int k = 0; k < dimensions; ++k)
+        {
+            rawIntercept(k) = parameters[static_cast<std::size_t>(k)];
+        }
+        Eigen::VectorXd sanitizedIntercept(dimensions);
+        if (!acceptUnitBallReturn(
+                rawIntercept,
+                config.constraintTolerance,
+                sanitizedIntercept,
+                returnAudit))
+        {
+            return false;
+        }
+        if (!std::all_of(
+                parameters.begin(), parameters.end(),
+                [](double value) { return std::isfinite(value); }))
+        {
+            return false;
+        }
+
         TemporalCoefficients candidateCoefficients(dimensions);
         copyParametersToCoefficients(
             parameters, terms, dimensions, candidateCoefficients);
-        candidateCoefficients.beta.row(0) =
-            projectToInterior(
-                candidateCoefficients.beta.row(0).transpose(), 1.0)
-                .transpose();
-        return computeLegislatorDerivatives(
-                   legislatorIndex,
-                   periodInfo,
-                   trends,
-                   candidateCoefficients,
-                   rollCallMidpoints,
-                   rollCallSpreads,
-                   votes,
-                   validRollCalls,
-                   weights,
-                   normalCDF,
-                   model,
-                   firstPeriod,
-                   lastPeriod)
-            .logLikelihood;
+        candidateCoefficients.beta.row(0) = sanitizedIntercept.transpose();
+        acceptedLikelihood = computeLegislatorDerivatives(
+                                 legislatorIndex,
+                                 periodInfo,
+                                 trends,
+                                 candidateCoefficients,
+                                 rollCallMidpoints,
+                                 rollCallSpreads,
+                                 votes,
+                                 validRollCalls,
+                                 weights,
+                                 normalCDF,
+                                 model,
+                                 firstPeriod,
+                                 lastPeriod)
+                                 .logLikelihood;
+        const bool statusAcceptable =
+            isSuccessful(currentStatus) ||
+            currentStatus == nlopt::ROUNDOFF_LIMITED;
+        const bool acceptable =
+            statusAcceptable && std::isfinite(acceptedLikelihood) &&
+            acceptedLikelihood + config.acceptanceTolerance >=
+                output.initialLogLikelihood;
+        if (acceptable)
+        {
+            acceptedCoefficients = candidateCoefficients;
+        }
+        return acceptable;
     };
 
-    const bool unusableSlsqp =
+    bool candidateAccepted = auditSolverReturn(status);
+    if (!candidateAccepted &&
         config.algorithm == BlockOptimizerAlgorithm::Slsqp &&
-        (!std::isfinite(optimum) ||
-         (!(isSuccessful(status) || status == nlopt::ROUNDOFF_LIMITED)) ||
-         candidateLikelihood() + 1e-8 < output.initialLogLikelihood);
-    if (unusableSlsqp && config.fallbackToCobyla)
+        config.fallbackToCobyla)
     {
         parameters = initialParameters;
         optimum = output.initialLogLikelihood;
@@ -424,12 +477,21 @@ LegislatorOptimizationResult optimizeLegislator(
             BlockOptimizerAlgorithm::Cobyla, parameters, optimum);
         algorithmUsed = BlockOptimizerAlgorithm::Cobyla;
         output.fallbackUsed = true;
+        candidateAccepted = auditSolverReturn(status);
     }
 
-    TemporalCoefficients coefficients(dimensions);
-    copyParametersToCoefficients(parameters, terms, dimensions, coefficients);
-    coefficients.beta.row(0) =
-        projectToInterior(coefficients.beta.row(0).transpose(), 1.0).transpose();
+    output.accepted = candidateAccepted;
+    output.rawReturnFeasible = returnAudit.feasibleWithinTolerance;
+    output.numericalCorrectionApplied = returnAudit.correctionApplied;
+    output.rawFinalRadius = returnAudit.rawRadius;
+    output.rawConstraintViolation = returnAudit.constraintViolation;
+    output.feasibilityCorrectionNorm = returnAudit.correctionNorm;
+    output.infeasibleObjectiveEvaluations = objective.infeasibleEvaluations;
+    output.maxObjectiveConstraintViolation = objective.maxConstraintViolation;
+
+    // A materially infeasible or non-monotone return is rejected. The
+    // previous feasible coefficients remain authoritative.
+    const TemporalCoefficients &coefficients = acceptedCoefficients;
 
     const auto final = computeLegislatorDerivatives(
         legislatorIndex,
@@ -456,8 +518,7 @@ LegislatorOptimizationResult optimizeLegislator(
     output.objectiveEvaluations = objective.evaluations;
     output.optimizerStatus = static_cast<int>(status);
     output.algorithmUsed = algorithmUsed;
-    output.converged = isSuccessful(status) ||
-                       status == nlopt::ROUNDOFF_LIMITED;
+    output.converged = candidateAccepted;
     output.elapsedMilliseconds = std::chrono::duration<double, std::milli>(
                                      std::chrono::steady_clock::now() - started)
                                      .count();

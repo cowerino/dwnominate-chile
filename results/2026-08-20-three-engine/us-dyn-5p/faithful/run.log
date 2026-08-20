@@ -1,0 +1,78 @@
+﻿============================================================
+  DW-NOMINATE C++ CLI
+============================================================
+
+Configuracion:
+  Input:      <HOME>\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\us\cpp_input
+  Output:     <SCRATCH>\verify\us5
+  WNOMINATE:  <HOME>\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\us\cpp_input\wnominate_coordinates.csv
+  Modelo:     1 (lineal)
+  Iteraciones:4
+  Periodos:   5
+  Dimensiones:2
+  Beta:       5.9539
+  W2:         0.3463
+
+Cargando datos...
+  Ref. R:     output_R_dwnominate_model1
+  Pesos iniciales: W1=1.0, W2=0.3463, Beta=5.9539
+  W-NOMINATE: Cargadas 168 coordenadas iniciales desde <HOME>\Documents\GitHub\quevotan-api\nominate_cmodule\benchmarks\us\cpp_input\wnominate_coordinates.csv
+  Coordenadas aplicadas: 0 per-(leg,periodo), 523 per-legislador, 0 fallback
+dwnominate.exe : Advertencia: No se puede abrir output_R_dwnominate_model1/dwnominate_bill_parameters.csv
+At line:18 char:3
++   & $exe "--input-dir=$($j.i)" "--output-dir=$o" "--wnominate=$w" "-- ...
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Advertencia: No..._parameters.csv:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Legisladores: 523
+  Roll calls:   2940
+
+Ejecutando DW-NOMINATE...
+ LESS THAN 0.5 leg=10808 gmp_before=0.438654 gmp_after=0.997635 x1=0.7 x2=0.6
+ LESS THAN 0.5 leg=14435 gmp_before=0.404061 gmp_after=0.859817 x1=0.8 x2=0.4
+ LESS THAN 0.5 leg=20330 gmp_before=0.449184 gmp_after=0.853079 x1=0.7 x2=-0.1
+ LESS THAN 0.5 leg=20707 gmp_before=0.492501 gmp_after=0.87917 x1=0.6 x2=-1.38778e-16
+ LESS THAN 0.5 leg=20930 gmp_before=0.484071 gmp_after=0.866953 x1=0.6 x2=-1.38778e-16
+ LESS THAN 0.5 leg=21325 gmp_before=0.438644 gmp_after=0.835659 x1=0.6 x2=0.1
+ LESS THAN 0.5 leg=20713 gmp_before=0.460902 gmp_after=0.881611 x1=0.7 x2=0.1
+ LESS THAN 0.5 leg=20923 gmp_before=0.467116 gmp_after=0.835363 x1=0.6 x2=-0.1
+ LESS THAN 0.5 leg=29940 gmp_before=0.48065 gmp_after=0.88103 x1=0.7 x2=-1.38778e-16
+ LESS THAN 0.5 leg=40913 gmp_before=0.499641 gmp_after=0.594656 x1=-0.1 x2=-0.1
+ LESS THAN 0.5 leg=41104 gmp_before=0.435027 gmp_after=0.624619 x1=-0.9 x2=0.4
+ LESS THAN 0.5 leg=41101 gmp_before=0.435497 gmp_after=0.869552 x1=0.7 x2=0.1
+ LESS THAN 0.5 leg=41110 gmp_before=0.426066 gmp_after=0.681594 x1=-0.9 x2=0.4
+ LESS THAN 0.5 leg=41301 gmp_before=0.39565 gmp_after=0.848547 x1=0.8 x2=0.5
+ LESS THAN 0.5 leg=41306 gmp_before=0.498188 gmp_after=0.888986 x1=0.6 x2=-1.38778e-16
+ LESS THAN 0.5 leg=41112 gmp_before=0.46182 gmp_after=0.867746 x1=0.7 x2=-1.38778e-16
+ LESS THAN 0.5 leg=41701 gmp_before=0.32903 gmp_after=0.807161 x1=0.8 x2=0.6
+ LESS THAN 0.5 leg=41308 gmp_before=0.413848 gmp_after=0.856548 x1=0.8 x2=0.4
+ LESS THAN 0.5 leg=41700 gmp_before=0.45641 gmp_after=0.801049 x1=0.5 x2=-1.38778e-16
+[TIMING iter 1] WINT=0.0396065s, SIGMAS=0.0361496s, RC=2.91393s, LEG=0.677385s, Total=3.76277s
+[TIMING iter 2] WINT=0.0909602s, SIGMAS=0.0941578s, RC=5.95956s, LEG=1.22665s, Total=7.58761s
+[TIMING iter 3] WINT=0.168414s, SIGMAS=0.162194s, RC=8.79436s, LEG=1.70184s, Total=11.2038s
+[TIMING iter 4] WINT=0.248356s, SIGMAS=0.224009s, RC=11.6676s, LEG=2.16151s, Total=14.7989s
+
+========== RESUMEN DE TIEMPOS ==========
+  WINT (pesos):      0.248356 segundos
+  SIGMAS (beta):     0.224009 segundos
+  RC (roll calls):   11.6676 segundos
+  LEG (legisladores):2.16151 segundos
+  TOTAL FASES:       14.3015 segundos
+==========================================
+
+
+Resultados:
+  Log-likelihood: -38462.7835
+  Iteraciones:    4
+  Clasificacion:  227804/244247 (93.27%)
+  W1=1.0000, W2=0.5676, Beta=6.0289
+  Tiempo: 14.9s
+
+Exportando resultados...
+Exportado: <SCRATCH>\verify\us5/cpp_coordinates_all_periods.csv (523 registros)
+Exportado (polaridad corregida): <SCRATCH>\verify\us5/cpp_coordinates_all_periods_corrected.csv (523 registros)
+Exportado: <SCRATCH>\verify\us5/cpp_bill_parameters.csv (2940 roll calls)
+Exportado: <SCRATCH>\verify\us5/cpp_summary.csv
+
+Completado exitosamente.

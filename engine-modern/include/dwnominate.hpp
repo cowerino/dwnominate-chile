@@ -27,6 +27,7 @@
 #include <string>
 #include <map>
 #include <functional>
+#include <algorithm>
 
 /**
  * @brief Configuracion del modelo DW-NOMINATE.
@@ -64,6 +65,10 @@ struct DWNominateConfig
     bool solverFallbackToCobyla;
     bool adaptiveOptimizerSchedule;
     int numThreads;
+    int minimumIterations;
+    double convergenceAbsoluteTolerance;
+    double convergenceRelativeTolerance;
+    int convergencePatience;
 
     DWNominateConfig()
         : numDimensions(2),
@@ -87,7 +92,11 @@ struct DWNominateConfig
           blockSolverMode(BlockSolverMode::Cobyla),
           solverFallbackToCobyla(true),
           adaptiveOptimizerSchedule(false),
-          numThreads(1)
+          numThreads(1),
+          minimumIterations(4),
+          convergenceAbsoluteTolerance(0.0),
+          convergenceRelativeTolerance(0.0),
+          convergencePatience(2)
     {
     }
 };
@@ -249,6 +258,15 @@ struct BlockOptimizationTraceEntry
     double elapsedMilliseconds = 0.0;
     std::string algorithm;
     bool fallbackUsed = false;
+    bool attempted = false;
+    bool accepted = false;
+    bool rawReturnFeasible = false;
+    bool numericalCorrectionApplied = false;
+    double constraintTolerance = 0.0;
+    double rawConstraintViolation = 0.0;
+    double feasibilityCorrectionNorm = 0.0;
+    int infeasibleObjectiveEvaluations = 0;
+    double maxObjectiveConstraintViolation = 0.0;
 };
 
 /**
@@ -295,6 +313,10 @@ struct DWNominateResult
     // beta(0,k) = constante, beta(1,k) = lineal, beta(2,k) = cuadratico, beta(3,k) = cubico
     std::map<int, Eigen::MatrixXd> temporalCoefficients;
 
+    // Períodos realmente servidos por cada legislador (1-based). Esto evita
+    // exportar posiciones reconstruidas fuera de su carrera parlamentaria.
+    std::map<int, std::vector<int>> servedPeriods;
+
     // Lista de IDs unicos de legisladores procesados
     std::vector<int> legislatorUniqueIds;
 
@@ -302,6 +324,8 @@ struct DWNominateResult
     int numPeriods;    // Numero de periodos (congresos)
     int temporalModel; // Modelo temporal (0=constante, 1=lineal, 2=cuadratico, 3=cubico)
     int numDimensions; // Numero de dimensiones espaciales
+    bool converged;
+    double finalLogLikelihoodImprovement;
 
     DWNominateResult()
         : finalLogLikelihood(0.0),
@@ -311,8 +335,21 @@ struct DWNominateResult
           totalValidVotes(0),
           numPeriods(1),
           temporalModel(0),
-          numDimensions(2)
+          numDimensions(2),
+          converged(false),
+          finalLogLikelihoodImprovement(0.0)
     {
+    }
+
+    bool servedInPeriod(int uniqueId, int period) const
+    {
+        const auto found = servedPeriods.find(uniqueId);
+        if (found == servedPeriods.end())
+        {
+            return false;
+        }
+        const auto &periods = found->second;
+        return std::find(periods.begin(), periods.end(), period) != periods.end();
     }
 
     /**
@@ -333,16 +370,33 @@ struct DWNominateResult
             return Eigen::VectorXd();
         }
 
+        const auto served = servedPeriods.find(uniqueId);
+        if (served == servedPeriods.end())
+        {
+            return Eigen::VectorXd();
+        }
+        const auto periodIt = std::find(
+            served->second.begin(), served->second.end(), period);
+        if (periodIt == served->second.end())
+        {
+            return Eigen::VectorXd();
+        }
+
         const Eigen::MatrixXd &coef = it->second;
         int ns = static_cast<int>(coef.cols());
         Eigen::VectorXd coords(ns);
 
-        // Calcular tiempo normalizado t en [-1, 1]
-        // period es 1-based, convertir a 0-based index
+        // El ajuste temporal usa la secuencia compacta de períodos servidos,
+        // no el índice de calendario del panel completo. La exportación debe
+        // aplicar exactamente la misma base de Legendre que el objetivo.
+        const auto servedIndex = static_cast<std::size_t>(
+            std::distance(served->second.begin(), periodIt));
+        const auto servedCount = served->second.size();
         double t = 0.0;
-        if (numPeriods > 1)
+        if (servedCount > 1)
         {
-            t = -1.0 + 2.0 * static_cast<double>(period - 1) / static_cast<double>(numPeriods - 1);
+            t = -1.0 + 2.0 * static_cast<double>(servedIndex) /
+                           static_cast<double>(servedCount - 1);
         }
 
         // Polinomios de Legendre

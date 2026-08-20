@@ -1,4 +1,5 @@
 #include "rollcall_optimizer.hpp"
+#include "feasibility.hpp"
 
 #include <nlopt.hpp>
 
@@ -20,8 +21,11 @@ struct RollCallObjective
     const NormalCDF &normalCDF;
     int dimensions;
     const std::vector<int> &observedLegislators;
+    double constraintTolerance;
     RollCallDerivativesWorkBuffer workBuffer;
     int evaluations = 0;
+    int infeasibleEvaluations = 0;
+    double maxConstraintViolation = 0.0;
 
     RollCallObjective(
         const Eigen::MatrixXd &coords,
@@ -30,14 +34,16 @@ struct RollCallObjective
         const Eigen::VectorXd &modelWeights,
         const NormalCDF &cdf,
         int modelDimensions,
-        const std::vector<int> &observed)
+        const std::vector<int> &observed,
+        double feasibilityTolerance)
         : legislatorCoords(coords),
           rollCallIndex(index),
           votes(voteMatrix),
           weights(modelWeights),
           normalCDF(cdf),
           dimensions(modelDimensions),
-          observedLegislators(observed)
+          observedLegislators(observed),
+          constraintTolerance(feasibilityTolerance)
     {
     }
 
@@ -53,6 +59,15 @@ struct RollCallObjective
             parameters.data(), self.dimensions);
         Eigen::Map<const Eigen::VectorXd> spread(
             parameters.data() + self.dimensions, self.dimensions);
+
+        const double violation =
+            std::max(0.0, midpoint.squaredNorm() - 1.0);
+        self.maxConstraintViolation =
+            std::max(self.maxConstraintViolation, violation);
+        if (violation > self.constraintTolerance)
+        {
+            ++self.infeasibleEvaluations;
+        }
 
         const auto result = computeRollCallDerivativesOptimized(
             self.legislatorCoords,
@@ -211,7 +226,8 @@ RollCallOptimizationResult optimizeRollCall(
         weights,
         normalCDF,
         dimensions,
-        observedLegislators);
+        observedLegislators,
+        config.constraintTolerance);
     UnitBallConstraint constraint{dimensions};
 
     const std::vector<double> initialParameters = parameters;
@@ -266,30 +282,52 @@ RollCallOptimizationResult optimizeRollCall(
     BlockOptimizerAlgorithm algorithmUsed = config.algorithm;
     nlopt::result status = runSolver(algorithmUsed, parameters, optimum);
 
-    auto candidateLikelihood = [&]() {
+    UnitBallFeasibilityAudit returnAudit;
+    Eigen::VectorXd acceptedMidpoint = output.midpoint;
+    Eigen::VectorXd acceptedSpread = output.spread;
+    double acceptedLikelihood = initial.logLikelihood;
+
+    auto auditSolverReturn = [&](nlopt::result currentStatus) {
         Eigen::Map<const Eigen::VectorXd> rawMidpoint(
             parameters.data(), dimensions);
         Eigen::Map<const Eigen::VectorXd> rawSpread(
             parameters.data() + dimensions, dimensions);
-        return computeRollCallDerivativesOptimized(
-                   legislatorCoords,
-                   rollCallIndex,
-                   projectToUnitBall(rawMidpoint),
-                   rawSpread,
-                   votes,
-                   weights,
-                   normalCDF,
-                   objective.workBuffer,
-                   observedLegislators)
-            .logLikelihood;
+        Eigen::VectorXd sanitizedMidpoint(dimensions);
+        const bool feasible = acceptUnitBallReturn(
+            rawMidpoint,
+            config.constraintTolerance,
+            sanitizedMidpoint,
+            returnAudit);
+        if (!feasible || !rawSpread.allFinite())
+        {
+            return false;
+        }
+
+        const auto evaluated = computeRollCallDerivativesOptimized(
+            legislatorCoords,
+            rollCallIndex,
+            sanitizedMidpoint,
+            rawSpread,
+            votes,
+            weights,
+            normalCDF,
+            objective.workBuffer,
+            observedLegislators);
+        acceptedMidpoint = sanitizedMidpoint;
+        acceptedSpread = rawSpread;
+        acceptedLikelihood = evaluated.logLikelihood;
+        const bool statusAcceptable =
+            isSuccessful(currentStatus) ||
+            currentStatus == nlopt::ROUNDOFF_LIMITED;
+        return statusAcceptable && std::isfinite(acceptedLikelihood) &&
+               acceptedLikelihood + config.acceptanceTolerance >=
+                   initial.logLikelihood;
     };
 
-    const bool unusableSlsqp =
+    bool candidateAccepted = auditSolverReturn(status);
+    if (!candidateAccepted &&
         config.algorithm == BlockOptimizerAlgorithm::Slsqp &&
-        (!std::isfinite(optimum) ||
-         (!(isSuccessful(status) || status == nlopt::ROUNDOFF_LIMITED)) ||
-         candidateLikelihood() + 1e-8 < initial.logLikelihood);
-    if (unusableSlsqp && config.fallbackToCobyla)
+        config.fallbackToCobyla)
     {
         parameters = initialParameters;
         optimum = initial.logLikelihood;
@@ -297,17 +335,25 @@ RollCallOptimizationResult optimizeRollCall(
             BlockOptimizerAlgorithm::Cobyla, parameters, optimum);
         algorithmUsed = BlockOptimizerAlgorithm::Cobyla;
         output.fallbackUsed = true;
+        candidateAccepted = auditSolverReturn(status);
     }
 
-    for (int k = 0; k < dimensions; ++k)
+    output.accepted = candidateAccepted;
+    output.rawReturnFeasible = returnAudit.feasibleWithinTolerance;
+    output.numericalCorrectionApplied = returnAudit.correctionApplied;
+    output.rawFinalRadius = returnAudit.rawRadius;
+    output.rawConstraintViolation = returnAudit.constraintViolation;
+    output.feasibilityCorrectionNorm = returnAudit.correctionNorm;
+    output.infeasibleObjectiveEvaluations = objective.infeasibleEvaluations;
+    output.maxObjectiveConstraintViolation = objective.maxConstraintViolation;
+
+    if (candidateAccepted)
     {
-        output.midpoint(k) = parameters[static_cast<std::size_t>(k)];
-        output.spread(k) = parameters[static_cast<std::size_t>(dimensions + k)];
+        output.midpoint = acceptedMidpoint;
+        output.spread = acceptedSpread;
     }
-
-    // Defend against a solver feasibility tolerance or accumulated roundoff.
-    // This is not an optimizer step: it enforces the model's declared domain.
-    output.midpoint = projectToUnitBall(output.midpoint);
+    // A materially infeasible or non-monotone return is rejected. There is no
+    // projection rescue: output retains the feasible pre-solve state.
 
     const auto final = computeRollCallDerivatives(
         legislatorCoords,
@@ -327,7 +373,7 @@ RollCallOptimizationResult optimizeRollCall(
     output.midpointIterations = objective.evaluations;
     output.optimizerStatus = static_cast<int>(status);
     output.algorithmUsed = algorithmUsed;
-    output.converged = isSuccessful(status) || status == nlopt::ROUNDOFF_LIMITED;
+    output.converged = candidateAccepted;
     output.elapsedMilliseconds = std::chrono::duration<double, std::milli>(
                                      std::chrono::steady_clock::now() - started)
                                      .count();

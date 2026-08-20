@@ -1,0 +1,74 @@
+﻿=== audit p23 scalar=local start 2026-08-20T12:12:20 ===
+binary: <ENGINE-MODERN-AUDIT>\engine-modern\build\release\dwnominate-modern.exe
+============================================================
+  DW-NOMINATE C++ CLI
+============================================================
+
+Configuracion:
+  Input:      <QUEVOTAN-DB>\reproduce\out\chile\static_panels\p23
+  Output:     <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-static-p23\modern-audit-local
+  WNOMINATE:  <QUEVOTAN-DB>\reproduce\out\chile\static_panels\p23\wnominate_coordinates.csv
+  Modelo:     0 (constante)
+  Iteraciones:4
+  Periodos:   1
+  Dimensiones:2
+  Beta:       5.9539
+  W2:         0.3463
+
+  Redondeo:   precision completa
+  NLopt:      standard (xtol=1e-08, ftol=1e-10)
+  Maxeval:    scalar=120, rollcall=400, legislador=600
+  Solver:     slsqp (fallback COBYLA)
+  Escalares:  local (caja SIGMAS/WINT)
+  Modo:       estimacion
+  Schedule:   fijo
+  Threads:    1
+
+Cargando datos...
+  Ref. R:     output_R_dwnominate_model0
+  Legisladores filtrados (sin votos no-missing en ningun periodo): 179 de 340 totales
+  Pesos iniciales: W1=1.0, W2=0.3463, Beta=5.9539
+  W-NOMINATE: Cargadas 158 coordenadas iniciales desde <QUEVOTAN-DB>\reproduce\out\chile\static_panels\p23\wnominate_coordinates.csv
+  Coordenadas aplicadas: 0 per-(leg,periodo), 158 per-legislador, 3 fallback
+dwnominate-modern.exe : Advertencia: No se puede abrir output_R_dwnominate_model0/dwnominate_bill_parameters.csv
+At line:22 char:7
++       & "$bld\dwnominate-modern.exe" "--input-dir=$in" "--output-dir= ...
++       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Advertencia: No..._parameters.csv:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Legisladores: 161
+  Roll calls:   1023
+
+Ejecutando DW-NOMINATE...
+[TIMING iter 1] WINT=0.046218s, SIGMAS=0.0459593s, RC=0.744673s, LEG=0.130166s, LL=-13877.2, Total=0.99877s
+[TIMING iter 2] WINT=0.0814015s, SIGMAS=0.0899552s, RC=1.41711s, LEG=0.333308s, LL=-13253, Total=1.98634s
+[TIMING iter 3] WINT=0.118438s, SIGMAS=0.134931s, RC=2.08827s, LEG=0.615634s, LL=-12978.6, Total=3.05418s
+[TIMING iter 4] WINT=0.156757s, SIGMAS=0.176822s, RC=2.75566s, LEG=0.783845s, LL=-12804.4, Total=4.00208s
+
+========== RESUMEN DE TIEMPOS ==========
+  WINT (pesos):      0.156757 segundos
+  SIGMAS (beta):     0.176822 segundos
+  RC (roll calls):   2.75566 segundos
+  LEG (legisladores):0.783845 segundos
+  TOTAL FASES:       3.87308 segundos
+==========================================
+
+
+Resultados:
+  Log-likelihood: -12804.3786
+  Iteraciones:    4
+  Clasificacion:  87058/92253 (94.37%)
+  W1=1.0000, W2=0.5063, Beta=5.9035
+  Tiempo: 4.0s
+
+Exportando resultados...
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-static-p23\modern-audit-local/cpp_coordinates_all_periods.csv (161 registros)
+Exportado (polaridad corregida): <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-static-p23\modern-audit-local/cpp_coordinates_all_periods_corrected.csv (161 registros)
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-static-p23\modern-audit-local/cpp_bill_parameters.csv (1023 roll calls)
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-static-p23\modern-audit-local/cpp_summary.csv
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-static-p23\modern-audit-local/cpp_convergence_trace.csv
+Exportado: <QUEVOTAN-DB>\reproduce\out\final-2026-08-21\chile-static-p23\modern-audit-local/cpp_optimizer_trace.csv
+
+Completado exitosamente.
+EXIT=0 ELAPSED_S=4.09

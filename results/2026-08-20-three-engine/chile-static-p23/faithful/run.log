@@ -1,0 +1,64 @@
+﻿============================================================
+  DW-NOMINATE C++ CLI
+============================================================
+
+Configuracion:
+  Input:      <QUEVOTAN-DB>\reproduce\out\chile\static_panels\p23
+  Output:     <SCRATCH>\verify\p23
+  WNOMINATE:  <QUEVOTAN-DB>\reproduce\out\chile\static_panels\p23\wnominate_coordinates.csv
+  Modelo:     0 (constante)
+  Iteraciones:4
+  Periodos:   1
+  Dimensiones:2
+  Beta:       5.9539
+  W2:         0.3463
+
+Cargando datos...
+  Ref. R:     output_R_dwnominate_model0
+  Legisladores filtrados (sin votos no-missing en ningun periodo): 179 de 340 totales
+  Pesos iniciales: W1=1.0, W2=0.3463, Beta=5.9539
+  W-NOMINATE: Cargadas 158 coordenadas iniciales desde <QUEVOTAN-DB>\reproduce\out\chile\static_panels\p23\wnominate_coordinates.csv
+  Coordenadas aplicadas: 0 per-(leg,periodo), 158 per-legislador, 3 fallback
+dwnominate.exe : Advertencia: No se puede abrir output_R_dwnominate_model0/dwnominate_bill_parameters.csv
+At line:18 char:3
++   & $exe "--input-dir=$($j.i)" "--output-dir=$o" "--wnominate=$w" "-- ...
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Advertencia: No..._parameters.csv:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  Legisladores: 161
+  Roll calls:   1023
+
+Ejecutando DW-NOMINATE...
+ LESS THAN 0.5 leg=1033 gmp_before=0.482018 gmp_after=0.710469 x1=-0.7 x2=0.7
+ LESS THAN 0.5 leg=1093 gmp_before=0.0131126 gmp_after=0.848411 x1=-0.9 x2=0.4
+ LESS THAN 0.5 leg=1091 gmp_before=0.147684 gmp_after=0.701824 x1=-0.9 x2=-1.38778e-16
+[TIMING iter 1] WINT=0.0147742s, SIGMAS=0.0135285s, RC=1.06072s, LEG=0.15298s, Total=1.27823s
+ LESS THAN 0.5 leg=1093 gmp_before=0.482317 gmp_after=0.89604 x1=-0.9 x2=0.4
+[TIMING iter 2] WINT=0.0324103s, SIGMAS=0.0311781s, RC=2.02135s, LEG=0.304878s, Total=2.49644s
+[TIMING iter 3] WINT=0.0375967s, SIGMAS=0.0604174s, RC=2.95213s, LEG=0.419533s, Total=3.61231s
+[TIMING iter 4] WINT=0.0405187s, SIGMAS=0.0802949s, RC=3.76726s, LEG=0.534611s, Total=4.5997s
+
+========== RESUMEN DE TIEMPOS ==========
+  WINT (pesos):      0.0405187 segundos
+  SIGMAS (beta):     0.0802949 segundos
+  RC (roll calls):   3.76726 segundos
+  LEG (legisladores):0.534611 segundos
+  TOTAL FASES:       4.42268 segundos
+==========================================
+
+
+Resultados:
+  Log-likelihood: -13296.5220
+  Iteraciones:    4
+  Clasificacion:  86922/92253 (94.22%)
+  W1=1.0000, W2=0.5163, Beta=5.6539
+  Tiempo: 4.6s
+
+Exportando resultados...
+Exportado: <SCRATCH>\verify\p23/cpp_coordinates_all_periods.csv (161 registros)
+Exportado (polaridad corregida): <SCRATCH>\verify\p23/cpp_coordinates_all_periods_corrected.csv (161 registros)
+Exportado: <SCRATCH>\verify\p23/cpp_bill_parameters.csv (1023 roll calls)
+Exportado: <SCRATCH>\verify\p23/cpp_summary.csv
+
+Completado exitosamente.

@@ -94,6 +94,7 @@ struct CLIConfig
     bool showHelp = false;
     bool exportCorrected = true; // Exportar con corrección de polaridad
     bool legacyRoundStarts = false;
+    bool evaluateOnly = false;
     std::string optimizerPrecision = "standard";
     std::string blockSolver = "cobyla";
     std::string scalarSearch = "local";
@@ -103,6 +104,10 @@ struct CLIConfig
     int rollCallMaxEvaluations = 0;
     int legislatorMaxEvaluations = 0;
     int threads = 1;
+    int minimumIterations = 4;
+    double convergenceAbsoluteTolerance = 0.0;
+    double convergenceRelativeTolerance = 0.0;
+    int convergencePatience = 2;
 };
 
 // Parsing de argumentos CLI
@@ -122,12 +127,17 @@ void printHelp(const char *programName)
     std::cout << "  --model=<0|1|2|3>      Modelo temporal (default: 1)\n";
     std::cout << "                         0=constante, 1=lineal, 2=cuadrático, 3=cúbico\n";
     std::cout << "  --iterations=<n>       Número de iteraciones (default: 4)\n";
+    std::cout << "  --min-iterations=<n>   Mínimo antes de evaluar convergencia (default: 4)\n";
+    std::cout << "  --convergence-abs=<x>  Umbral absoluto de mejora de LL (0 desactiva)\n";
+    std::cout << "  --convergence-rel=<x>  Umbral relativo de mejora de LL (0 desactiva)\n";
+    std::cout << "  --convergence-patience=<n> Ciclos consecutivos requeridos (default: 2)\n";
     std::cout << "  --periods=<n>          Número de períodos (default: auto-detectar)\n";
     std::cout << "  --dimensions=<n>       Dimensiones espaciales (default: 2)\n";
     std::cout << "  --beta=<value>         Parámetro beta inicial (default: 5.9539)\n";
     std::cout << "  --w2=<value>           Peso dimensión 2 inicial (default: 0.3463)\n";
     std::cout << "  --legacy-round-starts  Cuantizar coordenadas iniciales a 3 decimales\n";
     std::cout << "                         como los archivos del Fortran standalone\n";
+    std::cout << "  --evaluate-only        Evaluar el estado cargado sin optimizar ningun bloque\n";
     std::cout << "  --optimizer-precision=<perfil>\n";
     std::cout << "                         relaxed|standard|strict|ultra (default: standard)\n";
     std::cout << "  --block-solver=<modo>  cobyla|slsqp|hybrid (default: cobyla)\n";
@@ -183,6 +193,10 @@ CLIConfig parseArguments(int argc, char *argv[])
         {
             config.legacyRoundStarts = true;
         }
+        else if (arg == "--evaluate-only")
+        {
+            config.evaluateOnly = true;
+        }
         else if (arg == "--adaptive-tolerances")
         {
             config.adaptiveTolerances = true;
@@ -218,6 +232,22 @@ CLIConfig parseArguments(int argc, char *argv[])
         else if (arg.find("--iterations=") == 0)
         {
             config.iterations = std::stoi(getArgValue(arg, "--iterations="));
+        }
+        else if (arg.find("--min-iterations=") == 0)
+        {
+            config.minimumIterations = std::stoi(getArgValue(arg, "--min-iterations="));
+        }
+        else if (arg.find("--convergence-abs=") == 0)
+        {
+            config.convergenceAbsoluteTolerance = std::stod(getArgValue(arg, "--convergence-abs="));
+        }
+        else if (arg.find("--convergence-rel=") == 0)
+        {
+            config.convergenceRelativeTolerance = std::stod(getArgValue(arg, "--convergence-rel="));
+        }
+        else if (arg.find("--convergence-patience=") == 0)
+        {
+            config.convergencePatience = std::stoi(getArgValue(arg, "--convergence-patience="));
         }
         else if (arg.find("--periods=") == 0)
         {
@@ -284,10 +314,15 @@ CLIConfig parseArguments(int argc, char *argv[])
     }
     if (config.threads < 1 || config.scalarMaxEvaluations < 0 ||
         config.rollCallMaxEvaluations < 0 ||
-        config.legislatorMaxEvaluations < 0)
+        config.legislatorMaxEvaluations < 0 || config.iterations < 1 ||
+        config.minimumIterations < 1 ||
+        config.convergenceAbsoluteTolerance < 0.0 ||
+        config.convergenceRelativeTolerance < 0.0 ||
+        config.convergencePatience < 1)
     {
         throw std::invalid_argument(
-            "threads debe ser >=1 y los overrides maxeval deben ser >=0");
+            "configuracion numerica invalida: iteraciones/paciencia deben ser "
+            "positivas y las tolerancias deben ser no negativas");
     }
     return config;
 }
@@ -402,6 +437,10 @@ void exportCoordinatesAllPeriodsCorrected(const std::string &path,
     {
         for (int legId : result.legislatorUniqueIds)
         {
+            if (!result.servedInPeriod(legId, period))
+            {
+                continue;
+            }
             Eigen::VectorXd coords = result.getCoordinatesAtPeriod(legId, period);
             if (coords.size() >= 2)
             {
@@ -416,6 +455,53 @@ void exportCoordinatesAllPeriodsCorrected(const std::string &path,
     }
 
     std::cout << "Exportado (polaridad corregida): " << path << " (" << exported << " registros)\n";
+}
+
+void exportTemporalCoefficients(const std::string &path,
+                                const DWNominateResult &result)
+{
+    std::ofstream file(path);
+    if (!file.is_open())
+    {
+        std::cerr << "Error: No se puede crear " << path << std::endl;
+        return;
+    }
+
+    file << std::fixed << std::setprecision(15);
+    file << "legislator_id,served_periods,effective_model,"
+            "beta0_dim1,beta0_dim2,beta1_dim1,beta1_dim2,"
+            "beta2_dim1,beta2_dim2,beta3_dim1,beta3_dim2,"
+            "intercept_radius\n";
+
+    int exported = 0;
+    for (int legId : result.legislatorUniqueIds)
+    {
+        const auto coefficientIt = result.temporalCoefficients.find(legId);
+        const auto periodsIt = result.servedPeriods.find(legId);
+        if (coefficientIt == result.temporalCoefficients.end() ||
+            periodsIt == result.servedPeriods.end())
+        {
+            continue;
+        }
+
+        const Eigen::MatrixXd &beta = coefficientIt->second;
+        if (beta.rows() < 4 || beta.cols() < 2)
+        {
+            continue;
+        }
+        const double interceptRadius = beta.row(0).head(2).norm();
+        file << legId << "," << periodsIt->second.size() << ","
+             << result.getEffectiveTemporalOrder(legId);
+        for (int term = 0; term < 4; ++term)
+        {
+            file << "," << beta(term, 0) << "," << beta(term, 1);
+        }
+        file << "," << interceptRadius << "\n";
+        ++exported;
+    }
+
+    std::cout << "Exportado: " << path << " (" << exported
+              << " legisladores)\n";
 }
 
 void exportBillParameters(const std::string &path,
@@ -457,13 +543,18 @@ void exportSummary(const std::string &path,
     }
 
     file << "parameter,value\n";
-    file << "log_likelihood," << std::fixed << std::setprecision(6) << result.finalLogLikelihood << "\n";
+    file << "log_likelihood," << std::fixed << std::setprecision(12) << result.finalLogLikelihood << "\n";
     file << "iterations," << result.totalIterations << "\n";
+    file << "converged," << (result.converged ? 1 : 0) << "\n";
+    file << "final_ll_improvement," << result.finalLogLikelihoodImprovement << "\n";
+    file << "convergence_absolute_tolerance," << config.convergenceAbsoluteTolerance << "\n";
+    file << "convergence_relative_tolerance," << config.convergenceRelativeTolerance << "\n";
+    file << "convergence_patience," << config.convergencePatience << "\n";
     file << "valid_votes," << result.totalValidVotes << "\n";
     file << "correct_classifications," << result.classificationAfter << "\n";
     double classPct = result.totalValidVotes > 0 ? (100.0 * result.classificationAfter / result.totalValidVotes) : 0.0;
     file << "classification_pct," << std::setprecision(4) << classPct << "\n";
-    file << "w1," << std::setprecision(6) << result.weights(0) << "\n";
+    file << "w1," << std::setprecision(15) << result.weights(0) << "\n";
     file << "w2," << result.weights(1) << "\n";
     file << "beta," << result.weights(2) << "\n";
     file << "temporal_model," << config.temporalModel << "\n";
@@ -472,6 +563,7 @@ void exportSummary(const std::string &path,
     file << "optimizer_precision," << config.optimizerPrecision << "\n";
     file << "block_solver," << config.blockSolver << "\n";
     file << "scalar_search," << config.scalarSearch << "\n";
+    file << "evaluate_only," << (config.evaluateOnly ? 1 : 0) << "\n";
     file << "adaptive_tolerances," << (config.adaptiveTolerances ? 1 : 0) << "\n";
     file << "threads," << config.threads << "\n";
     file << "elapsed_seconds," << std::setprecision(2) << elapsedSeconds << "\n";
@@ -520,7 +612,11 @@ void exportOptimizerTrace(const std::string &path,
 
     file << "iteration,block,item_index,algorithm,fallback_used,"
             "objective_evaluations,status,initial_log_likelihood,"
-            "final_log_likelihood,improvement,elapsed_milliseconds\n";
+            "final_log_likelihood,improvement,elapsed_milliseconds,"
+            "attempted,accepted,raw_return_feasible,numerical_correction_applied,"
+            "constraint_tolerance,raw_constraint_violation,"
+            "feasibility_correction_norm,infeasible_objective_evaluations,"
+            "max_objective_constraint_violation\n";
     file << std::fixed << std::setprecision(12);
     for (const auto &entry : result.optimizerTrace)
     {
@@ -534,7 +630,16 @@ void exportOptimizerTrace(const std::string &path,
              << entry.initialLogLikelihood << ","
              << entry.finalLogLikelihood << ","
              << entry.improvement << ","
-             << entry.elapsedMilliseconds << "\n";
+             << entry.elapsedMilliseconds << ","
+             << (entry.attempted ? 1 : 0) << ","
+             << (entry.accepted ? 1 : 0) << ","
+             << (entry.rawReturnFeasible ? 1 : 0) << ","
+             << (entry.numericalCorrectionApplied ? 1 : 0) << ","
+             << entry.constraintTolerance << ","
+             << entry.rawConstraintViolation << ","
+             << entry.feasibilityCorrectionNorm << ","
+             << entry.infeasibleObjectiveEvaluations << ","
+             << entry.maxObjectiveConstraintViolation << "\n";
     }
     std::cout << "Exportado: " << path << "\n";
 }
@@ -636,6 +741,9 @@ int main(int argc, char *argv[])
                       ? " (caja SIGMAS/WINT)"
                       : " (caja global experimental)")
               << "\n";
+    std::cout << "  Modo:       "
+              << (config.evaluateOnly ? "solo evaluacion" : "estimacion")
+              << "\n";
     std::cout << "  Schedule:   "
               << (config.adaptiveTolerances ? "adaptativo" : "fijo") << "\n";
     std::cout << "  Threads:    " << config.threads;
@@ -702,9 +810,9 @@ int main(int argc, char *argv[])
     dwConfig.lastIteration = config.iterations;
     dwConfig.marginThreshold = 0.025;
     dwConfig.verbose = config.verbose;
-    dwConfig.fixGlobalParams = false;
-    dwConfig.fixRollCalls = false;
-    dwConfig.fixLegislators = false;
+    dwConfig.fixGlobalParams = config.evaluateOnly;
+    dwConfig.fixRollCalls = config.evaluateOnly;
+    dwConfig.fixLegislators = config.evaluateOnly;
     dwConfig.optimizerRelativeXTolerance = optimizer.relativeXTolerance;
     dwConfig.optimizerRelativeFTolerance = optimizer.relativeFTolerance;
     dwConfig.optimizerConstraintTolerance = optimizer.constraintTolerance;
@@ -716,6 +824,10 @@ int main(int argc, char *argv[])
     dwConfig.solverFallbackToCobyla = config.solverFallbackToCobyla;
     dwConfig.adaptiveOptimizerSchedule = config.adaptiveTolerances;
     dwConfig.numThreads = config.threads;
+    dwConfig.minimumIterations = std::min(config.minimumIterations, config.iterations);
+    dwConfig.convergenceAbsoluteTolerance = config.convergenceAbsoluteTolerance;
+    dwConfig.convergenceRelativeTolerance = config.convergenceRelativeTolerance;
+    dwConfig.convergencePatience = config.convergencePatience;
 
     // Ejecutar algoritmo
     std::cout << "Ejecutando DW-NOMINATE...\n";
@@ -771,6 +883,10 @@ int main(int argc, char *argv[])
             config.outputDir + "/cpp_coordinates_all_periods_corrected.csv",
             result, config.periods);
     }
+
+    exportTemporalCoefficients(
+        config.outputDir + "/cpp_temporal_coefficients.csv",
+        result);
 
     exportBillParameters(
         config.outputDir + "/cpp_bill_parameters.csv",

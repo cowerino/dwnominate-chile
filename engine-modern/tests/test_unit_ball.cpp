@@ -68,6 +68,11 @@ int main()
     {
         return fail("roll-call midpoint escaped the unit ball");
     }
+    if (!rollCall.accepted || !rollCall.rawReturnFeasible ||
+        rollCall.rawConstraintViolation > rollCallConfig.constraintTolerance)
+    {
+        return fail("roll-call solver return violated the strict feasibility contract");
+    }
 
     // Static, one-period legislator problem. The initial point is deliberately
     // infeasible; only the constant term may be active with one period.
@@ -126,6 +131,12 @@ int main()
     if (legislator.totalVotes != 4)
     {
         return fail("unexpected legislator vote count");
+    }
+    if (!legislator.accepted || !legislator.rawReturnFeasible ||
+        legislator.rawConstraintViolation >
+            legislatorConfig.constraintTolerance)
+    {
+        return fail("legislator solver return violated the strict feasibility contract");
     }
 
     return 0;
