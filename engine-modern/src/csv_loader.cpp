@@ -779,6 +779,7 @@ std::vector<ReferenceBillParams> CSVLoader::loadReferenceBillParams()
 
     std::string path = outputDir_ + "/dwnominate_bill_parameters.csv";
     std::ifstream file(path);
+    int shortRows = 0;
     if (!file.is_open())
     {
         std::cerr << "Advertencia: No se puede abrir " << path << std::endl;
@@ -803,7 +804,10 @@ std::vector<ReferenceBillParams> CSVLoader::loadReferenceBillParams()
 
         // Esperado: session,ID,midpoint1D,midpoint2D,spread1D,spread2D
         if (fields.size() < 6)
+        {
+            ++shortRows;
             continue;
+        }
 
         ReferenceBillParams bp;
         bp.session = parseInt(fields[0]);
@@ -819,6 +823,21 @@ std::vector<ReferenceBillParams> CSVLoader::loadReferenceBillParams()
         }
 
         result.push_back(bp);
+    }
+
+    // Un archivo que se abre y no aporta ni una fila es casi siempre un desajuste
+    // de formato: la exportacion historica escribe cinco columnas encabezadas por
+    // un rollcall_id plano, y aqui se exigen seis. Sin este aviso la corrida sigue
+    // con cada votacion en su default degenerado (0,0)/(0.3,0.3) y parece haber
+    // cargado el estado.
+    if (result.empty() && shortRows > 0)
+    {
+        std::cerr << "Advertencia: " << shortRows << " filas de " << path
+                  << " tienen menos de seis columnas y se descartaron todas. "
+                  << "Se esperan session,ID,midpoint1D,midpoint2D,spread1D,spread2D; "
+                  << "cpp_bill_parameters.csv no sirve, use "
+                  << "dwnominate_bill_parameters.csv. Las votaciones quedan en su "
+                  << "valor inicial por defecto.\n";
     }
 
     return result;
