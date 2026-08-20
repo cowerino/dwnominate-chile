@@ -530,6 +530,46 @@ void exportBillParameters(const std::string &path,
     std::cout << "Exportado: " << path << " (" << numRollCalls << " roll calls)\n";
 }
 
+// El cargador espera session,ID,midpoint1D,midpoint2D,spread1D,spread2D en un archivo
+// llamado dwnominate_bill_parameters.csv, mientras que la exportacion historica escribe
+// un rollcall_id plano en cpp_bill_parameters.csv. Sin este segundo archivo un estado
+// exportado no se puede volver a cargar con --bill-params sin re-etiquetar las filas a
+// mano, que es lo que hace stage_bills() dentro de tests/test_dynamic_roundtrip.py.
+void exportBillParametersReloadable(const std::string &path,
+                                    const DWNominateResult &result,
+                                    const std::vector<int> &rollCallCongress)
+{
+    std::ofstream file(path);
+    if (!file.is_open())
+    {
+        std::cerr << "Error: No se puede crear " << path << std::endl;
+        return;
+    }
+
+    file << std::fixed << std::setprecision(15);
+    file << "session,ID,midpoint1D,midpoint2D,spread1D,spread2D\n";
+
+    const int numRollCalls = static_cast<int>(rollCallCongress.size());
+    int localId = 0;
+    int previousPeriod = -1;
+
+    for (int i = 0; i < numRollCalls; ++i)
+    {
+        const int period = rollCallCongress[i];
+        localId = (period == previousPeriod) ? localId + 1 : 1;
+        previousPeriod = period;
+
+        file << (period + 1) << ","
+             << localId << ","
+             << result.rollCallMidpoints(i, 0) << ","
+             << (result.rollCallMidpoints.cols() > 1 ? result.rollCallMidpoints(i, 1) : 0.0) << ","
+             << result.rollCallSpreads(i, 0) << ","
+             << (result.rollCallSpreads.cols() > 1 ? result.rollCallSpreads(i, 1) : 0.0) << "\n";
+    }
+
+    std::cout << "Exportado: " << path << " (" << numRollCalls << " roll calls, recargable)\n";
+}
+
 void exportSummary(const std::string &path,
                    const DWNominateResult &result,
                    const CLIConfig &config,
@@ -891,6 +931,10 @@ int main(int argc, char *argv[])
     exportBillParameters(
         config.outputDir + "/cpp_bill_parameters.csv",
         result, input.votes.getNumRollCalls());
+
+    exportBillParametersReloadable(
+        config.outputDir + "/dwnominate_bill_parameters.csv",
+        result, input.rollCallCongress);
 
     exportSummary(
         config.outputDir + "/cpp_summary.csv",
