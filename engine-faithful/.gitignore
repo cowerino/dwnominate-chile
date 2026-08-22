@@ -28,4 +28,11 @@ Makefile
 /tests
 *.log
 *.ps1
-/Eigen
+# Eigen IS tracked in this repository, deliberately.
+# This rule was inherited from quevotan-api's nominate_cmodule/.gitignore when the
+# engine was copied here, and it is why the published package shipped with no Eigen/
+# at all: the directory was present on the machine that pushed it and git dropped it
+# in silence. This is a REPLICATION package; a reader must be able to build from a
+# clean clone, so the header-only dependency travels with it (MPL2, COPYING.MPL2
+# retained). Do not re-add an ignore rule for it.
+# /Eigen

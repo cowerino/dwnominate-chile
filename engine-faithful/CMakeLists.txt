@@ -37,6 +37,34 @@ if(USE_REF_LAPACK AND EXISTS ${REF_LAPACK_ROOT}/lib/liblapacke.a)
     message(STATUS "Reference LAPACK found at ${REF_LAPACK_ROOT} (EIGEN_USE_LAPACKE ON)")
 elseif(NOT USE_REF_LAPACK)
     message(STATUS "USE_REF_LAPACK=OFF: Eigen's own JacobiSVD will be used")
+else()
+    # 2026-08-21: this branch used to be silent, and that silence is the single
+    # most expensive defect in the reproduction package. USE_REF_LAPACK defaults
+    # ON, so a user who has not built external/lapack-3.12.1 got a Jacobi binary
+    # while believing they had built the published configuration -- and the
+    # backend moves the likelihood by 2.4 to 31.8 nats, changing which engine
+    # wins on 2 of 4 panels. It is never acceptable to resolve this quietly.
+    message(WARNING
+        "USE_REF_LAPACK is ON but ${REF_LAPACK_ROOT}/lib/liblapacke.a was NOT found.\n"
+        "  Falling back to Eigen's own JacobiSVD. THIS IS NOT THE PUBLISHED CONFIGURATION.\n"
+        "  Published likelihoods were produced with LAPACKE; the two backends differ by\n"
+        "  2.4 to 31.8 nats on the panels in the paper and disagree about which engine wins\n"
+        "  on 2 of 4 of them. The backend actually used is recorded as 'svd_backend' in\n"
+        "  every cpp_summary.csv -- check it before comparing any likelihood.\n"
+        "  To build the published configuration, see external/README-DEPENDENCIES.md.\n"
+        "  To silence this deliberately, configure with -DUSE_REF_LAPACK=OFF.")
+endif()
+
+# Eigen is MANDATORY and is not part of a normal system install here; the
+# reproduction package shipped without it, so the failure mode was a wall of
+# 'Eigen/Dense: No such file' rather than one actionable line.
+if(NOT EXISTS ${CMAKE_SOURCE_DIR}/Eigen/Dense
+   AND NOT EXISTS ${CMAKE_SOURCE_DIR}/Eigen/Eigen/Dense)
+    message(FATAL_ERROR
+        "Eigen headers not found at ${CMAKE_SOURCE_DIR}/Eigen.\n"
+        "  Eigen is a required, header-only dependency. Obtain Eigen 3.4.0 and place its\n"
+        "  headers so that ${CMAKE_SOURCE_DIR}/Eigen/Dense resolves.\n"
+        "  See external/README-DEPENDENCIES.md for the exact pinned version and layout.")
 endif()
 
 # REQ-005 Stage 2b: locally-built OpenBLAS 0.3.33 (BLAS + LAPACK + LAPACKE bundled,
