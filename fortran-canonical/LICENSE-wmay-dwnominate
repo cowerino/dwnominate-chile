@@ -1,0 +1,65 @@
+Licence for DW-NOMINATE-wmay.f
+==============================
+
+`DW-NOMINATE-wmay.f` in this directory is `src/DW-NOMINATE.f` from
+`github.com/wmay/dwnominate` at commit `02d0876` (2023-02-20, "Fix incorrect
+variable name"), included unmodified. It is redistributed under the upstream
+project's MIT licence, reproduced below.
+
+Upstream declaration
+--------------------
+
+The package's `DESCRIPTION` declares:
+
+    License: MIT + file LICENSE
+
+and its `LICENSE` file contains, in full, the two template fields that R's
+"MIT + file LICENSE" convention requires:
+
+    YEAR: 2023
+    COPYRIGHT HOLDER: William May, Keith T. Poole
+
+Note for anyone checking: GitHub's licence detector reports this repository as
+"NOASSERTION / Other" rather than MIT. That is an artefact of the R convention,
+under which the `LICENSE` file carries only the two fields above and the licence
+body comes from R's own `share/licenses/MIT` template. The declaration in
+`DESCRIPTION` is the authoritative one, and it says MIT.
+
+Attribution, from the package's `Authors@R`
+-------------------------------------------
+
+    William May      author, creator          ORCID 0000-0002-3201-1885
+    Nolan McCarty    author                   ORCID 0000-0002-0538-1928
+                     "Author of the original Fortran code"
+    Keith T. Poole   copyright holder
+                     "Copyright holder of the original Fortran code"
+
+MIT licence text, with the upstream fields substituted
+------------------------------------------------------
+
+Copyright (c) 2023 William May, Keith T. Poole
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+The body above is the standard MIT text that R's "MIT + file LICENSE" convention
+refers to, with `YEAR` and `COPYRIGHT HOLDER` filled in from the upstream
+`LICENSE` file verbatim. It is reproduced here so the notice travels with the
+copy, as MIT requires.
+
+This licence covers `DW-NOMINATE-wmay.f` only. `DW-NOMINATE-2004.FOR` in this
+same directory has a different and unresolved status; see `../LICENSING.md`.
