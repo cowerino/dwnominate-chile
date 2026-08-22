@@ -35,6 +35,7 @@
 #include <vector>
 #include <map>
 #include <filesystem>
+#include <cstdlib>
 #include <chrono>
 #include <algorithm>
 #include <cmath>
@@ -346,6 +347,23 @@ void exportSummary(const std::string &path,
     file << "dimensions," << config.dimensions << "\n";
     file << "periods," << config.periods << "\n";
     file << "elapsed_seconds," << std::setprecision(2) << elapsedSeconds << "\n";
+
+    // Procedencia de build, en la salida misma. Una afirmacion en un documento
+    // ("corrido con el build X") es una asercion, no evidencia: el backend SVD
+    // mueve la verosimilitud entre 2.4 y 31.8 nats y en 2 de 4 paneles cambia
+    // cual motor gana. Estas tres lineas hacen que ninguna corrida pueda ser
+    // mal atribuida despues.
+#ifdef EIGEN_USE_LAPACKE
+    file << "svd_backend,lapacke\n";
+#else
+    file << "svd_backend,eigen_jacobi\n";
+#endif
+    file << "cutplane_absence,"
+         << (std::getenv("DWNOM_CUTPLANE_FILTER_ABSENT") == nullptr ? "retained" : "filtered")
+         << "\n";
+    file << "export_frame,"
+         << (std::getenv("DWNOM_EXPORT_GLOBAL_T") == nullptr ? "local_t" : "global_t")
+         << "\n";
 
     std::cout << "Exportado: " << path << "\n";
 }
