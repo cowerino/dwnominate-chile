@@ -1,0 +1,72 @@
+{
+  "generated_on": "2026-08-19",
+  "reference": {
+    "label": "faithful-cpp-proxy",
+    "is_actual_fortran": false,
+    "warning": "This snapshot does not establish equivalence with the canonical Fortran executable."
+  },
+  "tolerances": {
+    "solver_return_acceptance": 1e-08,
+    "parameter_equivalence": 1e-06,
+    "common_log_likelihood_equivalence": 1e-06
+  },
+  "verdicts": {
+    "all_accepted_solver_returns_feasible": true,
+    "all_objective_evaluations_feasible": false,
+    "all_panels_numerically_equivalent": false,
+    "modern_has_higher_common_in_sample_likelihood_on_all_panels": true
+  },
+  "panels": {
+    "353": {
+      "modern_common_log_likelihood": -1081.939252604415,
+      "reference_common_log_likelihood": -1139.467031989933,
+      "common_log_likelihood_difference": 57.52777938551799,
+      "attempted_blocks": 904,
+      "accepted_blocks": 904,
+      "raw_returns_outside_tolerance": 0,
+      "internal_infeasible_evaluations": 21417,
+      "max_internal_constraint_violation": 105510.33041070116,
+      "max_raw_return_constraint_violation": 1e-10,
+      "numerically_equivalent": false,
+      "active_members": 121,
+      "members_below_25_votes": 6,
+      "median_votes_per_active_member": 204.0,
+      "aligned_mean_displacement": 0.10245920763759685,
+      "aligned_max_displacement": 0.7769551337382845
+    },
+    "366": {
+      "modern_common_log_likelihood": -5827.995216400524,
+      "reference_common_log_likelihood": -6287.867242323077,
+      "common_log_likelihood_difference": 459.8720259225529,
+      "attempted_blocks": 2280,
+      "accepted_blocks": 2280,
+      "raw_returns_outside_tolerance": 0,
+      "internal_infeasible_evaluations": 38723,
+      "max_internal_constraint_violation": 657931.1669318433,
+      "max_raw_return_constraint_violation": 1e-10,
+      "numerically_equivalent": false,
+      "active_members": 155,
+      "members_below_25_votes": 0,
+      "median_votes_per_active_member": 606.0,
+      "aligned_mean_displacement": 0.08916618225965713,
+      "aligned_max_displacement": 0.3314077021227894
+    },
+    "368": {
+      "modern_common_log_likelihood": -12804.639526964365,
+      "reference_common_log_likelihood": -13216.868823427567,
+      "common_log_likelihood_difference": 412.22929646320154,
+      "attempted_blocks": 3596,
+      "accepted_blocks": 3596,
+      "raw_returns_outside_tolerance": 0,
+      "internal_infeasible_evaluations": 80416,
+      "max_internal_constraint_violation": 5163583.290250508,
+      "max_raw_return_constraint_violation": 1e-10,
+      "numerically_equivalent": false,
+      "active_members": 161,
+      "members_below_25_votes": 2,
+      "median_votes_per_active_member": 857.0,
+      "aligned_mean_displacement": 0.08134933243156711,
+      "aligned_max_displacement": 1.9522794221545663
+    }
+  }
+}
