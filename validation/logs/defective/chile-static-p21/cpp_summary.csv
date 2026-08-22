@@ -1,0 +1,16 @@
+parameter,value
+log_likelihood,-7279.409946
+iterations,4
+valid_votes,52079
+correct_classifications,48870
+classification_pct,93.8382
+w1,1.000000
+w2,0.506300
+beta,5.767962
+temporal_model,0
+dimensions,2
+periods,1
+elapsed_seconds,2.85
+svd_backend,eigen_jacobi
+cutplane_absence,retained
+export_frame,local_t

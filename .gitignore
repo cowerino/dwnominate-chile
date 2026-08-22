@@ -1,2 +1,7 @@
 __pycache__/
 *.pyc
+
+# Scratch output of reproduce/reproduce_static.py (regenerable; the committed
+# results it checks against live in results/).
+/reproduce/_out/
+/validation/_scratch/

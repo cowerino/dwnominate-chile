@@ -1,0 +1,22 @@
+--- a/src/dwnominate.cpp
++++ b/src/dwnominate.cpp
+@@ -1295,6 +1295,19 @@
+         sortedIndices[i] = static_cast<int>(rawIndices[i]);
+     }
+ 
++    // DEFECT REINTRODUCED (validation/defect-alignment.patch).
++    // This is the 2026-08-15 misalignment, restored on purpose. voteCodes is
++    // reordered into projection order while coords stays in natural order, so
++    // voteCodes[i] belongs to legislator sortedIndices[i] while coords.row(i)
++    // belongs to legislator i. The NS>=2 CUTPLANE path consumes them together and
++    // therefore classifies a shuffled pairing.
++    std::vector<int> sortedVoteCodes(numVoters);
++    for (int i = 0; i < numVoters; ++i)
++    {
++        sortedVoteCodes[i] = voteCodes[sortedIndices[i]];
++    }
++    voteCodes = sortedVoteCodes;
++
+     // FIX 2026-08-15: NO reordenar voteCodes.
+     //
+     // Antes se reordenaba voteCodes a orden de proyeccion mientras coords quedaba en

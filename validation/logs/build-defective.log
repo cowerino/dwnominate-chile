@@ -1,0 +1,62 @@
+
+$ cmake -S <HOME>\.claude\jobs\d172a38f\tmp\fals\defective -B <HOME>\.claude\jobs\d172a38f\tmp\fals\build-defective -G MinGW Makefiles -DCMAKE_BUILD_TYPE=Release
+-- The C compiler identification is GNU 15.2.0
+-- The CXX compiler identification is GNU 15.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: <HOME>/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/gcc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: <HOME>/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/c++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Build type: Release
+-- Found OpenMP_C: -fopenmp (found version "4.5")
+-- Found OpenMP_CXX: -fopenmp (found version "4.5")
+-- Found OpenMP: TRUE (found version "4.5")
+-- Checking for module 'nlopt'
+--   Package 'nlopt' not found
+-- Looking for sgemm_
+-- Looking for sgemm_ - not found
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Could NOT find BLAS (missing: BLAS_LIBRARIES) 
+CMake Warning at CMakeLists.txt:47 (message):
+  USE_REF_LAPACK is ON but
+  <SCRATCH>/tmp/fals/defective/external/lapack-3.12.1/build/lib/liblapacke.a
+  was NOT found.
+
+    Falling back to Eigen's own JacobiSVD. THIS IS NOT THE PUBLISHED CONFIGURATION.
+    Published likelihoods were produced with LAPACKE; the two backends differ by
+    2.4 to 31.8 nats on the panels in the paper and disagree about which engine wins
+    on 2 of 4 of them. The backend actually used is recorded as 'svd_backend' in
+    every cpp_summary.csv -- check it before comparing any likelihood.
+    To build the published configuration, see external/README-DEPENDENCIES.md.
+    To silence this deliberately, configure with -DUSE_REF_LAPACK=OFF.
+
+
+-- NLopt: 
+-- OpenMP: 4.5
+-- Configuring done (6.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: <SCRATCH>/tmp/fals/build-defective
+
+$ cmake --build <HOME>\.claude\jobs\d172a38f\tmp\fals\build-defective -j 4
+[  7%] Building CXX object CMakeFiles/dwnominate.dir/src/main_cli.cpp.obj
+[ 14%] Building CXX object CMakeFiles/dwnominate.dir/src/dwnominate.cpp.obj
+[ 21%] Building CXX object CMakeFiles/dwnominate.dir/src/csv_loader.cpp.obj
+[ 28%] Building CXX object CMakeFiles/dwnominate.dir/src/likelihood.cpp.obj
+[ 35%] Building CXX object CMakeFiles/dwnominate.dir/src/normal_cdf.cpp.obj
+[ 42%] Building CXX object CMakeFiles/dwnominate.dir/src/cutting_plane.cpp.obj
+[ 50%] Building CXX object CMakeFiles/dwnominate.dir/src/cutting_point.cpp.obj
+[ 57%] Building CXX object CMakeFiles/dwnominate.dir/src/grid_optimizer.cpp.obj
+[ 64%] Building CXX object CMakeFiles/dwnominate.dir/src/rollcall_optimizer.cpp.obj
+[ 71%] Building CXX object CMakeFiles/dwnominate.dir/src/rollcall_derivatives.cpp.obj
+[ 78%] Building CXX object CMakeFiles/dwnominate.dir/src/optimize_legislators.cpp.obj
+[ 85%] Building CXX object CMakeFiles/dwnominate.dir/src/legislator_derivatives.cpp.obj
+[ 92%] Building CXX object CMakeFiles/dwnominate.dir/src/simple_ols.cpp.obj
+[100%] Linking CXX executable dwnominate.exe
+[100%] Built target dwnominate
