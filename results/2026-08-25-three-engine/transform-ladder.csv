@@ -1,0 +1,16 @@
+panel,reference,other,transform,r_dim1,r_dim2,mean_2d
+chile-dynamic-23p,faithful,modern,raw,0.9672,0.7267,0.3566
+chile-dynamic-23p,faithful,modern,orthogonal,0.9618,0.8216,0.3133
+chile-dynamic-23p,faithful,modern,ortho+isoscale,0.9618,0.8216,0.3143
+chile-dynamic-23p,faithful,modern,ortho+axisscale,0.9618,0.8216,0.2912
+chile-dynamic-23p,faithful,modern,full linear,0.9709,0.8255,0.2838
+chile-dynamic-23p,faithful,fortran,raw,0.9979,0.99,0.074
+chile-dynamic-23p,faithful,fortran,orthogonal,0.998,0.9902,0.0745
+chile-dynamic-23p,faithful,fortran,ortho+isoscale,0.998,0.9902,0.0743
+chile-dynamic-23p,faithful,fortran,ortho+axisscale,0.998,0.9902,0.0718
+chile-dynamic-23p,faithful,fortran,full linear,0.998,0.9903,0.0715
+chile-dynamic-23p,modern,fortran,raw,0.9634,0.7237,0.343
+chile-dynamic-23p,modern,fortran,orthogonal,0.9499,0.7971,0.2939
+chile-dynamic-23p,modern,fortran,ortho+isoscale,0.9499,0.7971,0.2855
+chile-dynamic-23p,modern,fortran,ortho+axisscale,0.9499,0.7971,0.2595
+chile-dynamic-23p,modern,fortran,full linear,0.9706,0.8124,0.2292
