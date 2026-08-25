@@ -39,6 +39,12 @@ There is no `trajectories-fortran`: the Fortran harness exports no per-legislato
 effective degree, so its polynomial cannot be reconstructed. Rather than infer a degree
 from the served span inside a figure, the generator refuses.
 
+## The numbers behind these maps
+
+`results/2026-08-25-three-engine/` carries the same vintage as a table: `comparison-table.csv`
+with one row per panel, plus per-panel per-engine summaries and coordinates. The maps here and
+the numbers there are the same fits.
+
 ## Provenance
 
 Every figure here comes from one run directory, produced by

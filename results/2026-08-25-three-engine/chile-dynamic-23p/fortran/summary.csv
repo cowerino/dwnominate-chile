@@ -1,0 +1,11 @@
+parameter,value
+log_likelihood,    -119043.486668713391
+w1,       1.000000000000000
+w2,       0.336300015449524
+beta,       7.266984462738037
+iterations,4
+valid_votes,692839
+correct_classifications,644293
+temporal_model,2
+dimensions,2
+periods,23
