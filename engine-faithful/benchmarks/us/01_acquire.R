@@ -72,14 +72,91 @@ for (i in seq_along(congs)) {
   write.csv(df, sprintf("cpp_input/votes_matrix_p%d.csv", i), row.names = TRUE)
 }
 
-# Seed coords: per-congress W-NOMINATE on the FIRST congress, mapped to global roster.
+# Seed coords: per-congress W-NOMINATE, each member seeded from the FIRST congress
+# they served in, mapped to the global roster.
 # (C++ uses one starting-coord file keyed by legislator_id.)
-wn1 <- wnominate(rcs[[1]], polarity = c(1, 1), dims = 2, minvotes = 20, verbose = FALSE)
+#
+# Fitting rcs[[1]] alone and initialising the whole union roster at (0,0) left 61 of
+# 168 members at exactly the origin, the one point that carries no information about
+# which side of a cutting plane a member falls on.
+#
+# polarity = c(1,1) means "row 1 of THIS congress", and row 1 is a different senator
+# in each congress, so fitting all five that way would orient each period against a
+# different person. Use one anchor legislator present in every congress, resolved to
+# its row index within each. Averaging the periods is not an option: the per-period
+# frames are not mutually rotated, so a mean mixes frames and shrinks the
+# configuration toward the origin, which is the defect being repaired. Taking one
+# period keeps a single coherent frame.
+present_all <- Reduce(intersect, lapply(mats, rownames))
+party_of <- function(id) {
+  for (i in seq_along(congs)) {
+    m <- membs[[i]]; m <- m[m$chamber == "Senate", ]
+    p <- m$party_code[match(as.integer(id), m$icpsr)]
+    if (!is.na(p)) return(p)
+  }
+  NA
+}
+reps <- present_all[sapply(present_all, function(id) isTRUE(party_of(id) == 200))]
+if (length(reps) == 0) stop("no Republican present in all congresses: no stable polarity anchor")
+anchor <- sort(as.integer(reps))[1]
+cat(sprintf("polarity anchor: icpsr %d, present in all %d congresses\n", anchor, length(congs)))
+
+fits <- lapply(seq_along(congs), function(i) {
+  a <- match(as.character(anchor), rownames(mats[[i]]))
+  w <- wnominate(rcs[[i]], polarity = c(a, a), dims = 2, minvotes = 20, verbose = FALSE)
+  stopifnot(nrow(w$legislators) == nrow(rcs[[i]]$votes))
+  df <- data.frame(legislator_id = rownames(rcs[[i]]$votes),
+                   coord1D = w$legislators$coord1D,
+                   coord2D = w$legislators$coord2D,
+                   stringsAsFactors = FALSE)
+  df <- df[!is.na(df$coord1D) & !is.na(df$coord2D), ]
+  cat(sprintf("S%d: %d of %d legislators fitted\n", congs[i], nrow(df), nrow(rcs[[i]]$votes)))
+  df
+})
+
+# Sign alignment to period 1. The anchor fixes orientation in principle, but a
+# dimension can still invert when the anchor sits near the origin on that axis.
+# Check explicitly on the overlapping legislators and flip only on a negative
+# correlation. Report every flip rather than doing it silently.
+for (i in seq_along(fits)[-1]) {
+  ref <- fits[[1]]; cur <- fits[[i]]
+  common <- intersect(ref$legislator_id, cur$legislator_id)
+  if (length(common) < 10) {
+    cat(sprintf("S%d: only %d overlapping, no flip check\n", congs[i], length(common))); next
+  }
+  for (k in c("coord1D", "coord2D")) {
+    r <- cor(ref[[k]][match(common, ref$legislator_id)], cur[[k]][match(common, cur$legislator_id)])
+    if (!is.na(r) && r < 0) {
+      cur[[k]] <- -cur[[k]]
+      cat(sprintf("S%d %s: FLIPPED (r was %.4f on %d overlapping)\n", congs[i], k, r, length(common)))
+    } else {
+      cat(sprintf("S%d %s: kept (r = %.4f on %d overlapping)\n", congs[i], k, r, length(common)))
+    }
+  }
+  fits[[i]] <- cur
+}
+
+# First served congress wins. Row order follows global_ids so the seed stays aligned
+# row-for-row with cpp_input/votes_matrix_p*.csv; do not re-sort here.
 seed <- data.frame(coord1D = 0.0, coord2D = 0.0, legislator_id = global_ids,
                    legislator_name = "", party = "", stringsAsFactors = FALSE)
-w <- wn1$legislators; w_ids <- rownames(rcs[[1]]$votes)
-seed$coord1D[match(w_ids, seed$legislator_id)] <- ifelse(is.na(w$coord1D), 0, w$coord1D)
-seed$coord2D[match(w_ids, seed$legislator_id)] <- ifelse(is.na(w$coord2D), 0, w$coord2D)
+seeded <- rep(FALSE, nrow(seed))
+for (i in seq_along(fits)) {
+  f <- fits[[i]]
+  j <- match(f$legislator_id, seed$legislator_id)
+  take <- !is.na(j) & !seeded[j]
+  seed$coord1D[j[take]] <- f$coord1D[take]
+  seed$coord2D[j[take]] <- f$coord2D[take]
+  seeded[j[take]] <- TRUE
+}
+cat(sprintf("seeded %d of %d; still at origin: %d (no W-NOMINATE estimate in ANY congress)\n",
+            sum(seeded), nrow(seed), sum(!seeded)))
+
+# legislator_id must be written UNQUOTED. global_ids comes from matrix rownames and is
+# therefore character; write.csv quotes character columns; and the Fortran harness reads
+# that field list-directed into an INTEGER. The read fails on the first data row and no
+# coordinate is applied at all, while the harness still prints that it loaded them.
+seed$legislator_id <- as.integer(seed$legislator_id)
 write.csv(seed, "cpp_input/wnominate_coordinates.csv", row.names = FALSE)
 
 # Published VoteView DW-NOMINATE per (congress, icpsr) for the validity check
