@@ -59,6 +59,7 @@ struct CLIConfig
     bool verbose = false;
     bool showHelp = false;
     bool exportCorrected = true; // Exportar con corrección de polaridad
+    bool wmayReplication = false; // Desactivar GRID exclusivo del Fortran 2004
 };
 
 // Parsing de argumentos CLI
@@ -84,6 +85,7 @@ void printHelp(const char *programName)
     std::cout << "  --w2=<value>           Peso dimensión 2 inicial (default: 0.3463)\n";
     std::cout << "  --verbose              Mostrar progreso detallado\n";
     std::cout << "  --no-corrected         No exportar archivos con polaridad corregida\n";
+    std::cout << "  --wmay-replication     Replicar wmay/dwnominate (sin GRID GMP<0.5 de 2004)\n";
     std::cout << "  --help                 Mostrar esta ayuda\n\n";
     std::cout << "Ejemplos:\n";
     std::cout << "  " << programName << " --model=1 --iterations=10 --verbose\n";
@@ -119,6 +121,10 @@ CLIConfig parseArguments(int argc, char *argv[])
         else if (arg == "--no-corrected")
         {
             config.exportCorrected = false;
+        }
+        else if (arg == "--wmay-replication")
+        {
+            config.wmayReplication = true;
         }
         else if (arg.find("--input-dir=") == 0)
         {
@@ -491,6 +497,9 @@ int main(int argc, char *argv[])
     dwConfig.fixGlobalParams = false;
     dwConfig.fixRollCalls = false;
     dwConfig.fixLegislators = false;
+    // wmay carries no GMP<0.5 GRID clause; the 2004 distribution does. Default
+    // true, so this is a no-op unless --wmay-replication is passed.
+    dwConfig.use2004GridSafeguard = !config.wmayReplication;
 
     // Ejecutar algoritmo
     std::cout << "Ejecutando DW-NOMINATE...\n";

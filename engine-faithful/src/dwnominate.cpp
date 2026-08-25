@@ -1527,6 +1527,7 @@ void DWNominate::processLegislator(int uniqueId, const LegislatorPresence &prese
     // numSearchPointsTemporal=10, stepUnit=0.01, unitSphereScale=0.75. See
     // quevotan-db/reproduce/fortran/XINT_VS_OPTIMIZE_LEGISLATORS.md for the audit.
     LegislatorOptimizerConfig legConfig;
+    legConfig.use2004GridSafeguard = config_.use2004GridSafeguard;
 
     // Ejecutar optimizacion
     LegislatorOptimizationResult legResult = optimizeLegislator(

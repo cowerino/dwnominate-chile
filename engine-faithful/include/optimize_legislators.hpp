@@ -24,6 +24,7 @@ struct LegislatorOptimizerConfig
     double gmpDropTol = 0.00001;      // Tolerancia para detectar empeoramiento
     double unitSphereScale = 0.75;    // Escala al proyectar a hiperesfera
     double eigenThreshold = 0.0001;   // Umbral de eigenvalores para inversion
+    bool use2004GridSafeguard = true; // Ausente en wmay/dwnominate
 };
 
 // Resultado de la optimizacion de un legislador.

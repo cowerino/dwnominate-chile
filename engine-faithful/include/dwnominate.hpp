@@ -49,8 +49,14 @@ struct DWNominateConfig
     // Modo validación: fijar parámetros de roll calls 
     bool fixRollCalls; // Si true, NO re-estima cutting planes (usa valores cargados)
 
-    // Modo validación: fijar coordenadas de legisladores 
+    // Modo validación: fijar coordenadas de legisladores
     bool fixLegislators; // Si true, NO optimiza coordenadas (solo calcula likelihood)
+
+    // La distribución Fortran 2004 aplica una búsqueda GRID adicional cuando
+    // GMP<0.5 en dos dimensiones. El código canónico de wmay no contiene esa
+    // cláusula. Este interruptor permite comparar ambas fuentes sin cambiar el
+    // resto del optimizador ad hoc.
+    bool use2004GridSafeguard;
 
     DWNominateConfig()
         : numDimensions(2),
@@ -63,7 +69,8 @@ struct DWNominateConfig
           verbose(false),
           fixGlobalParams(false), // Por defecto: modo normal
           fixRollCalls(false),    // Por defecto: re-estimar roll calls
-          fixLegislators(false)   // Por defecto: optimizar legisladores
+          fixLegislators(false),  // Por defecto: optimizar legisladores
+          use2004GridSafeguard(true)
     {
     }
 };

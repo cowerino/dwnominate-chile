@@ -263,7 +263,12 @@ LegislatorOptimizationResult optimizeLegislator(
             // legacy_2004_DW-NOMINATE.FOR:2067 calling SUBROUTINE GRID at line 1808.
             // Without this, bad-fit (GMP<0.5) 2D legislators start gradient descent
             // from a degenerate intercept; weak dim-2 gradient drifts to 1D solutions.
-            if (termIndex == 0 && iter == 0 && numDim == 2 && saveGMP < 0.5)
+            // Gated 2026-08-25 to match the isolation package: wmay has no such
+            // clause, so replicating wmay requires switching it off. Default is
+            // true, so every run that does not pass --wmay-replication behaves
+            // exactly as before this flag existed.
+            if (config.use2004GridSafeguard &&
+                termIndex == 0 && iter == 0 && numDim == 2 && saveGMP < 0.5)
             {
                 constexpr double gridStep = 0.1;
                 constexpr int gridDim = 21;
