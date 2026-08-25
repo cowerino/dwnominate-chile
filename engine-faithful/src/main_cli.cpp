@@ -327,6 +327,59 @@ void exportBillParameters(const std::string &path,
     std::cout << "Exportado: " << path << " (" << numRollCalls << " roll calls)\n";
 }
 
+// Histogram of the EFFECTIVE per-legislator polynomial degree.
+//
+// `temporal_model` in the summary is the order REQUESTED on the command line,
+// not the order the engine fitted. The degree is gated on tenure
+// (NNMODEL.GE.n .AND. NEPCONG.GE.5/6/7, see processLegislator in
+// dwnominate.cpp:1513-1523), so on a short panel a --model=2 run can stamp
+// "2" while every member is at most constant. That difference decides whether
+// a cross-engine comparison is comparing the same model at all, and the
+// requested-order row alone cannot show it.
+//
+// One count per LEGISLATOR, not per (legislator, period) row, and only for
+// legislators the coordinate exporter would actually write. The sum of these
+// rows is therefore exactly the number of distinct legislator_id values in
+// cpp_coordinates_all_periods.csv, whose effective_model column carries the
+// same per-legislator value.
+std::map<int, int> effectiveModelHistogram(const DWNominateResult &result,
+                                           int numPeriods)
+{
+    std::map<int, int> hist;
+    if (!result.hasTemporalCoefficients())
+    {
+        return hist;
+    }
+
+    for (int legId : result.legislatorUniqueIds)
+    {
+        // Mirror the exporter's filter exactly (see exportCoordinatesAllPeriods):
+        // a legislator with no served period inside the panel writes no row, and
+        // must not be counted here either.
+        bool exported = false;
+        for (int period = 1; period <= numPeriods && !exported; ++period)
+        {
+            if (result.getCoordinatesAtPeriod(legId, period).size() >= 2)
+            {
+                exported = true;
+            }
+        }
+        if (!exported)
+        {
+            continue;
+        }
+
+        int effModel = result.getEffectiveTemporalOrder(legId);
+        if (effModel < 0)
+        {
+            continue;
+        }
+        hist[effModel]++;
+    }
+
+    return hist;
+}
+
 void exportSummary(const std::string &path,
                    const DWNominateResult &result,
                    const CLIConfig &config,
@@ -350,6 +403,16 @@ void exportSummary(const std::string &path,
     file << "w2," << result.weights(1) << "\n";
     file << "beta," << result.weights(2) << "\n";
     file << "temporal_model," << config.temporalModel << "\n";
+
+    // What the engine actually fitted, degree by degree. Emitted ALONGSIDE
+    // temporal_model, never instead of it: every consumer audited reads this
+    // file by key, so appended rows are inert to them and the requested-order
+    // row keeps its meaning. Only degrees that occur get a row.
+    for (const auto &kv : effectiveModelHistogram(result, config.periods))
+    {
+        file << "effective_model_" << kv.first << "," << kv.second << "\n";
+    }
+
     file << "dimensions," << config.dimensions << "\n";
     file << "periods," << config.periods << "\n";
     file << "elapsed_seconds," << std::setprecision(2) << elapsedSeconds << "\n";
