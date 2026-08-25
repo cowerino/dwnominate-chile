@@ -28,9 +28,12 @@ Two differences worth naming:
   cutting-plane normal from an SVD of the roll-call midpoint matrix. 2004 uses IMSL `LSVRR`,
   wmay uses LAPACK `DGESDD` with the correspondingly transposed right-singular-vector index
   (`vvv(ns,k)` against `vvv(k,ns)`).
-- **`XINT`** carries a per-legislator 2-D fit-quality safeguard in the 2004 source that wmay
-  drops: under `ns==2`, a legislator whose geometric mean probability falls below 0.50 has their
-  coefficients reverted to the pre-update values rather than the update being accepted.
+- **`XINT`** carries a per-legislator 2-D safeguard in the 2004 source that wmay drops, commented
+  there as `KLUDGE TO FIX PRECISION PROBLEM`. On the first iteration only, and only under `ns==2`,
+  a legislator whose geometric mean probability falls below 0.50 triggers a call to `GRID`, and the
+  grid search's constant term is **adopted** (`XBETA(1,K)=XBETASV(1,K)`). It is a re-initialisation
+  from a grid search, not a revert to pre-update values, and it is the reason `GRID` is dead code in
+  wmay: this was its only call site.
 
 `GRID`, a 31-line search helper, exists only in the 2004 source and is not on wmay's path.
 
