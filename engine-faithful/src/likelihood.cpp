@@ -327,7 +327,7 @@ LikelihoodResult computeLogLikelihoodParallel(
     int positiveUtility = 0;
 
 #ifdef _OPENMP
-#pragma omp parallel reduction(+ : totalLL, totalVotes, correctClassified, positiveUtility)
+#pragma omp parallel reduction(+ : totalVotes, correctClassified, positiveUtility)
 #endif
     {
         // Buffer thread-local para temporales
@@ -414,11 +414,22 @@ LikelihoodResult computeLogLikelihoodParallel(
                 totalVotes++;
             }
 
-            totalLL += legislatorLogLikelihood;
             result.legislatorLL[i] = legislatorLogLikelihood;
             result.legislatorVotes[i] = legislatorValidVotes;
             result.legislatorErrors[i] = legislatorWrongPredictions;
         }
+    }
+
+    // totalLL se suma DESPUES de la region paralela y en orden de indice.
+    // La suma en punto flotante no es asociativa y OpenMP no especifica el orden
+    // en que combina las parciales por thread, asi que reducir totalLL movia los
+    // bits bajos entre corridas incluso con el mismo numero de threads. Las
+    // busquedas canonicas son accept-if-improved: una comparacion invertida en un
+    // cuasi-empate cambia el estado y la corrida diverge. Los tres acumuladores
+    // enteros pueden quedarse en el reduction (la suma entera si es asociativa).
+    for (int i = 0; i < numLegislators; ++i)
+    {
+        totalLL += result.legislatorLL[i];
     }
 
     result.logLikelihood = totalLL;
