@@ -67,3 +67,25 @@ bounded constant term.
 8x in the model's squared metric. The maps are deliberately drawn unweighted, which is
 the published convention for this literature; any statistic that computes a distance
 between legislators must apply the weight.
+
+## ⚠ Which seed produced these fits
+
+Every figure here comes from a run seeded with `data/<panel>/wnominate_coordinates.csv`,
+which is **per-legislator-constant**: one coordinate pair per member, reused in every
+period. The canonical seeding for a dynamic panel is per-(legislator, period), and this
+repository ships that file too, as
+`data/chile-dynamic/wnominate_coordinates_per_period.csv` (2,685 rows, 330 of 334
+members varying across periods).
+
+The difference is not cosmetic. On `chile-dynamic-23p`, holding engine, panel and cycle
+count fixed and changing only the seed moves the log-likelihood by roughly 19,000 nats,
+which is about the same size as the whole engine-to-engine difference on that panel. It
+also shows in the fitted weight: per-legislator-seeded arms sit at their `w2 = 0.3463`
+starting value while per-period-seeded arms reach about 0.51.
+
+So the dynamic maps here are **faithful renderings of the runs named in each
+MANIFEST.csv**, and those runs are seeded the way the isolation design requires — the
+standalone Fortran harness has no per-period path, so all three arms are held to the
+per-legislator seed to keep the comparison internally consistent. Read them as the
+optimizer-isolation design's output, not as this engine's best available fit. The static
+panels are unaffected: a single period has no per-period seed to differ from.
