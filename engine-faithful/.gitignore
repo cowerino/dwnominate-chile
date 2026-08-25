@@ -8,7 +8,7 @@
 #   cd lapack-3.12.1 && mkdir build && cd build && cmake -G "MinGW Makefiles" \
 #     -DBUILD_SHARED_LIBS=OFF -DLAPACKE=ON -DCBLAS=OFF -DBUILD_TESTING=OFF \
 #     -DCMAKE_BUILD_TYPE=Release .. && cmake --build . -j
-/external/
+/external/*
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
@@ -36,3 +36,7 @@ Makefile
 # clean clone, so the header-only dependency travels with it (MPL2, COPYING.MPL2
 # retained). Do not re-add an ignore rule for it.
 # /Eigen
+
+# The dependency note is a tracked deliverable: reproduce/README.md cites it, and a
+# clean clone must have it. Everything else under external/ stays ignored.
+!/external/README-DEPENDENCIES.md

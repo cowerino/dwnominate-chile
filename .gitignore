@@ -5,3 +5,7 @@ __pycache__/
 # results it checks against live in results/).
 /reproduce/_out/
 /validation/_scratch/
+
+# Variant build trees: local only, and they vendor their own git checkouts.
+/engine-modern/build-diag/
+/engine-modern/build-main/
