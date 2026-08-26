@@ -1,0 +1,35 @@
+{
+  "configuration": {
+    "block_solver": "slsqp",
+    "dimensions": 2,
+    "iterations": 4,
+    "optimizer_precision": "standard",
+    "scalar_search": "local",
+    "threads": 1
+  },
+  "dynamic_us111_115": {
+    "beta": 5.963518,
+    "classification_pct": 93.4959,
+    "log_likelihood": -36404.397549,
+    "max_radius_matched": 1.2276830132817838,
+    "outside_unit_ball_matched": 7,
+    "period_scores_vs_fortran": [
+      {"period": 1, "r1": 0.9962704711, "r2": 0.8739743587, "scale2": 0.9672555271},
+      {"period": 2, "r1": 0.9964570657, "r2": 0.7931931478, "scale2": 0.8724144526},
+      {"period": 3, "r1": 0.9954030808, "r2": 0.6938190062, "scale2": 0.8339208920},
+      {"period": 4, "r1": 0.9956037921, "r2": 0.6588987652, "scale2": 0.7702475436},
+      {"period": 5, "r1": 0.9933276189, "r2": 0.6060929363, "scale2": 0.7722860104}
+    ],
+    "w2": 0.552126
+  },
+  "static_chile": {
+    "353": {"beta": 6.671786, "classification_pct": 94.1206, "log_likelihood": -1081.939253, "w2": 0.541958},
+    "366": {"beta": 6.554631, "classification_pct": 95.4473, "log_likelihood": -5827.995216, "w2": 0.498612},
+    "368": {"beta": 5.906222, "classification_pct": 94.3698, "log_likelihood": -12804.639527, "w2": 0.506305}
+  },
+  "static_vs_faithful_minimum_25_votes": {
+    "353": {"n": 115, "r1": 0.9978046664, "r2": 0.9892528871, "scale2": 1.0205570478},
+    "366": {"n": 155, "r1": 0.9969454703, "r2": 0.9624371488, "scale2": 1.0631876467},
+    "368": {"n": 159, "r1": 0.9978325074, "r2": 0.9839457808, "scale2": 1.0130053596}
+  }
+}

@@ -1,0 +1,8 @@
+mode,block_solver,adaptive,threads,scalar_maxeval,rollcall_maxeval,legislator_maxeval,log_likelihood,elapsed_seconds
+cobyla_reference,cobyla,0,1,120,400,600,-15528.130488,4.09
+slsqp_fixed,slsqp,0,1,120,400,600,-15534.215167,1.86
+slsqp_adaptive,slsqp,1,1,120,400,600,-15532.180534,1.56
+slsqp_explicit_budget,slsqp,0,1,60,80,100,-15534.178100,1.66
+slsqp_adaptive_openmp4,slsqp,1,4,120,400,600,-15532.180534,0.84
+internal_hybrid_adaptive,hybrid,1,1,120,400,600,-15547.031228,2.24
+external_faithful4_plus_slsqp1,slsqp,0,1,120,400,600,-15467.682400,7.68
