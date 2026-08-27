@@ -1,0 +1,23 @@
+{
+  "successful_replicates": 200,
+  "requested_replicates": 200,
+  "confidence": 0.95,
+  "targets": [
+    {
+      "label": "P1",
+      "period": 17
+    },
+    {
+      "label": "P2",
+      "period": 20
+    },
+    {
+      "label": "P3",
+      "period": 24
+    }
+  ],
+  "negative_delta_means": "movement toward the left",
+  "primary_interval": "percentile",
+  "multiple_testing": "Holm across all reported party-pair comparisons",
+  "estimand": "party median at each prespecified full-period DW-NOMINATE slice, conditional on observed membership and missingness"
+}

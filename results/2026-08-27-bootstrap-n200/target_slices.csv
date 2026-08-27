@@ -1,0 +1,4 @@
+label,period,start,end,unit_name,definition
+P1,17,2019-06-23,2019-10-17,u17_P15,last unit entirely before the estallido social (2019-10-18)
+P2,20,2020-06-23,2020-10-25,u20_P23,unit ending at the constitutional plebiscite (2020-10-25)
+P3,24,2021-11-06,2022-03-10,u24_P34,last unit of the 55th legislative period (ends 2022-03-10)
