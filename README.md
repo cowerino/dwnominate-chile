@@ -42,7 +42,7 @@ everything in this repository, all documented rather than worked around silently
 | `figures/` | published figures, one run vintage each: `figures/dynamic/` (the 55th-PL expanding-window study and the 23-period panel) and `figures/static/` |
 | `results/` | dated, frozen result sets: three-engine comparison tables (2026-08-20, 2026-08-25), the converged-modern record, and goodness-of-fit including APRE (2026-08-26) |
 | `validation/` | falsification harness: `run_falsification.py` plus the known-defect patch it must detect. The reproduction claim is testable, not asserted |
-| `reproduce/` | self-checking reproduction of the static three-engine comparison from a clean clone |
+| `reproduce/` | self-checking reproduction of the static three-engine comparison from a clean clone, plus `map_agreement.py`, which computes the map-agreement statistics two fits are compared on: the two Pearson correlations after orthogonal Procrustes without scaling, the mean 2-D distance, and the **amplitude ratio** (the RMS-radius ratio that a correlation and a no-scaling Procrustes fit are both blind to) |
 | `experimental/` | two pre-fix engine trees kept deliberately, named by commit, **not for results**. See `experimental/README.md` |
 
 ## The three engines, and what each is for
