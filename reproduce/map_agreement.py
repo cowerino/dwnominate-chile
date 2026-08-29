@@ -78,7 +78,13 @@ def load(path: Path) -> pd.DataFrame:
     if missing:
         sys.exit(f"{path}: missing column(s) {sorted(missing)}")
     frame = frame.rename(columns={"coord1D": "d1", "coord2D": "d2"})
-    return frame[["legislator_id", "period", "d1", "d2"]].dropna()
+    frame = frame[["legislator_id", "period", "d1", "d2"]]
+    # Some exports write unfitted rows as a whitespace-padded "NaN", which pandas
+    # types as text; coerce so those rows are dropped rather than silently
+    # carried through as strings.
+    for column in ("d1", "d2"):
+        frame[column] = pd.to_numeric(frame[column], errors="coerce")
+    return frame.dropna()
 
 
 def procrustes_noscale(reference: np.ndarray, engine: np.ndarray):

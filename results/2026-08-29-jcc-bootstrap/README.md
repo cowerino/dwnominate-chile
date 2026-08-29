@@ -40,9 +40,11 @@ synthetic record.
 | bootstrap gate evidence | `bootstrap_status.csv`, `alignment_diagnostics.csv` | 999/999 successful; replicate-to-observed D1 correlation 0.993 to 0.999, no sign reversals |
 | **Table II** (six-panel three-engine comparison), static rows | `isolation_matrix.csv` | `fortran`, `adhoc`, `nlopt` are total log-likelihoods under one evaluator |
 
-The two **dynamic** rows of Table II were regenerated later, on repaired starting values, and are
-not in `isolation_matrix.csv`. They come from the pablo-37 extraction; see `SOURCES.md` in the
-quevotan-db reproduction package for that pointer.
+> **Not reachable here yet.** The two **dynamic** rows of Table II were regenerated later, on
+> repaired starting values, and are NOT in `isolation_matrix.csv`, which still carries the
+> superseded dynamic values. Nor are the two dynamic rows of Table I. Those runs have not been
+> promoted into this repository, so a reader cannot currently reproduce them from it. This is a
+> known gap, recorded here rather than papered over.
 
 ## Two traps in these files
 
