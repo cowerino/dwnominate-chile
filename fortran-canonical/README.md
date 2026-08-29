@@ -66,10 +66,15 @@ The WinLibs UCRT toolchain ships no `liblapack`/`libblas`; `Rlapack.dll Rblas.dl
 install (`R/bin/x64/`) can be passed to the linker instead, which is how the reference build was
 produced. Both were built with gfortran 15.2.0, MinGW-W64 x86_64-ucrt-posix-seh.
 
-**Scope of the standalone wmay driver.** `standalone_main.f90` is validated for single-period runs
-only. A multi-period run aborts inside the engine with `FATAL: MISMATCH ON MISSING DATA`, an input
-marshalling inconsistency in the driver's `RCVOTE1`/`RCVOTE9` construction, not in the model. The
-paper's multi-period Fortran results were produced through the R package.
+**Scope of the standalone wmay driver.** Since 2026-08-29 `standalone_main.f90` is the
+multi-period-capable driver from the optimizer-isolation package: it marshals stacked
+member-period rows, tolerates quoted CSV ids, and reports how many seed rows were actually
+applied (a load that places zero coordinates can no longer pass as seeded). Verified by
+reproducing the banked `us-dynamic-5p` arm bit-for-bit
+(`results/2026-08-25-three-engine/us-dynamic-5p/fortran/`, log-likelihood
+−37299.698687780183). The previous driver in this tree was single-period only and aborted
+multi-period runs with `FATAL: MISMATCH ON NON-MISSING DATA`; multi-period results produced
+before the isolation package ran through the R package instead.
 
 ## Provenance of the published Fortran arm
 

@@ -2,9 +2,13 @@
 ! Reads CSV vote matrices and calls dwnom() subroutine directly
 ! Replaces the R wrapper for clean scientific comparison against C++
 !
-! Usage: dwnominate_fortran <input_dir> <output_dir> <niter> <model>
+! Usage: dwnominate_fortran <input_dir> <output_dir> <niter> <model> &
+!        [state_dir] [fit|evaluate] [iteration_start]
 
 program dwnominate_standalone
+  use xxcom_mod, only: core_xdata => XDATA, core_zmid => ZMID, &
+                       core_dyn => DYN, core_weight => WEIGHT, &
+                       core_xbiglog => XBIGLOG, core_kbiglog => KBIGLOG
   implicit none
 
   ! Parameters
@@ -35,15 +39,18 @@ program dwnominate_standalone
   double precision, allocatable :: WEIGHTSOUT(:)
 
   ! Local variables
-  integer :: NS, NMODEL, NFIRST, NLAST, NITER
+  integer :: NS, NMODEL, NFIRST, NLAST, NITER, iteration_start
+  integer :: terminal_iteration, state_iterations
   integer :: num_periods, total_legs, total_rcs
   integer :: i, j, p, rc_offset, leg_offset
   integer :: num_legs_in_period, num_rcs_in_period
   integer :: vote_code
-  character(len=512) :: input_dir, output_dir, fname
+  character(len=512) :: input_dir, output_dir, state_dir, fname
   character(len=512) :: arg
   character(len=65536) :: line
   integer :: argc, ios, unit_num
+  logical :: evaluate_only
+  real :: native_plog
 
   ! Timing
   real :: start_time, end_time
@@ -52,8 +59,12 @@ program dwnominate_standalone
   input_dir = 'test_single'
   output_dir = 'comparison/fortran_niter1'
   NITER = 1
+  iteration_start = 1
   NS = 2
   NMODEL = 0
+  state_dir = ''
+  evaluate_only = .false.
+  state_iterations = -1
 
   ! Parse command line arguments
   argc = command_argument_count()
@@ -67,6 +78,20 @@ program dwnominate_standalone
     call get_command_argument(4, arg)
     read(arg, *) NMODEL
   endif
+  if (argc >= 5) call get_command_argument(5, state_dir)
+  if (argc >= 6) then
+    call get_command_argument(6, arg)
+    evaluate_only = trim(adjustl(arg)) == 'evaluate'
+  endif
+  if (argc >= 7) then
+    call get_command_argument(7, arg)
+    read(arg, *) iteration_start
+  endif
+
+  if (NITER < 0 .or. iteration_start < 1) then
+    write(*,*) 'ERROR: niter must be non-negative and iteration_start positive'
+    stop 1
+  endif
 
   write(*,*) '============================================'
   write(*,*) '  DW-NOMINATE Fortran Standalone'
@@ -74,7 +99,10 @@ program dwnominate_standalone
   write(*,*) '  Input:  ', trim(input_dir)
   write(*,*) '  Output: ', trim(output_dir)
   write(*,*) '  Iterations: ', NITER
+  write(*,*) '  Iteration start: ', iteration_start
   write(*,*) '  Model: ', NMODEL
+  if (len_trim(state_dir) > 0) write(*,*) '  State: ', trim(state_dir)
+  if (evaluate_only) write(*,*) '  Mode: native PLOG evaluation only'
   write(*,*) ''
 
   call cpu_time(start_time)
@@ -137,25 +165,66 @@ program dwnominate_standalone
   allocate(ZMIDOUT(total_rcs, NS))
   allocate(WEIGHTSOUT(NS + 1))
 
+  XDATAOUT = 0.0d0
+  SDX1OUT = 0.0d0
+  SDX2OUT = 0.0d0
+  VARX1OUT = 0.0d0
+  VARX2OUT = 0.0d0
+  XBIGLOGOUT = 0.0d0
+  KBIGLOGOUT = 0
+  GMPAOUT = 0.0d0
+  GMPBOUT = 0.0d0
+  DYNOUT = 0.0d0
+  ZMIDOUT = 0.0d0
+  WEIGHTSOUT = 0.0d0
+
   ! Step 4: Initialize
   WEIGHTSIN(1) = 1.0d0    ! W1
   WEIGHTSIN(2) = 0.3463d0 ! W2
   WEIGHTSIN(3) = 5.9539d0 ! Beta
 
-  DYNIN = 0.3d0   ! Default spread
+  ! Canonical initialization: both alternatives coincide until CUTPLANE.
+  DYNIN = 0.0d0   ! Default spread
   ZMIDIN = 0.0d0  ! Default midpoints
 
   NOMSTARTIN(1) = NS
   NOMSTARTIN(2) = NMODEL
   NOMSTARTIN(3) = NFIRST
   NOMSTARTIN(4) = NLAST
-  NOMSTARTIN(5) = 1       ! IHAPPY1
-  NOMSTARTIN(6) = NITER   ! IHAPPY2
+  NOMSTARTIN(5) = iteration_start
+  NOMSTARTIN(6) = iteration_start + NITER - 1
+  terminal_iteration = NOMSTARTIN(6)
+
+  if (evaluate_only) then
+    ! Initialise the canonical COMMON/module state without executing an
+    ! optimisation cycle. PLOG is invoked explicitly after dwnom returns.
+    NOMSTARTIN(5) = 1
+    NOMSTARTIN(6) = 0
+    terminal_iteration = iteration_start - 1
+  endif
 
   ! Step 5: Load data
   call load_data(input_dir, num_periods, total_legs, total_rcs, NS, &
                  RCVOTE1IN, RCVOTE9IN, RCVOTET1IN, RCVOTET9IN, &
                  ICONGIN, NCONGIN, ID1IN, XDATAIN, MCONGIN)
+
+  if (len_trim(state_dir) > 0) then
+    call load_terminal_state(state_dir, total_legs, total_rcs, NS, &
+                             ID1IN, NCONGIN, XDATAIN, ZMIDIN, DYNIN, &
+                             WEIGHTSIN, state_iterations)
+    if (evaluate_only .and. state_iterations >= 0) then
+      terminal_iteration = state_iterations
+    else if (.not. evaluate_only .and. argc < 7 .and. &
+             state_iterations >= 0) then
+      iteration_start = state_iterations + 1
+      NOMSTARTIN(5) = iteration_start
+      NOMSTARTIN(6) = iteration_start + NITER - 1
+      terminal_iteration = NOMSTARTIN(6)
+    endif
+  else if (evaluate_only) then
+    write(*,*) 'ERROR: evaluate mode requires state_dir'
+    stop 1
+  endif
 
   write(*,*) ''
   write(*,*) '  Running DW-NOMINATE...'
@@ -168,6 +237,16 @@ program dwnominate_standalone
              VARX2OUT, XBIGLOGOUT, KBIGLOGOUT, GMPAOUT, GMPBOUT, DYNOUT, &
              ZMIDOUT, WEIGHTSOUT)
 
+  if (evaluate_only) then
+    call PLOG(native_plog, NFIRST, NLAST)
+    XDATAOUT = core_xdata(1:total_legs, 1:NS)
+    ZMIDOUT = core_zmid(1:total_rcs, 1:NS)
+    DYNOUT = core_dyn(1:total_rcs, 1:NS)
+    WEIGHTSOUT = core_weight(1:NS + 1)
+    XBIGLOGOUT = core_xbiglog(1:total_legs, 1:2)
+    KBIGLOGOUT = core_kbiglog(1:total_legs, 1:4)
+  endif
+
   call cpu_time(end_time)
 
   ! Step 7: Export results
@@ -179,7 +258,8 @@ program dwnominate_standalone
 
   call export_results(output_dir, total_legs, total_rcs, NS, num_periods, &
                       XDATAOUT, ZMIDOUT, DYNOUT, WEIGHTSOUT, &
-                      ID1IN, NCONGIN, NITER)
+                      ID1IN, NCONGIN, XBIGLOGOUT, KBIGLOGOUT, &
+                      terminal_iteration, NMODEL)
 
   write(*,*) ''
   write(*,*) '  Done.'
@@ -193,11 +273,9 @@ contains
     character(len=512) :: fn
     character(len=65536) :: line
     integer :: p, nrc, nleg, ios, u
-    integer :: first_leg_count
 
     tot_rcs = 0
     tot_legs = 0
-    first_leg_count = 0
 
     do p = 1, nper
       write(fn, '(A,A,I0,A)') trim(dir), '/votes_matrix_p', p, '.csv'
@@ -217,18 +295,21 @@ contains
       do
         read(u, '(A)', iostat=ios) line
         if (ios /= 0) exit
-        if (len_trim(line) > 0) nleg = nleg + 1
+        if (len_trim(line) > 0 .and. row_has_observed_vote(line)) then
+          nleg = nleg + 1
+        endif
       enddo
       close(u)
 
-      if (p == 1) first_leg_count = nleg
       tot_rcs = tot_rcs + nrc
+      tot_legs = tot_legs + nleg
 
       write(*,'(A,I2,A,I4,A,I6)') '    Period ', p, ': ', nleg, ' legislators x ', nrc, ' roll calls'
     enddo
 
-    ! All periods share the same legislator roster (unified list)
-    tot_legs = first_leg_count
+    ! XDATA/ID1/NCONG are stacked member-period rows in the canonical caller.
+    ! Reusing one unified roster here overwrites NCONG and corrupts every
+    ! dynamic period after the first.
   end subroutine
 
   integer function count_commas(str)
@@ -237,6 +318,32 @@ contains
     count_commas = 0
     do i = 1, len_trim(str)
       if (str(i:i) == ',') count_commas = count_commas + 1
+    enddo
+  end function
+
+  logical function row_has_observed_vote(str)
+    character(len=*), intent(in) :: str
+    character(len=20) :: field
+    integer :: start_pos, comma_pos, ios, vote
+
+    row_has_observed_vote = .false.
+    comma_pos = index(str, ',')
+    if (comma_pos == 0) return
+    start_pos = comma_pos + 1
+    do while (start_pos <= len_trim(str))
+      comma_pos = index(str(start_pos:), ',')
+      if (comma_pos == 0) then
+        field = str(start_pos:)
+      else
+        field = str(start_pos:start_pos+comma_pos-2)
+      endif
+      read(field, *, iostat=ios) vote
+      if (ios == 0 .and. vote >= 1 .and. vote <= 6) then
+        row_has_observed_vote = .true.
+        return
+      endif
+      if (comma_pos == 0) exit
+      start_pos = start_pos + comma_pos
     enddo
   end function
 
@@ -254,20 +361,19 @@ contains
     character(len=512) :: fn
     character(len=65536) :: line
     character(len=20) :: token
-    integer :: p, i, j, u, ios, rc_off, vote, leg_id
-    integer :: nrc_period, comma_pos, start_pos
-    integer, allocatable :: period_votes(:,:)
-    integer, allocatable :: leg_ids(:)
-    double precision :: frac
+    character(len=64) :: id_token
+    integer :: p, i, j, u, ios, rc_off, leg_off, row_index, vote, leg_id
+    integer :: nrc_period, nleg_period, comma_pos, start_pos
 
     ! Initialize
     rv1 = 0
-    rv9 = 0
+    rv9 = 1
     rvt1 = 0
-    rvt9 = 0
+    rvt9 = 1
     xdata = 0.0d0
 
     rc_off = 0
+    leg_off = 0
 
     do p = 1, nper
       write(fn, '(A,A,I0,A)') trim(dir), '/votes_matrix_p', p, '.csv'
@@ -278,20 +384,33 @@ contains
       read(u, '(A)') line
       nrc_period = count_commas(line)
 
-      ! Read each legislator row
-      do i = 1, nlegs
+      ! Read and stack only member-period rows with an observed vote.
+      nleg_period = 0
+      do
         read(u, '(A)', iostat=ios) line
         if (ios /= 0) exit
+        if (.not. row_has_observed_vote(line)) cycle
+        nleg_period = nleg_period + 1
+        row_index = leg_off + nleg_period
 
         ! Parse: first field is legislator_id, rest are votes
         start_pos = 1
-        ! Skip legislator ID field
         comma_pos = index(line(start_pos:), ',')
-        if (p == 1) then
-          ! Read leg ID from first period
-          read(line(1:comma_pos-1), *, iostat=ios) leg_id
-          id1(i) = leg_id
+        ! R's write.csv() quotes row names, while the Chile audit inputs do
+        ! not.  Accept both encodings so exported legislator identifiers are
+        ! stable and terminal states remain reloadable across data sources.
+        id_token = adjustl(line(1:comma_pos-1))
+        if (len_trim(id_token) >= 2 .and. id_token(1:1) == '"') then
+          id_token = id_token(2:len_trim(id_token)-1)
         endif
+        read(id_token, *, iostat=ios) leg_id
+        if (ios /= 0) then
+          write(*,*) 'ERROR: invalid legislator identifier: ', &
+                     trim(line(1:comma_pos-1))
+          stop 1
+        endif
+        id1(row_index) = leg_id
+        ncong(row_index) = p
         start_pos = comma_pos + 1
 
         ! Parse vote fields
@@ -307,37 +426,34 @@ contains
           if (ios /= 0) vote = 9
 
           ! Translate: 1=Yea, 6=Nay, 9=Missing
-          if (vote == 1) then
-            rv1(i, rc_off + j) = 1
-            rv9(i, rc_off + j) = 0
-            rvt1(rc_off + j, i) = 1
-            rvt9(rc_off + j, i) = 0
-          else if (vote == 6) then
-            rv1(i, rc_off + j) = 0
-            rv9(i, rc_off + j) = 0
-            rvt1(rc_off + j, i) = 0
-            rvt9(rc_off + j, i) = 0
+          if (vote >= 1 .and. vote <= 3) then
+            ! RCVOTE is stacked by member-period row, but its second index is
+            ! the roll-call number *within that member's period*.  RCVOTET is
+            ! stacked by roll call, but its second index is the member number
+            ! *within that roll call's period*.  The canonical core adds the
+            ! period offsets itself.  Applying either offset here a second
+            ! time makes the two views disagree from period 2 onward.
+            rv1(row_index, j) = 1
+            rv9(row_index, j) = 0
+            rvt1(rc_off + j, nleg_period) = 1
+            rvt9(rc_off + j, nleg_period) = 0
+          else if (vote >= 4 .and. vote <= 6) then
+            rv1(row_index, j) = 0
+            rv9(row_index, j) = 0
+            rvt1(rc_off + j, nleg_period) = 0
+            rvt9(rc_off + j, nleg_period) = 0
           else
             ! Missing (9 or anything else)
-            rv1(i, rc_off + j) = 0
-            rv9(i, rc_off + j) = 1
-            rvt1(rc_off + j, i) = 0
-            rvt9(rc_off + j, i) = 1
+            rv1(row_index, j) = 0
+            rv9(row_index, j) = 1
+            rvt1(rc_off + j, nleg_period) = 0
+            rvt9(rc_off + j, nleg_period) = 1
           endif
 
           start_pos = start_pos + comma_pos
           if (comma_pos == 0) exit
         enddo
 
-        ! Set congress for this legislator (use first period with votes)
-        if (p == 1) ncong(i) = p
-        ! Check if legislator has any votes in this period
-        do j = 1, nrc_period
-          if (rv9(i, rc_off + j) == 0) then
-            ncong(i) = p  ! Update to latest period with votes
-            exit
-          endif
-        enddo
       enddo
       close(u)
 
@@ -346,31 +462,26 @@ contains
         icong(rc_off + j) = p
       enddo
 
-      ! Congress metadata: [numLegislators, numRollCalls, numLegislators]
-      ! Must be total legislator count, not just active ones — the Fortran
-      ! code uses MCONG(p,3) to size the RCVOTET initialization loop, and
-      ! MCONG(p,1) for the RCVOTE loop. Both must cover all rows so the
-      ! transpose arrays stay consistent. Missing data is handled internally
-      ! via the RCVOTE9/RCVOTET9 boolean arrays.
-      mcong(p, 1) = nlegs
+      ! Match write_session_file() in the R wrapper: session identifier,
+      ! number of roll calls, number of legislator rows.
+      mcong(p, 1) = p
       mcong(p, 2) = nrc_period
-      mcong(p, 3) = nlegs
+      mcong(p, 3) = nleg_period
 
       rc_off = rc_off + nrc_period
+      leg_off = leg_off + nleg_period
     enddo
+
+    if (leg_off /= nlegs) then
+      write(*,*) 'ERROR: stacked legislator count mismatch', leg_off, nlegs
+      stop 1
+    endif
 
     ! Read W-NOMINATE starting coordinates AFTER id1 is populated from vote data
     write(fn, '(A,A)') trim(dir), '/wnominate_coordinates.csv'
     call load_wnominate_coords(fn, nlegs, ndim, id1, xdata)
 
-    ! Fallback coordinates for legislators without W-NOMINATE starts
-    do i = 1, nlegs
-      if (abs(xdata(i, 1)) < 1.0d-10 .and. abs(xdata(i, 2)) < 1.0d-10) then
-        frac = dble(i) / dble(nlegs)
-        xdata(i, 1) = frac - 0.5d0
-        xdata(i, 2) = merge(0.1d0, -0.1d0, mod(i,2)==0) * frac
-      endif
-    enddo
+    ! Unseeded rows remain at the canonical origin.
 
   end subroutine
 
@@ -382,6 +493,7 @@ contains
 
     character(len=512) :: line
     integer :: u, ios, leg_id, i
+    integer :: nrows, napplied, nbad
     double precision :: c1, c2
     logical :: file_exists
 
@@ -398,34 +510,237 @@ contains
     ! Skip header
     read(u, '(A)') line
 
-    do
-      read(u, *, iostat=ios) c1, c2, leg_id
-      if (ios /= 0) exit
+    nrows = 0
+    napplied = 0
+    nbad = 0
 
-      ! Find this legislator in the id1 array
+    do
+      read(u, '(A)', iostat=ios) line
+      if (ios /= 0) exit
+      if (len_trim(line) == 0) cycle
+      nrows = nrows + 1
+
+      ! Blank out quotes before the list-directed read. write.csv() emits the
+      ! row name quoted ("10808"), and a quoted character constant cannot be
+      ! read into an INTEGER: the read fails, and reading straight from the
+      ! unit would abandon the whole file on its first data row while still
+      ! reporting success. Trailing name/party columns are simply not consumed.
+      do i = 1, len(line)
+        if (line(i:i) == '"' .or. line(i:i) == '''') line(i:i) = ' '
+      enddo
+      do i = 1, len(line)
+        if (line(i:i) == ',') line(i:i) = ' '
+      enddo
+
+      read(line, *, iostat=ios) c1, c2, leg_id
+      if (ios /= 0) then
+        nbad = nbad + 1
+        cycle
+      endif
+
+      ! Fill every stacked member-period row for this legislator. Dynamic
+      ! panels contain repeated IDs; stopping at the first match would leave
+      ! all later periods at an unintended zero start.
       do i = 1, nlegs
         if (id1(i) == leg_id) then
           xdata(i, 1) = c1
           if (ndim >= 2) xdata(i, 2) = c2
+          napplied = napplied + 1
+        endif
+      enddo
+    enddo
+    close(u)
+
+    ! Report what was APPLIED, not that a file was opened. A success message
+    ! for a load that placed zero coordinates is how an unseeded arm passed
+    ! for a seeded one.
+    write(*,'(A,I0,A,I0,A)') '   W-NOMINATE seed: ', nrows, &
+         ' rows read, ', napplied, ' stacked rows seeded'
+    if (nbad > 0) then
+      write(*,'(A,I0,A)') '   WARNING: ', nbad, ' seed rows could not be parsed'
+    endif
+    if (napplied == 0) then
+      write(*,*) '  WARNING: seed file present but NO coordinates were applied'
+    endif
+  end subroutine
+
+  subroutine load_terminal_state(dir, nlegs, nrcs, ndim, id1, ncong, &
+                                 xdata, zmid, dyn, weights, state_iterations)
+    character(len=*), intent(in) :: dir
+    integer, intent(in) :: nlegs, nrcs, ndim
+    integer, intent(in) :: id1(nlegs), ncong(nlegs)
+    double precision, intent(inout) :: xdata(nlegs, ndim)
+    double precision, intent(inout) :: zmid(nrcs, ndim), dyn(nrcs, ndim)
+    double precision, intent(inout) :: weights(ndim + 1)
+    integer, intent(out) :: state_iterations
+    character(len=512) :: path
+
+    write(path, '(A,A)') trim(dir), '/summary.csv'
+    call load_state_summary(path, ndim, weights, state_iterations)
+    write(path, '(A,A)') trim(dir), '/coordinates.csv'
+    call load_state_coordinates(path, nlegs, ndim, id1, ncong, xdata)
+    write(path, '(A,A)') trim(dir), '/bill_parameters.csv'
+    call load_state_bills(path, nrcs, ndim, zmid, dyn)
+    write(*,*) '  Loaded complete terminal state'
+  end subroutine
+
+  subroutine load_state_summary(path, ndim, weights, state_iterations)
+    character(len=*), intent(in) :: path
+    integer, intent(in) :: ndim
+    double precision, intent(inout) :: weights(ndim + 1)
+    integer, intent(out) :: state_iterations
+    character(len=2048) :: state_line, key, value_text
+    integer :: u, state_ios, comma, found
+    logical :: exists
+    double precision :: value
+
+    state_iterations = -1
+
+    inquire(file=trim(path), exist=exists)
+    if (.not. exists) then
+      write(*,*) 'ERROR: Missing state summary ', trim(path)
+      stop 1
+    endif
+    u = 80
+    open(unit=u, file=trim(path), status='old', action='read', iostat=state_ios)
+    if (state_ios /= 0) stop 1
+    read(u, '(A)', iostat=state_ios) state_line
+    found = 0
+    do
+      read(u, '(A)', iostat=state_ios) state_line
+      if (state_ios /= 0) exit
+      comma = index(state_line, ',')
+      if (comma == 0) cycle
+      key = adjustl(trim(state_line(1:comma - 1)))
+      value_text = adjustl(trim(state_line(comma + 1:)))
+      read(value_text, *, iostat=state_ios) value
+      if (state_ios /= 0) cycle
+      if (trim(key) == 'w2') then
+        weights(2) = value
+        found = found + 1
+      else if (trim(key) == 'beta') then
+        weights(ndim + 1) = value
+        found = found + 1
+      else if (trim(key) == 'iterations') then
+        state_iterations = nint(value)
+      endif
+    enddo
+    close(u)
+    if (found /= 2) then
+      write(*,*) 'ERROR: State summary must contain w2 and beta'
+      stop 1
+    endif
+  end subroutine
+
+  subroutine load_state_coordinates(path, nlegs, ndim, id1, ncong, xdata)
+    character(len=*), intent(in) :: path
+    integer, intent(in) :: nlegs, ndim
+    integer, intent(in) :: id1(nlegs), ncong(nlegs)
+    double precision, intent(inout) :: xdata(nlegs, ndim)
+    character(len=2048) :: state_line
+    integer :: u, state_ios, leg_id, period, row, matched
+    double precision :: c1, c2
+    logical, allocatable :: loaded(:)
+    logical :: exists
+
+    inquire(file=trim(path), exist=exists)
+    if (.not. exists) then
+      write(*,*) 'ERROR: Missing state coordinates ', trim(path)
+      stop 1
+    endif
+    allocate(loaded(nlegs))
+    loaded = .false.
+    u = 81
+    open(unit=u, file=trim(path), status='old', action='read', iostat=state_ios)
+    if (state_ios /= 0) stop 1
+    read(u, '(A)', iostat=state_ios) state_line
+    do
+      read(u, '(A)', iostat=state_ios) state_line
+      if (state_ios /= 0) exit
+      read(state_line, *, iostat=state_ios) leg_id, period, c1, c2
+      if (state_ios /= 0) cycle
+      do row = 1, nlegs
+        if (id1(row) == leg_id .and. ncong(row) == period) then
+          xdata(row, 1) = c1
+          if (ndim >= 2) xdata(row, 2) = c2
+          loaded(row) = .true.
           exit
         endif
       enddo
     enddo
     close(u)
-    write(*,*) '  Loaded W-NOMINATE starting coordinates'
+    matched = count(loaded)
+    deallocate(loaded)
+    if (matched /= nlegs) then
+      write(*,*) 'ERROR: State coordinates incomplete', matched, nlegs
+      stop 1
+    endif
+  end subroutine
+
+  subroutine load_state_bills(path, nrcs, ndim, zmid, dyn)
+    character(len=*), intent(in) :: path
+    integer, intent(in) :: nrcs, ndim
+    double precision, intent(inout) :: zmid(nrcs, ndim), dyn(nrcs, ndim)
+    character(len=2048) :: state_line
+    integer :: u, state_ios, rollcall_id, row, matched
+    double precision :: m1, m2, s1, s2
+    logical, allocatable :: loaded(:)
+    logical :: exists
+
+    inquire(file=trim(path), exist=exists)
+    if (.not. exists) then
+      write(*,*) 'ERROR: Missing state bill parameters ', trim(path)
+      stop 1
+    endif
+    allocate(loaded(nrcs))
+    loaded = .false.
+    u = 82
+    open(unit=u, file=trim(path), status='old', action='read', iostat=state_ios)
+    if (state_ios /= 0) stop 1
+    read(u, '(A)', iostat=state_ios) state_line
+    do
+      read(u, '(A)', iostat=state_ios) state_line
+      if (state_ios /= 0) exit
+      read(state_line, *, iostat=state_ios) rollcall_id, m1, m2, s1, s2
+      if (state_ios /= 0) cycle
+      row = rollcall_id + 1
+      if (row < 1 .or. row > nrcs) cycle
+      zmid(row, 1) = m1
+      dyn(row, 1) = s1
+      if (ndim >= 2) then
+        zmid(row, 2) = m2
+        dyn(row, 2) = s2
+      endif
+      loaded(row) = .true.
+    enddo
+    close(u)
+    matched = count(loaded)
+    deallocate(loaded)
+    if (matched /= nrcs) then
+      write(*,*) 'ERROR: State bill parameters incomplete', matched, nrcs
+      stop 1
+    endif
   end subroutine
 
   subroutine export_results(dir, nlegs, nrcs, ndim, nper, &
-                            xdata, zmid, dyn, weights, id1, ncong, niter)
+                            xdata, zmid, dyn, weights, id1, ncong, &
+                            xbiglog, kbiglog, niter, nmodel)
     character(len=*), intent(in) :: dir
-    integer, intent(in) :: nlegs, nrcs, ndim, nper, niter
+    integer, intent(in) :: nlegs, nrcs, ndim, nper, niter, nmodel
     double precision, intent(in) :: xdata(nlegs, ndim)
     double precision, intent(in) :: zmid(nrcs, ndim), dyn(nrcs, ndim)
     double precision, intent(in) :: weights(ndim + 1)
     integer, intent(in) :: id1(nlegs), ncong(nlegs)
+    double precision, intent(in) :: xbiglog(nlegs, 2)
+    integer, intent(in) :: kbiglog(nlegs, 4)
 
     character(len=512) :: fn
-    integer :: u, i
+    integer :: u, i, valid_votes, wrong_predictions
+    double precision :: log_likelihood
+
+    log_likelihood = sum(xbiglog(:, 2))
+    valid_votes = sum(kbiglog(:, 2))
+    wrong_predictions = sum(kbiglog(:, 4))
 
     ! Export coordinates
     write(fn, '(A,A)') trim(dir), '/coordinates.csv'
@@ -433,11 +748,10 @@ contains
     open(unit=u, file=trim(fn), status='replace', action='write')
     write(u, '(A)') 'legislator_id,period,coord1D,coord2D'
     do i = 1, nlegs
-      ! Only export legislators with non-zero coordinates
-      if (abs(xdata(i,1)) > 1.0d-10 .or. abs(xdata(i,2)) > 1.0d-10) then
-        write(u, '(I0,A,I0,A,F18.15,A,F18.15)') &
-          id1(i), ',', ncong(i), ',', xdata(i,1), ',', xdata(i,2)
-      endif
+      ! Zero is a legitimate coordinate and must remain distinguishable from
+      ! an absent member-period row in a reloadable terminal state.
+      write(u, '(I0,A,I0,A,F18.15,A,F18.15)') &
+        id1(i), ',', ncong(i), ',', xdata(i,1), ',', xdata(i,2)
     enddo
     close(u)
     write(*,*) '  Wrote ', trim(fn)
@@ -457,11 +771,17 @@ contains
     write(fn, '(A,A)') trim(dir), '/summary.csv'
     open(unit=u, file=trim(fn), status='replace', action='write')
     write(u, '(A)') 'parameter,value'
-    write(u, '(A,F12.6)') 'w1,', weights(1)
-    write(u, '(A,F12.6)') 'w2,', weights(2)
-    write(u, '(A,F12.6)') 'beta,', weights(ndim+1)
+    write(u, '(A,F24.12)') 'log_likelihood,', log_likelihood
+    ! These values are continuation state, not presentation-only summaries.
+    ! Six decimals measurably change later dynamic cycles.
+    write(u, '(A,F24.15)') 'w1,', weights(1)
+    write(u, '(A,F24.15)') 'w2,', weights(2)
+    write(u, '(A,F24.15)') 'beta,', weights(ndim+1)
     write(u, '(A,I0)') 'iterations,', niter
-    write(u, '(A,I0)') 'temporal_model,', 0
+    write(u, '(A,I0)') 'valid_votes,', valid_votes
+    write(u, '(A,I0)') 'correct_classifications,', &
+                       valid_votes - wrong_predictions
+    write(u, '(A,I0)') 'temporal_model,', nmodel
     write(u, '(A,I0)') 'dimensions,', ndim
     write(u, '(A,I0)') 'periods,', nper
     close(u)
