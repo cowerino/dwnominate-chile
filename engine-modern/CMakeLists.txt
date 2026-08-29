@@ -15,6 +15,43 @@ option(DWNOMINATE_ENABLE_OPENMP "Parallelize independent model blocks" OFF)
 option(DWNOMINATE_ENABLE_REGRESSION_TESTS
        "Run the committed Chile and US numerical regression panels" OFF)
 
+# The canonical Fortran computes the CUTPLANE SEARCH SVDs with LAPACK's DGESDD
+# (DW-NOMINATE-wmay.f lines 3319 and 3333). The matched configuration routes
+# this engine's CUTPLANE SVDs through the same routine. Every matched-arm
+# comparison published from this package was produced with this configuration.
+option(DWNOMINATE_USE_SYSTEM_DGESDD
+       "Use the system LAPACK DGESDD used by wmay/dwnominate SEARCH (matched configuration)" ON)
+set(DWNOMINATE_SYSTEM_LAPACK_LIBRARY "" CACHE FILEPATH
+    "Explicit LAPACK library for the DGESDD route")
+set(DWNOMINATE_SYSTEM_BLAS_LIBRARY "" CACHE FILEPATH
+    "Explicit BLAS library for the DGESDD route")
+set(DWNOMINATE_REF_LAPACK_ROOT
+    ${CMAKE_CURRENT_SOURCE_DIR}/../engine-faithful/external/lapack-3.12.1/build)
+if(DWNOMINATE_USE_SYSTEM_DGESDD)
+    if(DWNOMINATE_SYSTEM_LAPACK_LIBRARY AND DWNOMINATE_SYSTEM_BLAS_LIBRARY)
+        set(DWNOMINATE_SYSTEM_LINEAR_ALGEBRA
+            ${DWNOMINATE_SYSTEM_LAPACK_LIBRARY}
+            ${DWNOMINATE_SYSTEM_BLAS_LIBRARY})
+    elseif(EXISTS ${DWNOMINATE_REF_LAPACK_ROOT}/lib/liblapack.a
+           AND EXISTS ${DWNOMINATE_REF_LAPACK_ROOT}/lib/libblas.a)
+        # The reference netlib build vendored beside engine-faithful serves the
+        # DGESDD route: deterministic, no CPU dispatch, same library the
+        # matched arms link.
+        set(DWNOMINATE_SYSTEM_LINEAR_ALGEBRA
+            ${DWNOMINATE_REF_LAPACK_ROOT}/lib/liblapack.a
+            ${DWNOMINATE_REF_LAPACK_ROOT}/lib/libblas.a)
+    else()
+        message(FATAL_ERROR
+            "DWNOMINATE_USE_SYSTEM_DGESDD is ON (the matched configuration) but no LAPACK/BLAS was found.\n"
+            "  Either build engine-faithful/external/lapack-3.12.1 per external/README-DEPENDENCIES.md,\n"
+            "  or pass -DDWNOMINATE_SYSTEM_LAPACK_LIBRARY= and -DDWNOMINATE_SYSTEM_BLAS_LIBRARY=.\n"
+            "  There is deliberately no silent fallback: the SVD route moves dynamic-panel optima\n"
+            "  by hundreds of nats. Configure with -DDWNOMINATE_USE_SYSTEM_DGESDD=OFF for the\n"
+            "  Eigen-native route.")
+    endif()
+    message(STATUS "CUTPLANE SEARCH: system LAPACK DGESDD")
+endif()
+
 find_package(Eigen3 3.4 CONFIG QUIET)
 if(NOT Eigen3_FOUND)
     if(NOT DWNOMINATE_FETCH_DEPENDENCIES)
@@ -84,6 +121,12 @@ add_library(dwnominate_core ${DWNOMINATE_CORE_SOURCES})
 target_include_directories(dwnominate_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(dwnominate_core PUBLIC Eigen3::Eigen ${DWNOMINATE_NLOPT_TARGET})
 target_compile_features(dwnominate_core PUBLIC cxx_std_20)
+
+if(DWNOMINATE_USE_SYSTEM_DGESDD)
+    target_link_libraries(dwnominate_core PUBLIC
+        ${DWNOMINATE_SYSTEM_LINEAR_ALGEBRA} gfortran quadmath)
+    target_compile_definitions(dwnominate_core PUBLIC DWNOM_USE_FORTRAN_DGESDD)
+endif()
 
 if(OpenMP_CXX_FOUND)
     target_link_libraries(dwnominate_core PUBLIC OpenMP::OpenMP_CXX)

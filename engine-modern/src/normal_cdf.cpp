@@ -2,15 +2,109 @@
 #include <cmath>
 #include <algorithm>
 
-NormalCDF::NormalCDF()
+namespace
+{
+constexpr double sqrtTwo = 1.4142135623730950488016887242097;
+constexpr double logSqrtTwoPi = 0.91893853320467274178032973640562;
+}
+
+NormalCDFMode parseNormalCDFMode(const std::string &value)
+{
+    if (value == "continuous")
+        return NormalCDFMode::Continuous;
+    if (value == "interpolated")
+        return NormalCDFMode::InterpolatedTable;
+    if (value == "legacy-nearest")
+        return NormalCDFMode::LegacyNearestTable;
+    throw std::invalid_argument(
+        "likelihood evaluator desconocido: " + value +
+        " (use continuous, interpolated o legacy-nearest)");
+}
+
+const char *normalCDFModeName(NormalCDFMode mode)
+{
+    switch (mode)
+    {
+    case NormalCDFMode::Continuous:
+        return "continuous";
+    case NormalCDFMode::InterpolatedTable:
+        return "interpolated";
+    case NormalCDFMode::LegacyNearestTable:
+        return "legacy-nearest";
+    }
+    return "unknown";
+}
+
+NormalCDF::NormalCDF(NormalCDFMode mode)
     : table_(TABLE_ROWS * 4, 0.0), tableSize_(2 * NDEVIT - 1), resolution_(XDEVIT),
-      minZ_(0.0), maxZ_(0.0)
+      minZ_(0.0), maxZ_(0.0), mode_(mode)
 {
     initializeTable();
 
     // Guardar min/max valores z para la verificación de límites
     minZ_ = table_[0];                    // Primer valor z (más negativo)
     maxZ_ = table_[(tableSize_ - 1) * 4]; // Último valor z (más positivo)
+}
+
+double NormalCDF::nearest(double z, int column) const
+{
+    const size_t centre = NDEVIT - 1;
+    size_t offset = static_cast<size_t>(
+        std::floor(std::abs(z) * resolution_ + 0.5));
+    offset = std::min(offset, NDEVIT - 2);
+    const size_t row = z >= 0.0 ? centre + offset : centre - offset;
+    return table_[row * 4 + static_cast<size_t>(column)];
+}
+
+double NormalCDF::continuousLogCdf(double z)
+{
+    if (z < -10.0)
+    {
+        // Mills-series evaluation of log Phi(z).  Factoring the leading
+        // phi(z)/(-z) term avoids underflow for beta sensitivity runs well
+        // beyond the historical +/-5 table.
+        const double inverseSquare = 1.0 / (z * z);
+        const double correction =
+            1.0 - inverseSquare + 3.0 * inverseSquare * inverseSquare -
+            15.0 * inverseSquare * inverseSquare * inverseSquare +
+            105.0 * inverseSquare * inverseSquare * inverseSquare * inverseSquare;
+        return -0.5 * z * z - std::log(-z) - logSqrtTwoPi +
+               std::log(correction);
+    }
+    if (z > 0.0)
+    {
+        const double upperTail = 0.5 * std::erfc(z / sqrtTwo);
+        return std::log1p(-upperTail);
+    }
+    return std::log(0.5 * std::erfc(-z / sqrtTwo));
+}
+
+double NormalCDF::continuousGaussOverCdf(double z, double logCdf)
+{
+    constexpr double sqrtTwoPi =
+        2.506628274631000502415765284811;
+    // Deliberately omit 1/sqrt(2*pi), matching the historical derivative
+    // representation used by the block code.
+    return continuousPdfOverCdf(z, logCdf) * sqrtTwoPi;
+}
+
+double NormalCDF::continuousPdfOverCdf(double z, double logCdf)
+{
+    if (z < -10.0)
+    {
+        // Exact derivative of the executed Mills-series log-CDF above. This
+        // matters for KKT diagnostics: objective and gradient must describe
+        // the same numerical function, even in the far tail.
+        const double q = 1.0 / (z * z);
+        const double correction =
+            1.0 - q + 3.0 * q * q - 15.0 * q * q * q +
+            105.0 * q * q * q * q;
+        const double derivativeCorrection =
+            -1.0 + 6.0 * q - 45.0 * q * q + 420.0 * q * q * q;
+        const double dqDz = -2.0 / (z * z * z);
+        return -z - 1.0 / z + derivativeCorrection * dqDz / correction;
+    }
+    return std::exp(-0.5 * z * z - logSqrtTwoPi - logCdf);
 }
 
 void NormalCDF::initializeTable()
@@ -117,33 +211,54 @@ double NormalCDF::interpolate(double z, int column) const
 
 double NormalCDF::cdf(double z) const
 {
-    return interpolate(z, 1); // Columna 2 en Fortran (índice 1 en C++)
+    if (mode_ == NormalCDFMode::Continuous)
+        return std::exp(continuousLogCdf(z));
+    if (mode_ == NormalCDFMode::LegacyNearestTable)
+        return nearest(z, 1);
+    return interpolate(z, 1);
 }
 
 double NormalCDF::logCdf(double z) const
 {
-    return interpolate(z, 2); // Columna 3 en Fortran (índice 2 en C++)
+    if (mode_ == NormalCDFMode::Continuous)
+        return continuousLogCdf(z);
+    if (mode_ == NormalCDFMode::LegacyNearestTable)
+        return nearest(z, 2);
+    return interpolate(z, 2);
 }
 
 double NormalCDF::pdfOverCdf(double z) const
 {
-    return interpolate(z, 3); // Columna 4 en Fortran (índice 3 en C++)
+    if (mode_ == NormalCDFMode::Continuous)
+    {
+        const double logCdfValue = continuousLogCdf(z);
+        return continuousPdfOverCdf(z, logCdfValue);
+    }
+    if (mode_ == NormalCDFMode::LegacyNearestTable)
+        return nearest(z, 3);
+    return interpolate(z, 3);
 }
 
 double NormalCDF::gaussOverCdf(double z) const
 {
     // Fortran-compatible: ZGAUSS/ZDISTF where ZGAUSS = exp(-ZS²/2)
     // This is the Mills ratio without the 1/sqrt(2*pi) factor
-    double cdf_val = cdf(z);
-    if (cdf_val < 1e-300)
-    {
-        cdf_val = 1e-300; // Avoid division by zero
-    }
-    return std::exp(-z * z / 2.0) / cdf_val;
+    return logCdfAndMills(z).second;
 }
 
 std::pair<double, double> NormalCDF::logCdfAndMills(double z) const
 {
+    if (mode_ == NormalCDFMode::Continuous)
+    {
+        const double logCdfValue = continuousLogCdf(z);
+        return {logCdfValue, continuousGaussOverCdf(z, logCdfValue)};
+    }
+    if (mode_ == NormalCDFMode::LegacyNearestTable)
+    {
+        const double logCdfValue = nearest(z, 2);
+        const double cdfValue = std::max(nearest(z, 1), 1e-300);
+        return {logCdfValue, std::exp(-0.5 * z * z) / cdfValue};
+    }
     // OPTIMIZADO: Cálculo directo de índice O(1) + una sola búsqueda para ambos valores
     // Manejar valores fuera de límites
     if (z <= minZ_)

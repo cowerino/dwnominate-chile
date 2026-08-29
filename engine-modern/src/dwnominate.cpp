@@ -27,6 +27,7 @@ static double g_legTimeMs = 0.0;
 DWNominate::DWNominate(const DWNominateConfig &config, const DWNominateInput &input)
     : config_(config),
       votes_(input.votes),
+      normalCDF_(config.likelihoodMode),
       currentLogLikelihood_(0.0),
       lastTotalVotes_(0),
       lastClassificationAfter_(0)
@@ -171,20 +172,10 @@ void DWNominate::loadRollCalls(const DWNominateInput &input)
         int krcmin = std::min(kyes, kno);
         double xmarg = (krctot > 0) ? static_cast<double>(krcmin) / krctot : 0.0;
 
-        // Verificar si spread es ~0 (indica roll call NA de R cuando fixRollCalls=true)
-        bool hasNonZeroSpread = false;
-        for (int d = 0; d < config_.numDimensions; ++d)
-        {
-            if (std::abs(rollCallSpreads_(i, d)) > 1e-10)
-            {
-                hasNonZeroSpread = true;
-                break;
-            }
-        }
-
         // Nota: RCBAD=.TRUE. significa roll call VALIDO en Fortran
-        // Roll call es válido si: margen >= threshold Y spread no es cero
-        validRollCalls_[i] = (xmarg >= config_.marginThreshold) && hasNonZeroSpread;
+        // La validez depende solo de los votos. Los parámetros de votación son
+        // cero al inicio canónico y no pueden utilizarse como máscara de datos.
+        validRollCalls_[i] = xmarg >= config_.marginThreshold;
     }
 }
 
@@ -446,18 +437,11 @@ DWNominateResult DWNominate::run()
         }
     }
 
-    // Evaluate-only mode has no roll-call phase from which to populate the
-    // historical classification counters. Preserve the established reporting
-    // path for fitted runs and use the common evaluator only when required.
-    const bool evaluateOnly = config_.fixGlobalParams &&
-                              config_.fixRollCalls &&
-                              config_.fixLegislators;
-    result.totalValidVotes = evaluateOnly
-                                 ? globalStats_.totalVotes
-                                 : lastTotalVotes_;
-    result.classificationAfter = evaluateOnly
-                                     ? globalStats_.correctClassified
-                                     : lastClassificationAfter_;
+    // Report the terminal state, not the counters left behind by the earlier
+    // roll-call phase. Legislator optimization changes probabilities after
+    // those historical counters were accumulated.
+    result.totalValidVotes = globalStats_.totalVotes;
+    result.classificationAfter = globalStats_.correctClassified;
 
     // Recopilar estadisticas por legislador
     int numLegislators = static_cast<int>(legislatorCoords_.rows());
@@ -556,6 +540,15 @@ void DWNominate::executeWeightPhase(int iteration)
 
     // Configuracion del problema escalar acotado para W2.
     WeightOptimizerConfig config = wintConfig();
+    if (config_.fortranReplicationMode)
+    {
+        config.lowerBound = -std::numeric_limits<double>::infinity();
+        config.upperBound = std::numeric_limits<double>::infinity();
+    }
+    else
+    {
+        config.upperBound = config_.weight2UpperBound;
+    }
     if (!config_.scalarLocalTrustRegion)
     {
         config.localRadius = 0.0;
@@ -640,6 +633,15 @@ void DWNominate::executeBetaPhase(int iteration)
 
     // Configuracion del problema escalar acotado para beta.
     BetaOptimizerConfig config = sigmasConfig();
+    if (config_.fortranReplicationMode)
+    {
+        config.lowerBound = -std::numeric_limits<double>::infinity();
+        config.upperBound = std::numeric_limits<double>::infinity();
+    }
+    else
+    {
+        config.upperBound = config_.betaUpperBound;
+    }
     if (!config_.scalarLocalTrustRegion)
     {
         config.localRadius = 0.0;

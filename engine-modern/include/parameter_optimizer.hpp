@@ -105,10 +105,10 @@ inline BetaOptimizerConfig sigmasConfig()
 inline WeightOptimizerConfig wintConfig()
 {
     WeightOptimizerConfig config;
-    // The sign of a dimensional weight is unidentified because the likelihood
-    // contains w_k^2. A positive interval removes that redundant gauge.
+    // Scientific-mode identification bounds. The strict Fortran-replication
+    // mode removes both global bounds because canonical WINT has none.
     config.lowerBound = 0.01;
-    config.upperBound = 2.0;
+    config.upperBound = 1.0;
     // Fortran: accepted probe plus NINC=15 steps, each of size 0.01.
     config.localRadius = 0.16;
     config.initialStep = 0.01;

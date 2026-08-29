@@ -344,20 +344,10 @@ void DWNominate::loadRollCalls(const DWNominateInput &input)
         int krcmin = std::min(kyes, kno);
         double xmarg = (krctot > 0) ? static_cast<double>(krcmin) / krctot : 0.0;
 
-        // Verificar si spread es ~0 (indica roll call NA de R cuando fixRollCalls=true)
-        bool hasNonZeroSpread = false;
-        for (int d = 0; d < config_.numDimensions; ++d)
-        {
-            if (std::abs(rollCallSpreads_(i, d)) > 1e-10)
-            {
-                hasNonZeroSpread = true;
-                break;
-            }
-        }
-
         // Nota: RCBAD=.TRUE. significa roll call VALIDO en Fortran
-        // Roll call es válido si: margen >= threshold Y spread no es cero
-        validRollCalls_[i] = (xmarg >= config_.marginThreshold) && hasNonZeroSpread;
+        // Its validity is determined by the minority margin, not by whether
+        // CUTPLANE has already initialized a non-zero spread.
+        validRollCalls_[i] = xmarg >= config_.marginThreshold;
     }
 }
 

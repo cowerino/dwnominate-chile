@@ -142,6 +142,11 @@ struct InitializationConfig
     // coordenadas iniciales a 0.001 antes de iniciar la estimacion. No afecta
     // las coordenadas calculadas posteriormente ni los parametros globales.
     bool roundStartsToThreeDecimals = false;
+
+    // The canonical R wrapper sends zero midpoint and zero spread for every
+    // roll call. A non-zero value is retained only as an explicit historical
+    // diagnostic for pre-audit C++ trajectories.
+    double initialRollCallSpread = 0.0;
 };
 
 /**

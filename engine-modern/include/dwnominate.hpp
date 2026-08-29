@@ -64,6 +64,12 @@ struct DWNominateConfig
     BlockSolverMode blockSolverMode;
     bool solverFallbackToCobyla;
     bool adaptiveOptimizerSchedule;
+    NormalCDFMode likelihoodMode;
+    // Replica procedimental: el Fortran no impone cotas globales a W2 ni beta.
+    // NLopt conserva solamente las cajas locales de alcance WINT/SIGMAS.
+    bool fortranReplicationMode;
+    double weight2UpperBound;
+    double betaUpperBound;
     int numThreads;
     int minimumIterations;
     double convergenceAbsoluteTolerance;
@@ -92,6 +98,10 @@ struct DWNominateConfig
           blockSolverMode(BlockSolverMode::Cobyla),
           solverFallbackToCobyla(true),
           adaptiveOptimizerSchedule(false),
+          likelihoodMode(NormalCDFMode::Continuous),
+          fortranReplicationMode(false),
+          weight2UpperBound(1.0),
+          betaUpperBound(20.0),
           numThreads(1),
           minimumIterations(4),
           convergenceAbsoluteTolerance(0.0),
@@ -326,6 +336,11 @@ struct DWNominateResult
     int numDimensions; // Numero de dimensiones espaciales
     bool converged;
     double finalLogLikelihoodImprovement;
+    // Gauge applied only to the exported second dimension.  A value other
+    // than one represents the likelihood-invariant map
+    // (x2, z2, d2, w2) -> (c*x2, c*z2, c*d2, w2/c).
+    double secondDimensionScaleFactor;
+    double rawSecondDimensionWeight;
 
     DWNominateResult()
         : finalLogLikelihood(0.0),
@@ -337,7 +352,9 @@ struct DWNominateResult
           temporalModel(0),
           numDimensions(2),
           converged(false),
-          finalLogLikelihoodImprovement(0.0)
+          finalLogLikelihoodImprovement(0.0),
+          secondDimensionScaleFactor(1.0),
+          rawSecondDimensionWeight(0.0)
     {
     }
 

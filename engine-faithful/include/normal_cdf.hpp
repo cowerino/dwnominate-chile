@@ -20,7 +20,7 @@ public:
      * Obtener el valor CDF para un puntaje z dado.
      * @param z Puntaje z normal estándar
      * @return CDF(z) = P(Z <= z) where Z ~ N(0,1)
-     * Utiliza interpolación lineal en la tabla precalculada.
+     * Utiliza el redondeo al vecino de la tabla del Fortran canónico.
      */
     double cdf(double z) const;
 
@@ -92,6 +92,7 @@ private:
      * @return Valor interpolado
      */
     double interpolate(double z, int column) const;
+    double nearest(double z, int column) const;
 
     // Constantes de Fortran
     static constexpr size_t NDEVIT = 50001;      // Puntos por lado (positivo/negativo)

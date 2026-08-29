@@ -4,7 +4,18 @@
 #include <vector>
 #include <cmath>
 #include <stdexcept>
+#include <string>
 #include <utility> // Para std::pair
+
+enum class NormalCDFMode
+{
+    Continuous,
+    InterpolatedTable,
+    LegacyNearestTable
+};
+
+NormalCDFMode parseNormalCDFMode(const std::string &value);
+const char *normalCDFModeName(NormalCDFMode mode);
 
 /**
  * Tabla de búsqueda precalculada para CDF normal estándar y valores relacionados.
@@ -13,8 +24,9 @@
 class NormalCDF
 {
 public:
-    // Constructor que precalcula la tabla de búsqueda CDF.
-    NormalCDF();
+    // Continuous is the scientific default. The two table modes are retained
+    // only to isolate historical numerical effects.
+    explicit NormalCDF(NormalCDFMode mode = NormalCDFMode::Continuous);
 
     /**
      * Obtener el valor CDF para un puntaje z dado.
@@ -78,6 +90,8 @@ public:
      */
     double getResolution() const { return resolution_; }
 
+    NormalCDFMode mode() const { return mode_; }
+
 private:
     /**
      * Inicializar la tabla de búsqueda (llamado por el constructor).
@@ -93,6 +107,11 @@ private:
      */
     double interpolate(double z, int column) const;
 
+    double nearest(double z, int column) const;
+    static double continuousLogCdf(double z);
+    static double continuousPdfOverCdf(double z, double logCdf);
+    static double continuousGaussOverCdf(double z, double logCdf);
+
     // Constantes de Fortran
     static constexpr size_t NDEVIT = 50001;      // Puntos por lado (positivo/negativo)
     static constexpr double XDEVIT = 10000.0;    // Factor de resolución
@@ -105,6 +124,7 @@ private:
     double resolution_;         // XDEVIT
     double minZ_;               // Valor mínimo z en la tabla (~-5.0)
     double maxZ_;               // Valor máximo z en la tabla (~5.0)
+    NormalCDFMode mode_;
 };
 
 #endif // NORMAL_CDF_HPP

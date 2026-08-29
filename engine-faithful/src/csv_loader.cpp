@@ -633,7 +633,9 @@ DWNominateInput CSVLoader::buildDWNominateInput(int numPeriods, const Initializa
 
     // 5.3 Midpoints y spreads iniciales de roll calls
     input.rollCallMidpoints = Eigen::MatrixXd::Zero(totalRollCalls, 2);
-    input.rollCallSpreads = Eigen::MatrixXd::Constant(totalRollCalls, 2, 0.3);
+    // Canonical Fortran leaves both arrays at the zero established by the
+    // caller and obtains the first non-zero cutting planes inside CUTPLANE.
+    input.rollCallSpreads = Eigen::MatrixXd::Zero(totalRollCalls, 2);
 
     // 5.3.1 NUEVO: Si tenemos parámetros de referencia de R, usarlos como inicialización
     // Esto replica el flujo del Fortran donde ZMID viene pre-calculado

@@ -84,6 +84,8 @@ ParameterOptimizationResult optimizeParameter(
 
     // Evaluar punto actual
     double saveCurr = evaluateLogLikelihood(context);
+    double bestValue = result.initialValue;
+    double bestLikelihood = saveCurr;
     result.initialLL = saveCurr;
     result.iterations++;
 
@@ -120,6 +122,8 @@ ParameterOptimizationResult optimizeParameter(
 
         context.weights(paramIndex) += xinc;
         saveCurr = evaluateLogLikelihood(context);
+        bestValue = context.weights(paramIndex);
+        bestLikelihood = saveCurr;
         result.iterations++;
 
         for (int iter = 0; iter < config.maxIterations; ++iter)
@@ -151,6 +155,8 @@ ParameterOptimizationResult optimizeParameter(
             if (saveUp > saveCurr)
             {
                 saveCurr = saveUp;
+                bestValue = context.weights(paramIndex);
+                bestLikelihood = saveUp;
 
                 if (config.verbose)
                 {
@@ -173,6 +179,8 @@ ParameterOptimizationResult optimizeParameter(
 
         context.weights(paramIndex) -= xinc;
         saveCurr = evaluateLogLikelihood(context);
+        bestValue = context.weights(paramIndex);
+        bestLikelihood = saveCurr;
         result.iterations++;
 
         for (int iter = 0; iter < config.maxIterations; ++iter)
@@ -204,6 +212,8 @@ ParameterOptimizationResult optimizeParameter(
             if (saveDwn > saveCurr)
             {
                 saveCurr = saveDwn;
+                bestValue = context.weights(paramIndex);
+                bestLikelihood = saveDwn;
 
                 if (config.verbose)
                 {
@@ -231,9 +241,12 @@ ParameterOptimizationResult optimizeParameter(
         }
     }
 
-    // Resultado final
-    result.value = context.weights(paramIndex);
-    result.logLikelihood = saveCurr;
+    // The historical loops can terminate while the mutable parameter is on an
+    // equal or unevaluated terminal step. Preserve the best state actually
+    // observed; the canonical Fortran source itself remains untouched.
+    context.weights(paramIndex) = bestValue;
+    result.value = bestValue;
+    result.logLikelihood = bestLikelihood;
 
     if (config.verbose)
     {
@@ -306,4 +319,3 @@ WeightOptimizationResult optimizeWeight2(
 
     return result;
 }
-

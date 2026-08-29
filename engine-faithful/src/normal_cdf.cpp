@@ -115,19 +115,29 @@ double NormalCDF::interpolate(double z, int column) const
     return value_lower + t * (value_upper - value_lower);
 }
 
+double NormalCDF::nearest(double z, int column) const
+{
+    const size_t centre = NDEVIT - 1;
+    size_t offset = static_cast<size_t>(
+        std::floor(std::abs(z) * resolution_ + 0.5));
+    offset = std::min(offset, NDEVIT - 2);
+    const size_t row = z >= 0.0 ? centre + offset : centre - offset;
+    return table_[row * 4 + static_cast<size_t>(column)];
+}
+
 double NormalCDF::cdf(double z) const
 {
-    return interpolate(z, 1); // Columna 2 en Fortran (índice 1 en C++)
+    return nearest(z, 1); // Columna 2 en Fortran (índice 1 en C++)
 }
 
 double NormalCDF::logCdf(double z) const
 {
-    return interpolate(z, 2); // Columna 3 en Fortran (índice 2 en C++)
+    return nearest(z, 2); // Columna 3 en Fortran (índice 2 en C++)
 }
 
 double NormalCDF::pdfOverCdf(double z) const
 {
-    return interpolate(z, 3); // Columna 4 en Fortran (índice 3 en C++)
+    return nearest(z, 3); // Columna 4 en Fortran (índice 3 en C++)
 }
 
 double NormalCDF::gaussOverCdf(double z) const
@@ -144,61 +154,9 @@ double NormalCDF::gaussOverCdf(double z) const
 
 std::pair<double, double> NormalCDF::logCdfAndMills(double z) const
 {
-    // OPTIMIZADO: Cálculo directo de índice O(1) + una sola búsqueda para ambos valores
-    // Manejar valores fuera de límites
-    if (z <= minZ_)
-    {
-        double logCdfVal = table_[0 * 4 + 2];
-        double cdfVal = table_[0 * 4 + 1];
-        if (cdfVal < 1e-300)
-            cdfVal = 1e-300;
-        double millsVal = std::exp(-z * z / 2.0) / cdfVal;
-        return {logCdfVal, millsVal};
-    }
-    if (z >= maxZ_)
-    {
-        double logCdfVal = table_[(tableSize_ - 1) * 4 + 2];
-        double cdfVal = table_[(tableSize_ - 1) * 4 + 1];
-        if (cdfVal < 1e-300)
-            cdfVal = 1e-300;
-        double millsVal = std::exp(-z * z / 2.0) / cdfVal;
-        return {logCdfVal, millsVal};
-    }
-
-    // OPTIMIZADO: Cálculo directo de índice O(1)
-    double indexFloat = (z - minZ_) * resolution_;
-    size_t lowerIndex = static_cast<size_t>(indexFloat);
-    if (lowerIndex >= tableSize_ - 1)
-    {
-        lowerIndex = tableSize_ - 2;
-    }
-    size_t upperIndex = lowerIndex + 1;
-
-    // Obtener los valores z
-    double z_lower = table_[lowerIndex * 4 + 0];
-    double z_upper = table_[upperIndex * 4 + 0];
-
-    // Calcular factor de interpolación
-    double t = 0.0;
-    if (std::abs(z_upper - z_lower) >= 1e-10)
-    {
-        t = (z - z_lower) / (z_upper - z_lower);
-    }
-
-    // Interpolar logCdf (columna 2)
-    double logCdf_lower = table_[lowerIndex * 4 + 2];
-    double logCdf_upper = table_[upperIndex * 4 + 2];
-    double logCdfVal = logCdf_lower + t * (logCdf_upper - logCdf_lower);
-
-    // Interpolar CDF (columna 1) para calcular Mills ratio
-    double cdf_lower = table_[lowerIndex * 4 + 1];
-    double cdf_upper = table_[upperIndex * 4 + 1];
-    double cdfVal = cdf_lower + t * (cdf_upper - cdf_lower);
-    if (cdfVal < 1e-300)
-        cdfVal = 1e-300;
-    double millsVal = std::exp(-z * z / 2.0) / cdfVal;
-
-    return {logCdfVal, millsVal};
+    const double logCdfValue = nearest(z, 2);
+    const double cdfValue = std::max(nearest(z, 1), 1e-300);
+    return {logCdfValue, std::exp(-z * z / 2.0) / cdfValue};
 }
 
 double NormalCDF::getZ(size_t index) const

@@ -19,6 +19,20 @@ if(PkgConfig_FOUND)
 endif()
 find_package(BLAS)
 
+# The canonical Fortran computes the CUTPLANE SEARCH SVDs with LAPACK's DGESDD
+# (DW-NOMINATE-wmay.f lines 3319 and 3333). The matched configuration therefore
+# routes this engine's CUTPLANE SVDs through the same routine, and it takes
+# precedence over the Eigen/LAPACKE route below. Every matched-arm comparison
+# published from this package (the three-engine vintage under results/ and the
+# optimizer-isolation protocol) was produced with this configuration; the
+# LAPACKE route below reproduces the earlier engine-lineage likelihoods only.
+option(USE_SYSTEM_DGESDD
+       "Use the system LAPACK DGESDD used by wmay/dwnominate SEARCH (matched configuration)" ON)
+set(SYSTEM_LAPACK_LIBRARY "" CACHE FILEPATH
+    "Explicit LAPACK library for the DGESDD route")
+set(SYSTEM_BLAS_LIBRARY "" CACHE FILEPATH
+    "Explicit BLAS library for the DGESDD route")
+
 # REQ-005 Stage 2: locally-built reference netlib LAPACK 3.12.1.
 # Routes Eigen's SVD through LAPACKE_dgesvd via EIGEN_USE_LAPACKE.
 # See external/lapack-3.12.1/ for the source build.
@@ -29,10 +43,33 @@ find_package(BLAS)
 # Eigen JacobiSVD against LAPACKE_dgesvd at +780.75 nats on one config and
 # -433.63 on another, and it is the ONLY rung that moves a reported parameter.
 # A quantity that large must be selectable and recorded, not inferred from a
-# file test. Default ON preserves the published configuration exactly.
-option(USE_REF_LAPACK "Route Eigen's SVD through LAPACKE_dgesvd (published configuration)" ON)
+# file test. This route reproduces the earlier engine-lineage likelihoods
+# (statics, tolerance-ladder findings); it is NOT the matched configuration,
+# which is USE_SYSTEM_DGESDD above and takes precedence.
+option(USE_REF_LAPACK "Route Eigen's SVD through LAPACKE_dgesvd (engine-lineage configuration)" ON)
 set(REF_LAPACK_ROOT ${CMAKE_SOURCE_DIR}/external/lapack-3.12.1/build)
-if(USE_REF_LAPACK AND EXISTS ${REF_LAPACK_ROOT}/lib/liblapacke.a)
+if(USE_SYSTEM_DGESDD)
+    if(SYSTEM_LAPACK_LIBRARY AND SYSTEM_BLAS_LIBRARY)
+        set(DWNOM_SYSTEM_LINEAR_ALGEBRA
+            ${SYSTEM_LAPACK_LIBRARY} ${SYSTEM_BLAS_LIBRARY})
+    elseif(EXISTS ${REF_LAPACK_ROOT}/lib/liblapack.a AND EXISTS ${REF_LAPACK_ROOT}/lib/libblas.a)
+        # The vendored reference netlib build serves the DGESDD route too:
+        # deterministic, no CPU dispatch, the same library the matched arms link.
+        set(DWNOM_SYSTEM_LINEAR_ALGEBRA
+            ${REF_LAPACK_ROOT}/lib/liblapack.a
+            ${REF_LAPACK_ROOT}/lib/libblas.a)
+    else()
+        message(FATAL_ERROR
+            "USE_SYSTEM_DGESDD is ON (the matched configuration) but no LAPACK/BLAS was found.\n"
+            "  Either build external/lapack-3.12.1 per external/README-DEPENDENCIES.md, or pass\n"
+            "  -DSYSTEM_LAPACK_LIBRARY= and -DSYSTEM_BLAS_LIBRARY= explicitly.\n"
+            "  There is deliberately no silent fallback: the SVD route moves dynamic-panel\n"
+            "  optima by hundreds of nats. To build the Eigen/LAPACKE engine-lineage\n"
+            "  configuration instead, configure with -DUSE_SYSTEM_DGESDD=OFF.")
+    endif()
+    set(REF_LAPACK_FOUND FALSE)
+    message(STATUS "CUTPLANE SEARCH: system LAPACK DGESDD")
+elseif(USE_REF_LAPACK AND EXISTS ${REF_LAPACK_ROOT}/lib/liblapacke.a)
     set(REF_LAPACK_FOUND TRUE)
     message(STATUS "Reference LAPACK found at ${REF_LAPACK_ROOT} (EIGEN_USE_LAPACKE ON)")
 elseif(NOT USE_REF_LAPACK)
@@ -46,8 +83,8 @@ else()
     # wins on 2 of 4 panels. It is never acceptable to resolve this quietly.
     message(WARNING
         "USE_REF_LAPACK is ON but ${REF_LAPACK_ROOT}/lib/liblapacke.a was NOT found.\n"
-        "  Falling back to Eigen's own JacobiSVD. THIS IS NOT THE PUBLISHED CONFIGURATION.\n"
-        "  Published likelihoods were produced with LAPACKE; the two backends differ by\n"
+        "  Falling back to Eigen's own JacobiSVD. THIS IS NEITHER PUBLISHED CONFIGURATION.\n"
+        "  The engine-lineage likelihoods were produced with LAPACKE; the two backends differ by\n"
         "  2.4 to 31.8 nats on the panels in the paper and disagree about which engine wins\n"
         "  on 2 of 4 of them. The backend actually used is recorded as 'svd_backend' in\n"
         "  every cpp_summary.csv -- check it before comparing any likelihood.\n"
@@ -122,7 +159,18 @@ target_link_libraries(dwnominate
 )
 target_link_directories(dwnominate PRIVATE ${NLOPT_LIBRARY_DIRS})
 target_compile_definitions(dwnominate PRIVATE USE_OPENMP)
-target_compile_options(dwnominate PRIVATE -O3 -march=native -ffast-math -DNDEBUG)
+# Keep the negative-control arithmetic comparable with engine-modern and the
+# Fortran reference. Fast-math changes likelihood summation and boundary
+# behavior in a non-convex fixed-cycle procedure; -march=native also makes the
+# receipt machine-specific. Release optimization is already supplied by CMake.
+# (Until 2026-08-29 this line carried -march=native -ffast-math, which the
+# matched protocol forbids; the isolation builds never used them.)
+target_compile_options(dwnominate PRIVATE -O3 -DNDEBUG)
+
+if(USE_SYSTEM_DGESDD)
+    target_link_libraries(dwnominate ${DWNOM_SYSTEM_LINEAR_ALGEBRA} gfortran quadmath)
+    target_compile_definitions(dwnominate PRIVATE DWNOM_USE_FORTRAN_DGESDD)
+endif()
 
 if(BLAS_FOUND)
     target_link_libraries(dwnominate ${BLAS_LIBRARIES})

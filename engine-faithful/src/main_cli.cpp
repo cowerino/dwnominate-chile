@@ -422,7 +422,9 @@ void exportSummary(const std::string &path,
     // mueve la verosimilitud entre 2.4 y 31.8 nats y en 2 de 4 paneles cambia
     // cual motor gana. Estas tres lineas hacen que ninguna corrida pueda ser
     // mal atribuida despues.
-#ifdef EIGEN_USE_LAPACKE
+#ifdef DWNOM_USE_FORTRAN_DGESDD
+    file << "svd_backend,fortran_dgesdd\n";
+#elif defined(EIGEN_USE_LAPACKE)
     file << "svd_backend,lapacke\n";
 #else
     file << "svd_backend,eigen_jacobi\n";

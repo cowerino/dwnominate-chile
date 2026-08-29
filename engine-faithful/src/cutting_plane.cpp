@@ -9,6 +9,13 @@
 #include <limits>
 #include <iostream>
 
+#ifdef DWNOM_USE_FORTRAN_DGESDD
+extern "C" void dgesdd_(char *jobz, int *m, int *n, double *a, int *lda,
+                         double *s, double *u, int *ldu, double *vt,
+                         int *ldvt, double *work, int *lwork, int *iwork,
+                         int *info);
+#endif
+
 namespace
 {
     /**
@@ -275,6 +282,57 @@ namespace
     {
         const int ns = static_cast<int>(cloud.cols());
 
+#ifdef DWNOM_USE_FORTRAN_DGESDD
+        // Match wmay/dwnominate SEARCH exactly at the linear-algebra-family
+        // level: DGESDD('S') followed by the last row of VT.  Eigen's
+        // JacobiSVD is a valid SVD, but small floating-point differences in
+        // this non-convex fixed-cycle procedure can select a different map.
+        int m = static_cast<int>(cloud.rows());
+        int n = ns;
+        int lda = m;
+        int minimum = std::min(m, n);
+        int ldu = m;
+        int ldvt = minimum;
+        int info = 0;
+        char jobz = 'S';
+        Eigen::MatrixXd matrix = cloud;
+        std::vector<double> singularValues(static_cast<std::size_t>(minimum));
+        std::vector<double> leftVectors(
+            static_cast<std::size_t>(ldu) * static_cast<std::size_t>(minimum));
+        std::vector<double> rightVectors(
+            static_cast<std::size_t>(ldvt) * static_cast<std::size_t>(n));
+        std::vector<int> integerWork(static_cast<std::size_t>(8 * minimum));
+
+        int lwork = -1;
+        double workQuery = 0.0;
+        dgesdd_(&jobz, &m, &n, matrix.data(), &lda, singularValues.data(),
+                leftVectors.data(), &ldu, rightVectors.data(), &ldvt,
+                &workQuery, &lwork, integerWork.data(), &info);
+        if (info != 0)
+        {
+            throw std::runtime_error("DGESDD workspace query failed");
+        }
+        lwork = std::max(1, static_cast<int>(std::ceil(workQuery)));
+        std::vector<double> work(static_cast<std::size_t>(lwork));
+        matrix = cloud;
+        dgesdd_(&jobz, &m, &n, matrix.data(), &lda, singularValues.data(),
+                leftVectors.data(), &ldu, rightVectors.data(), &ldvt,
+                work.data(), &lwork, integerWork.data(), &info);
+        if (info != 0)
+        {
+            throw std::runtime_error("DGESDD failed in SEARCH");
+        }
+
+        Eigen::VectorXd minVarianceDir(ns);
+        for (int dimension = 0; dimension < ns; ++dimension)
+        {
+            minVarianceDir(dimension) =
+                rightVectors[static_cast<std::size_t>(minimum - 1) +
+                             static_cast<std::size_t>(dimension) *
+                                 static_cast<std::size_t>(ldvt)];
+        }
+        return minVarianceDir;
+#else
         // SVD de la nube de puntos
         Eigen::JacobiSVD<Eigen::MatrixXd> svd(cloud, Eigen::ComputeThinV);
 
@@ -283,6 +341,7 @@ namespace
         Eigen::VectorXd minVarianceDir = svd.matrixV().col(ns - 1);
 
         return minVarianceDir;
+#endif
     }
 
     /**

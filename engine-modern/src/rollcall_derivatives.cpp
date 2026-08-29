@@ -244,24 +244,11 @@ RollCallDerivativesResult computeRollCallDerivatives(
         // Actualizar estadisticas de clasificacion
         updateClassificationStats(result, util.DC, util.DB, util.XCC, ZS);
 
-        // Lookup en tabla CDF
-        double cdfValue = normalCDF.cdf(ZS);
-        double logCdfValue = normalCDF.logCdf(ZS);
+        const auto [logCdfValue, ratio] =
+            normalCDF.logCdfAndMills(ZS);
 
         // Acumular log-likelihood
         result.logLikelihood += logCdfValue;
-
-        // Calcular derivadas
-        // ZGAUSS = exp(-(ZS*ZS)/2.0)
-        double zgauss = std::exp(-(ZS * ZS) / 2.0);
-
-        // Ratio phi(ZS)/Phi(ZS) para derivadas
-        // Evitar division por cero
-        double ratio = 0.0;
-        if (cdfValue > 1e-300)
-        {
-            ratio = zgauss / cdfValue;
-        }
 
         // Derivadas respecto a midpoint y spread
         for (int k = 0; k < numDimensions; ++k)
@@ -423,13 +410,9 @@ RollCallDerivativesResult computeRollCallDerivativesOptimized(
         }
 
         // Log-likelihood
-        double cdfValue = normalCDF.cdf(ZS);
-        double logCdfValue = normalCDF.logCdf(ZS);
+        const auto [logCdfValue, ratio] =
+            normalCDF.logCdfAndMills(ZS);
         logLikelihood += logCdfValue;
-
-        // Calcular derivadas
-        double zgauss = std::exp(-(ZS * ZS) / 2.0);
-        double ratio = (cdfValue > 1e-300) ? (zgauss / cdfValue) : 0.0;
 
         // CORRECCION E: Acumular derivadas inline
         for (int k = 0; k < numDimensions; ++k)
@@ -547,12 +530,9 @@ RollCallDerivativesResult computeRollCallDerivativesOptimized(
             correctClassified++;
         }
 
-        double cdfValue = normalCDF.cdf(ZS);
-        double logCdfValue = normalCDF.logCdf(ZS);
+        const auto [logCdfValue, ratio] =
+            normalCDF.logCdfAndMills(ZS);
         logLikelihood += logCdfValue;
-
-        double zgauss = std::exp(-(ZS * ZS) / 2.0);
-        double ratio = (cdfValue > 1e-300) ? (zgauss / cdfValue) : 0.0;
 
         for (int k = 0; k < numDimensions; ++k)
         {

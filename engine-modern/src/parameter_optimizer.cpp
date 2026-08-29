@@ -55,6 +55,13 @@ ParameterOptimizationResult optimizeParameter(
     {
         throw std::invalid_argument("invalid scalar optimizer bounds");
     }
+    if ((!std::isfinite(config.lowerBound) ||
+         !std::isfinite(config.upperBound)) &&
+        !(config.localRadius > 0.0 && std::isfinite(config.localRadius)))
+    {
+        throw std::invalid_argument(
+            "unbounded scalar search requires a finite local radius");
+    }
 
     ParameterOptimizationResult output;
     output.initialValue = context.weights(paramIndex);
@@ -72,6 +79,12 @@ ParameterOptimizationResult optimizeParameter(
             effectiveLower, output.initialValue - config.localRadius);
         effectiveUpper = std::min(
             effectiveUpper, output.initialValue + config.localRadius);
+    }
+    if (!std::isfinite(effectiveLower) ||
+        !std::isfinite(effectiveUpper) ||
+        !(effectiveLower < effectiveUpper))
+    {
+        throw std::invalid_argument("NLopt scalar box must be finite");
     }
 
     output.initialLL = computeLogLikelihoodParallel(
@@ -141,6 +154,10 @@ ParameterOptimizationResult optimizeParameter(
     const bool objectiveDidNotDecrease =
         std::isfinite(output.logLikelihood) &&
         output.logLikelihood + config.acceptanceTolerance >= output.initialLL;
+    const bool objectiveIsFlat =
+        std::isfinite(output.logLikelihood) &&
+        std::abs(output.logLikelihood - output.initialLL) <=
+            config.acceptanceTolerance;
     output.accepted = output.rawReturnFeasible && acceptableStatus &&
                       objectiveDidNotDecrease;
     if (!output.accepted)
@@ -151,7 +168,14 @@ ParameterOptimizationResult optimizeParameter(
     }
     else
     {
-        output.value = acceptedValue;
+        // BOBYQA is free to return any point in a constant box. The canonical
+        // first WINT/SIGMAS calls see precisely such a box because bill
+        // midpoint and spread are both zero. A numerically flat solve must not
+        // create an arbitrary trajectory or change the identification gauge.
+        output.value = objectiveIsFlat ? output.initialValue : acceptedValue;
+        context.weights(paramIndex) = output.value;
+        if (objectiveIsFlat)
+            output.logLikelihood = output.initialLL;
     }
     output.iterations = objective.evaluations;
     output.optimizerStatus = static_cast<int>(status);

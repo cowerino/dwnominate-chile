@@ -11,6 +11,23 @@
 #include <stdexcept>
 #include <cmath>
 
+namespace
+{
+
+// Canonical coding in dwnominate: 1--3 yea, 4--6 nay, and 0 or >6
+// missing.  -1 is the CSV loader's own missing sentinel.
+inline bool isMissingVoteCode(int value)
+{
+    return value == -1 || value == 0 || value > 6;
+}
+
+inline bool isYeaVoteCode(int value)
+{
+    return value >= 1 && value <= 3;
+}
+
+} // namespace
+
 double dwnominate_input::roundLegacyStartCoordinate(double value)
 {
     if (!std::isfinite(value))
@@ -443,11 +460,11 @@ DWNominateInput CSVLoader::buildDWNominateInput(int numPeriods, const Initializa
                 continue; // no aparece en el CSV de este periodo
             }
             int voteRow = it->second;
-            // Activo en este periodo: >=1 voto no-missing (1=Si, 0/6=No; -1/9=missing).
+            // Active in this period: at least one canonical non-missing vote.
             bool active = false;
             for (int v : pd.votes[voteRow])
             {
-                if (v != -1 && v != 9)
+                if (!isMissingVoteCode(v))
                 {
                     active = true;
                     break;
@@ -463,7 +480,6 @@ DWNominateInput CSVLoader::buildDWNominateInput(int numPeriods, const Initializa
     }
 
     int totalLegislators = static_cast<int>(stackedRows.size()); // = filas apiladas (S)
-    int totalUniqueLegislators = static_cast<int>(legislatorIds_.size());
     int totalRollCalls = 0;
     for (int rc : rollCallsPerPeriod_)
     {
@@ -551,13 +567,10 @@ DWNominateInput CSVLoader::buildDWNominateInput(int numPeriods, const Initializa
 
         if (!applied)
         {
-            // Fallback: distribución uniforme simple basada en el índice único
-            int uIdx = legislatorIdToIndex_.count(legId) ? legislatorIdToIndex_.at(legId) : 0;
-            double frac = (totalUniqueLegislators > 0)
-                              ? static_cast<double>(uIdx) / static_cast<double>(totalUniqueLegislators)
-                              : 0.0;
-            input.legislatorCoords(r, 0) = frac - 0.5;
-            input.legislatorCoords(r, 1) = (uIdx % 2 == 0 ? 0.1 : -0.1) * frac;
+            // Canonical wmay/Fortran start for a legislator absent from the
+            // W-NOMINATE seed.  The roster order must not enter the model.
+            input.legislatorCoords(r, 0) = 0.0;
+            input.legislatorCoords(r, 1) = 0.0;
             coordsFallback++;
         }
     }
@@ -591,7 +604,11 @@ DWNominateInput CSVLoader::buildDWNominateInput(int numPeriods, const Initializa
 
     // 5.3 Midpoints y spreads iniciales de roll calls
     input.rollCallMidpoints = Eigen::MatrixXd::Zero(totalRollCalls, 2);
-    input.rollCallSpreads = Eigen::MatrixXd::Constant(totalRollCalls, 2, 0.3);
+    const double initialSpread = initConfig
+                                     ? initConfig->initialRollCallSpread
+                                     : 0.0;
+    input.rollCallSpreads =
+        Eigen::MatrixXd::Constant(totalRollCalls, 2, initialSpread);
 
     // 5.3.1 NUEVO: Si tenemos parámetros de referencia de R, usarlos como inicialización
     // Esto replica el flujo del Fortran donde ZMID viene pre-calculado
@@ -669,14 +686,14 @@ DWNominateInput CSVLoader::buildDWNominateInput(int numPeriods, const Initializa
             {
                 int localRc = globalRcIdx - off;
                 int vote = pd.votes[voteRow][localRc];
-                // Codificación: 1=Sí, 0/6=No, 9=Missing/Abstención, -1=NA
-                if (vote == -1 || vote == 9)
+                if (isMissingVoteCode(vote))
                 {
                     input.votes.setVote(r, globalRcIdx, false, true);
                 }
                 else
                 {
-                    input.votes.setVote(r, globalRcIdx, vote == 1, false);
+                    input.votes.setVote(
+                        r, globalRcIdx, isYeaVoteCode(vote), false);
                 }
             }
             else
