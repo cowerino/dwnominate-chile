@@ -69,7 +69,11 @@ for (i in seq_along(congs)) {
   full <- matrix(9L, length(global_ids), ncol(M), dimnames = list(global_ids, colnames(M)))
   full[rownames(R), ] <- R                          # absent senators -> all 9 (missing)
   df <- data.frame(full, check.names = FALSE)
-  write.csv(df, sprintf("cpp_input/votes_matrix_p%d.csv", i), row.names = TRUE)
+  # quote = FALSE: rownames are character ids, and write.csv quotes character.
+  # The Fortran harness reads the id field list-directed into an INTEGER, so a
+  # quoted "10808" aborts the whole matrix load (same defect class as the seed).
+  write.csv(df, sprintf("cpp_input/votes_matrix_p%d.csv", i), row.names = TRUE,
+            quote = FALSE)
 }
 
 # Seed coords: per-congress W-NOMINATE, each member seeded from the FIRST congress

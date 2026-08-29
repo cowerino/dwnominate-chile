@@ -22,7 +22,9 @@ colnames(M) <- seq_len(ncol(M))           # rollcall ids 1..596
 
 # votes_matrix_p1.csv : first col = legislator id, header = rollcall ids
 df <- data.frame(M, check.names = FALSE)
-write.csv(df, file.path(outdir, "votes_matrix_p1.csv"), row.names = TRUE)
+# quote = FALSE: quoted ids abort the Fortran harness's list-directed reads.
+write.csv(df, file.path(outdir, "votes_matrix_p1.csv"), row.names = TRUE,
+          quote = FALSE)
 
 # Canonical published W-NOMINATE reference (polarity per the package vignette)
 wn <- wnominate(sen90, polarity = c(2, 5), dims = 2, minvotes = 20)
@@ -40,13 +42,15 @@ write.csv(ref, file.path(outdir, "wnom_reference.csv"), row.names = FALSE)
 seedA <- data.frame(coord1D = ref$coord1D, coord2D = ref$coord2D,
                     legislator_id = ids, legislator_name = ref$name, party = ref$party,
                     stringsAsFactors = FALSE)
-write.csv(seedA, file.path(outdir, "wnominate_coordinates.csv"), row.names = FALSE)
+write.csv(seedA, file.path(outdir, "wnominate_coordinates.csv"), row.names = FALSE,
+          quote = FALSE)
 
 # Seed B: perturbed start (estimate-not-regurgitate test)
 seedB <- seedA
 seedB$coord1D <- pmax(-0.99, pmin(0.99, seedA$coord1D + rnorm(nrow(seedA), 0, 0.30)))
 seedB$coord2D <- pmax(-0.99, pmin(0.99, seedA$coord2D + rnorm(nrow(seedA), 0, 0.30)))
-write.csv(seedB, file.path(outdir, "wnominate_coordinates_perturbed.csv"), row.names = FALSE)
+write.csv(seedB, file.path(outdir, "wnominate_coordinates_perturbed.csv"), row.names = FALSE,
+          quote = FALSE)
 
 # legislator metadata (party for polarity anchor)
 meta <- data.frame(legislator_id = ids, party = sen90$legis.data$party,
