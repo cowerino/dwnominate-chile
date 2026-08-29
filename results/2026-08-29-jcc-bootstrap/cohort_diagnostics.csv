@@ -1,0 +1,5 @@
+cohort,n_legislators,definition
+full,163,active and party observed in at least one target slice
+balanced,145,active and party observed in every target slice
+stable,137,balanced and same party in every target slice
+continuous,121,"stable and present in every observed panel period: 1,2,3,4,5,6,7,8,9,10,11,12"
