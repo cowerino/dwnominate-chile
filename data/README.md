@@ -11,6 +11,9 @@ the comparison table uses.
 | `chile-static/leg368/` | legislatura 368 | 1 period | static arm. Same bytes as period 23 |
 | `us-sen90/` | US Senate, 90th Congress | 1 period, 102 legislators | the static confirmation arm |
 | `us-dynamic-5p/` | US Senate, 5 congresses | 5 periods, 168 legislators | the dynamic confirmation arm, `--periods=5 --model=1` |
+| `synthetic-2d/strong/` | synthetic, dim-2 real by construction | 1 period, 155 legislators, 715 roll calls | recovery test against a known truth |
+| `synthetic-2d/moderate/` | same, fewer dim-2 cleavages | 1 period | recovery test |
+| `synthetic-2d/weak/` | same, fewest dim-2 cleavages | 1 period | recovery test |
 
 ## File contract
 
