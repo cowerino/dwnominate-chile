@@ -1,3 +1,0 @@
-Contexto lógico del instrumento de investigación y sus entradas externas. Ruta común verificada: portal R, ejecutables y comprobación de archivos.
-
-Flecha discontinua: flujo de información. LL: log-verosimilitud.

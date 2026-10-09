@@ -176,5 +176,5 @@ terms. `LICENSING.md` has the complete map; `LICENSE` and `LICENSE-DATA` carry t
 
 ## Thesis report and design diagrams
 
-[Etapa 2 report and diagram review, 2026-10-08](docs/thesis/etapa-2/2026-10-08/README.md).
+[Etapa 2 report and diagram review, 2026-10-08](docs/thesis/etapa-2/README.md).
 This dated course review does not change the frozen paper results or certify pending designs as implemented.

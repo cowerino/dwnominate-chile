@@ -1,3 +1,0 @@
-Objetivos dentro del instrumento de investigación: estimación, validación chilena y comparación. Los roles pueden ser ejercidos por la misma persona.
-
-UML casos de uso: participación, especialización e inclusión.

@@ -1,6 +1,7 @@
-# Informes y diagramas del trabajo de título
+# Informes del trabajo de título
 
-**[Informe de Etapa 2 y diagramas para revisión, 2026-10-08](etapa-2/2026-10-08/README.md)**.
+| Etapa | Informe y figuras | Versión |
+|---|---|---|
+| Etapa 2 | [Informe y diagramas](etapa-2/README.md) | 2026-10-08 |
 
-Estas publicaciones de curso son distintas de los resultados congelados del artículo.
-Los diagramas se publican como propuestas para revisión, con su estado y procedencia explícitos.
+Los informes de curso son independientes de los resultados congelados del artículo.
