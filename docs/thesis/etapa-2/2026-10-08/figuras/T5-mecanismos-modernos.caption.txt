@@ -1,0 +1,3 @@
+Mecanismos de búsqueda fieles y modernos en el perfil controlado. La tabla separa implementación y restricciones de los controles de medición.
+
+Tabla de mecanismos; no usa relaciones UML.

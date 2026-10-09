@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="135mm" height="148.519mm" viewBox="0 0 382.677 421">
+<rect width="100%" height="100%" fill="white"/>
+<title>F3</title>
+<desc>Correspondencia de responsabilidades entre los dos antecedentes Fortran y el motor fiel C++. Catálogo de rutinas y variantes en el anexo de correspondencia.</desc>
+<text x="191.34" y="14.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Correspondencia de responsabilidades</text>
+<text x="93.00" y="35.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Antecedentes Fortran</text>
+<text x="290.00" y="35.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Motor fiel C++</text>
+<rect x="8" y="48" width="170" height="48" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="93.00" y="62.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Entrada y ejecución</text>
+<polyline points="8,67.0 178,67.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="14.00" y="78.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">2004: programa con archivos</text>
+<text x="14.00" y="88.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">wmay: dwnom y envoltorio R/CLI</text>
+<rect x="205" y="48" width="170" height="48" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="290.00" y="62.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Entrada y orquestación</text>
+<polyline points="205,67.0 375,67.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="211.00" y="78.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">CLI y CSVLoader; ciclo en DWNominate</text>
+<polyline points="178,72 205,72" fill="none" stroke="rgb(127,127,127)" stroke-width="1.8"/>
+<rect x="8" y="104" width="170" height="48" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="93.00" y="118.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Configuración y estado</text>
+<polyline points="8,123.0 178,123.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="14.00" y="134.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">2004: COMMON; wmay: módulos</text>
+<text x="14.00" y="144.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">parámetros y arreglos compartidos</text>
+<rect x="205" y="104" width="170" height="48" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="290.00" y="118.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Configuración y estado</text>
+<polyline points="205,123.0 375,123.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="211.00" y="134.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">DWNominateConfig explícita</text>
+<text x="211.00" y="144.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">estado retenido en DWNominate</text>
+<polyline points="178,128 205,128" fill="none" stroke="rgb(127,127,127)" stroke-width="1.8"/>
+<rect x="8" y="160" width="170" height="48" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="93.00" y="174.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Búsquedas de parámetros</text>
+<polyline points="8,179.0 178,179.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="14.00" y="190.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">WINT, SIGMAS, RCINT2, XINT</text>
+<text x="14.00" y="200.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">GRID: presente solo en 2004</text>
+<rect x="205" y="160" width="170" height="48" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="290.00" y="174.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Búsquedas fieles</text>
+<polyline points="205,179.0 375,179.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="211.00" y="190.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">escalares, votaciones y legisladores</text>
+<text x="211.00" y="200.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">GRID con interruptor de linaje</text>
+<polyline points="178,184 205,184" fill="none" stroke="rgb(127,127,127)" stroke-width="1.8"/>
+<rect x="8" y="216" width="170" height="48" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="93.00" y="230.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Geometría de cortes</text>
+<polyline points="8,235.0 178,235.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="14.00" y="246.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">CUTPLANE, SEARCH, JAN11PT</text>
+<text x="14.00" y="256.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">2004: LSVRR; wmay: DGESDD</text>
+<rect x="205" y="216" width="170" height="48" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="290.00" y="230.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Geometría de cortes</text>
+<polyline points="205,235.0 375,235.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="211.00" y="246.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">cutting_plane, cutting_point</text>
+<text x="211.00" y="256.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">DGESDD en el perfil comparado</text>
+<polyline points="178,240 205,240" fill="none" stroke="rgb(127,127,127)" stroke-width="1.8"/>
+<rect x="8" y="272" width="170" height="48" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="93.00" y="286.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Verosimilitud</text>
+<polyline points="8,291.0 178,291.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="14.00" y="302.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">PLOG; derivadas PROLLC2, PROX</text>
+<rect x="205" y="272" width="170" height="48" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="290.00" y="286.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Verosimilitud y derivadas</text>
+<polyline points="205,291.0 375,291.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="211.00" y="302.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">likelihood; módulos de derivadas</text>
+<polyline points="178,296 205,296" fill="none" stroke="rgb(127,127,127)" stroke-width="1.8"/>
+<rect x="8" y="328" width="170" height="48" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="93.00" y="342.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Soporte numérico</text>
+<polyline points="8,347.0 178,347.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="14.00" y="358.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">RSORT, REGA; normal tabulada</text>
+<rect x="205" y="328" width="170" height="48" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="290.00" y="342.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Soporte numérico</text>
+<polyline points="205,347.0 375,347.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="211.00" y="358.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">sort_utils, simple_ols, normal_cdf</text>
+<polyline points="178,352 205,352" fill="none" stroke="rgb(127,127,127)" stroke-width="1.8"/>
+<polyline points="8,388 374.6771653543307,388" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="8.00" y="398.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">Línea horizontal: correspondencia de responsabilidad. Las dependencias de módulos y la</text>
+<text x="8.00" y="408.50" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">propiedad del estado se documentan por separado en el anexo.</text>
+</svg>

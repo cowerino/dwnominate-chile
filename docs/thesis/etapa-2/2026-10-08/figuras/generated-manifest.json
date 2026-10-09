@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-08",
+  "width_mm": 135,
+  "font": "Palatino Linotype (C:/Windows/Fonts/pala.ttf, palab.ttf, palai.ttf)",
+  "height_pt": {
+    "F1-contexto": 320,
+    "F2-casos-de-uso": 447,
+    "F3-fortran-a-cpp": 421,
+    "F4-ciclo-estimacion": 482,
+    "T5-mecanismos-modernos": 336,
+    "F6-datos-tiempo-servido": 480,
+    "F7-verificacion": 462,
+    "A1-clases-estado": 492,
+    "A2-secuencia-estimacion": 510
+  },
+  "pdf_sha256": {
+    "F1-contexto.pdf": "da3d5b2423d19ec588904789bad0433f4761e32421e85d6394158c90fac64f9b",
+    "F2-casos-de-uso.pdf": "dcc2a72710f74c205cf95a38fcd91e76b6f507f6e2a847bcfb6fde332db13bd6",
+    "F3-fortran-a-cpp.pdf": "039e2ab72c2929d15f4ed089572a7e6f6b5116e907cbd69cac930f34d8780d90",
+    "F4-ciclo-estimacion.pdf": "f5fda83d50c4c1a9c42d740fa4453869aa349398e3a5a4803936898d7b28b585",
+    "T5-mecanismos-modernos.pdf": "980eca59a525c4780d3c39af3ebcc5c3344d0ae2028c4540903a08b5b03be820",
+    "F6-datos-tiempo-servido.pdf": "55528158f38423c9d1b81599e31bf1dc4d6dd7be0f6c77fbcc201d98de07fb86",
+    "F7-verificacion.pdf": "eb5bca53afd2fb4d794231fee07ce2377c97e85b78a8fc56918680c32c77f1d7",
+    "A1-clases-estado.pdf": "7d7e640dc866f5eb05ae303e4f1a53538c7fc5933a8a4b55a20e996aa56065db",
+    "A2-secuencia-estimacion.pdf": "98d1ad3bd471cfb9b25e3fa14d37059f90f8dc519786fd108bbee6172185204c",
+    "figuras-e2-revision.pdf": "5b147ac59148b0a44daf0c0f7f98eafaa4875608c01e4c116082987808714296"
+  },
+  "figures": [
+    "F1-contexto",
+    "F2-casos-de-uso",
+    "F3-fortran-a-cpp",
+    "F4-ciclo-estimacion",
+    "F6-datos-tiempo-servido",
+    "F7-verificacion",
+    "A1-clases-estado",
+    "A2-secuencia-estimacion"
+  ],
+  "tables": [
+    "T5-mecanismos-modernos"
+  ],
+  "items": [
+    "F1-contexto",
+    "F2-casos-de-uso",
+    "F3-fortran-a-cpp",
+    "F4-ciclo-estimacion",
+    "T5-mecanismos-modernos",
+    "F6-datos-tiempo-servido",
+    "F7-verificacion",
+    "A1-clases-estado",
+    "A2-secuencia-estimacion"
+  ]
+}

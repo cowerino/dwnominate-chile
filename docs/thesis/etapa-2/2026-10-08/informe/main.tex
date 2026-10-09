@@ -1,0 +1,167 @@
+%% ============================================================================
+%% Informe de Etapa 2: Diseño e Implementación Inicial. INFO1197, II-2026.
+%% Nieves & Antivil. Proyecto LaTeX autocontenido, derivado del preámbulo de
+%% thesis/draft/main.tex (memoir 12 pt, Palatino, biblatex-apa con biber; sin
+%% amsmath; \mathrm{} y no \text{}; ancho de texto 382.6 pt).
+%%
+%% Construir desde PowerShell con MiKTeX:
+%%   pdflatex -interaction=nonstopmode -output-directory=build main.tex
+%%   biber --input-directory build --output-directory build main
+%%   pdflatex -interaction=nonstopmode -output-directory=build main.tex   (dos veces)
+%%   Copy-Item build/main.pdf main.pdf
+%%
+%% Las figuras F1-F4, F6-F7, A1-A2 y el cuadro T5 se leen directamente de ../figuras/*.pdf
+%% (\graphicspath abajo), para que cada construcción tome la última versión.
+%% La carpeta informe/figuras/ es una copia antigua y ya no se usa. Para
+%% subir el proyecto a Overleaf hay que llevar también ../figuras/.
+%% ============================================================================
+\documentclass[12pt,oneside,spanish,oldfontcommands]{memoir}
+\usepackage[utf8]{inputenc}
+\usepackage[backend=biber,style=apa]{biblatex}
+\addbibresource{referencias.bib}
+\DeclareLanguageMapping{spanish}{spanish-apa}
+\usepackage{mathpazo}
+\usepackage[T1]{fontenc}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+\setlength{\parskip}{\smallskipamount} % la plantilla usa \medskipamount; reducido por el límite de treinta páginas
+\setlength{\parindent}{0pt}
+\setlength{\headheight}{16pt}
+\usepackage{babel}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{url}
+
+\usepackage{endnotes}
+\addto\shorthandsspanish{\spanishdeactivate{~<>.}}
+
+\usepackage{array}
+\usepackage{rotfloat}
+\usepackage{textcomp}
+%\usepackage{amssymb,amsmath}  % se mantiene comentado como en la plantilla; con amsmath memoir numera las ecuaciones como (N.0)
+\usepackage{graphicx}
+\graphicspath{{../figuras/}}
+\usepackage{esint}
+\usepackage{csquotes}
+\usepackage{hyperref}
+\usepackage{xurl}
+\usepackage[none]{hyphenat}
+\usepackage{longtable}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+% nombres de archivo, módulos, rutas y opciones en cuadros; cortan solo en _ / - .
+\DeclareUrlCommand\archivo{\urlstyle{tt}\def\UrlBreaks{\do\_\do\/\do\-\do\.}\def\UrlBigBreaks{}}
+
+\usepackage{dsfont}
+\usepackage{algorithm}
+\usepackage{multirow}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\algdef{SE}[VARIABLES]{Variables}{EndVariables}
+   {\algorithmicvariables}
+   {\algorithmicend\ \algorithmicvariables}
+\algnewcommand{\algorithmicvariables}{\textbf{global variables}}
+\floatname{algorithm}{Algoritmo}
+\algrenewcommand\algorithmicrequire{\textbf{Entrada:}}
+\algrenewcommand\algorithmicensure{\textbf{Salida:}}
+\algrenewcommand\algorithmicreturn{\textbf{devolver}}
+\algrenewcommand\algorithmicfor{\textbf{para}}
+\algrenewcommand\algorithmicforall{\textbf{para todo}}
+\algrenewcommand\algorithmicdo{\textbf{hacer}}
+\algrenewcommand\algorithmicend{\textbf{fin}}
+\algrenewcommand\algorithmicif{\textbf{si}}
+\algrenewcommand\algorithmicthen{\textbf{entonces}}
+\algrenewcommand\algorithmicelse{\textbf{si no}}
+\algrenewcommand\algorithmicwhile{\textbf{mientras}}
+\addto\captionsspanish{\renewcommand{\appendixname}{Anexo}}
+
+\newcommand{\Tau}{\mathrm{T}}
+\newcommand{\I}{\mathds{1}}
+
+\makeatletter
+\@ifundefined{showcaptionsetup}{}{%
+ \PassOptionsToPackage{caption=false}{subfig}}
+\usepackage{subfig}
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+%% Pies de figura y de cuadro en tamaño pequeño: el bloque de texto mide 548,5 pt
+%% de alto y las vistas, hasta 536 pt; cada vista lleva su clave de notación
+%% impresa al pie de la propia figura, por lo que el pie LaTeX solo da el mensaje.
+\captionnamefont{\footnotesize\bfseries}
+\captiontitlefont{\footnotesize}
+%% Encabezados de capítulo compactos (el estilo de la plantilla deja un tercio de
+%% página en blanco por capítulo; el informe tiene límite de treinta páginas).
+\setlength{\beforechapskip}{0pt}
+\setlength{\midchapskip}{4pt}
+\setlength{\afterchapskip}{12pt}
+\renewcommand{\chapnamefont}{\normalfont\large\bfseries}
+\renewcommand{\chapnumfont}{\normalfont\large\bfseries}
+\renewcommand{\chaptitlefont}{\normalfont\LARGE\bfseries\raggedright}
+\setlength{\cfttablenumwidth}{3.2em}
+\cftsetindents{section}{1.5em}{2.7em}
+\cftsetindents{subsection}{4.2em}{3.2em}
+%% Flotantes: las vistas miden hasta 19 cm de alto; sin estos valores un flotante
+%% más alto que \topfraction y más bajo que \floatpagefraction queda varado.
+%% Espacios verticales compactos alrededor de títulos de sección, flotantes y cuadros
+%% largos, por el mismo límite de páginas.
+\setbeforesecskip{-2.6ex plus -0.6ex minus -0.2ex}
+\setaftersecskip{1.3ex plus 0.2ex}
+\setbeforesubsecskip{-2.2ex plus -0.5ex minus -0.2ex}
+\setaftersubsecskip{1.0ex plus 0.2ex}
+\setlength{\textfloatsep}{12pt plus 2pt minus 4pt}
+\setlength{\floatsep}{10pt plus 2pt minus 2pt}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
+\setlength{\LTpre}{6pt}
+\setlength{\LTpost}{6pt}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.6}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.8}
+
+%% Evidencia: enlaces verificados o archivos incluidos en el paquete local.
+
+\begin{document}
+
+\sloppy
+
+\input{portada}
+\clearpage
+
+\pagenumbering{roman}
+
+\tableofcontents{}
+
+\clearpage
+
+\listoffigures
+\clearpage
+
+\listoftables
+
+\clearpage
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\setlength{\tabcolsep}{4pt}
+%% Cuerpo continuo: cada capítulo sigue en la misma página tras vaciar los
+%% flotantes pendientes, por el límite de treinta páginas de cuerpo. La
+%% bibliografía y los anexos vuelven a empezar en página nueva.
+\renewcommand{\clearforchapter}{\par\FloatBarrier\vspace{2\baselineskip}}
+\input{1-introduccion}
+\input{2-retroalimentacion}
+\input{3-avance}
+\input{4-diseno}
+\input{5-documentacion}
+
+\FloatBarrier
+\clearpage
+\renewcommand{\clearforchapter}{\clearpage}
+\printbibliography
+
+\appendix
+\input{anexos}
+
+\end{document}

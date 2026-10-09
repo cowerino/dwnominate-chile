@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="135mm" height="179.917mm" viewBox="0 0 382.677 510">
+<rect width="100%" height="100%" fill="white"/>
+<title>A2</title>
+<desc>Secuencia de una estimación con el motor fiel desde el portal R. La CLI carga y valida las entradas (inicialización: semillas, beta y W2, el peso de la segunda dimensión), crea el motor con la configuración y los datos, ejecuta los ciclos y exporta parámetros terminales y un resumen mixto (M-02); si loadInput o run() lanzan una excepción, termina con código 1 y sin salidas (el constructor y la exportación están fuera de esos bloques try). El portal acepta el resultado solo si el código de salida es cero y las coordenadas, los parámetros y el resumen existen y se pueden leer; no valida su cobertura completa ni todo su esquema. En la llamada, faithful_mode = &quot;wmay&quot; añade --wmay-replication (linaje wmay, salvaguarda GRID apagada). El paralelismo con OpenMP es una capacidad del motor; la corrida comparativa usa un hilo.</desc>
+<rect x="16.0" y="8" width="60" height="26" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="46.00" y="25.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="middle">:portal R</text>
+<rect x="111.0" y="8" width="50" height="26" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="136.00" y="25.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="middle">:CLI</text>
+<rect x="237.0" y="8" width="66" height="26" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="270.00" y="25.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="middle">:CSVLoader</text>
+<polyline points="46,34 46,458" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<polyline points="136,34 136,362" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<polyline points="270,34 270,340" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<polyline points="334,153 334,340" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<polyline points="46,58 136,58" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="129.0,55.0 136,58 129.0,61.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<rect x="48.5" y="36.8" width="57.11425781250001" height="9.450000000000001" fill="white"/>
+<text x="50.00" y="44.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">ejecuta la CLI</text>
+<rect x="48.5" y="47.6" width="67.85546875" height="8.4" fill="white"/>
+<text x="50.00" y="54.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">system2(exe, args)</text>
+<rect x="8" y="66" width="368" height="266" rx="0" fill="none" stroke="#202020" stroke-width=".7"/>
+<polygon points="8,66 27.328125,66 27.328125,76 22.328125,81 8,81" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="13.00" y="77.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="700" text-anchor="start">alt</text>
+<text x="142.00" y="77.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">[loadInput y run() sin excepción]</text>
+<polyline points="136,104 270,104" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="263.0,101.0 270,104 263.0,107.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<rect x="138.5" y="82.8" width="108.66650390625001" height="9.450000000000001" fill="white"/>
+<text x="140.00" y="90.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">carga y valida las entradas</text>
+<rect x="138.5" y="93.6" width="125.39453125" height="8.4" fill="white"/>
+<text x="140.00" y="100.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">loadInput(periodos, inicialización)</text>
+<polyline points="270,120 136,120" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<polyline points="143.0,123.0 136,120 143.0,117.0" fill="none" stroke="#202020" stroke-width=".7"/>
+<rect x="138.5" y="108.8" width="70.60546875000001" height="9.450000000000001" fill="white"/>
+<text x="140.00" y="116.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">entrada validada</text>
+<rect x="297" y="127" width="74" height="26" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="334.00" y="144.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="middle">:DWNominate</text>
+<polyline points="136,140 297,140" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<polyline points="290.0,137.0 297,140 290.0,143.0" fill="none" stroke="#202020" stroke-width=".7"/>
+<rect x="138.5" y="128.8" width="37.99365234375001" height="9.450000000000001" fill="white"/>
+<text x="140.00" y="136.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">«Create»</text>
+<rect x="175.99365234375" y="129.6" width="88.375" height="8.4" fill="white"/>
+<text x="177.49" y="136.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">(configuración, entrada)</text>
+<polyline points="136,176 334,176" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="327.0,173.0 334,176 327.0,179.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<rect x="138.5" y="154.8" width="68.38623046875001" height="9.450000000000001" fill="white"/>
+<text x="140.00" y="162.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">ejecuta los ciclos</text>
+<rect x="138.5" y="165.6" width="20.96875" height="8.4" fill="white"/>
+<text x="140.00" y="172.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">run()</text>
+<polygon points="232,193 364,193 372,201 372,244.20000000000005 232,244.20000000000005" fill="white" stroke="#202020" stroke-width=".7"/>
+<polyline points="364,193 364,201 372,201" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="239.00" y="207.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">Actividad interna: F4. run()</text>
+<text x="239.00" y="216.80" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">ejecuta T ciclos y devuelve el</text>
+<text x="239.00" y="226.60" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">estado terminal; la carga y</text>
+<text x="239.00" y="236.40" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">construcción inicializan antes.</text>
+<polyline points="334,264 136,264" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<polyline points="143.0,267.0 136,264 143.0,261.0" fill="none" stroke="#202020" stroke-width=".7"/>
+<rect x="138.5" y="252.8" width="92.53857421875001" height="9.450000000000001" fill="white"/>
+<text x="140.00" y="260.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">parámetros terminales</text>
+<polyline points="136,274 150,274 150,286 136,286" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="143.0,289.0 136,286 143.0,283.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<rect x="154.5" y="270.8" width="80.95898437500001" height="9.450000000000001" fill="white"/>
+<text x="156.00" y="278.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">exporta parámetros</text>
+<rect x="154.5" y="281.6" width="88.26171875" height="8.4" fill="white"/>
+<text x="156.00" y="288.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">y resumen mixto (M-02)</text>
+<polyline points="8,295 376,295" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<text x="142.00" y="306.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">[excepción en loadInput o run()]</text>
+<rect x="72.4580078125" y="311" width="127.08398437500001" height="16" rx="6" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="136.00" y="322.50" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="middle">termina: código 1, sin salidas</text>
+<polyline points="265.5,335.5 274.5,344.5" fill="none" stroke="rgb(30,30,30)" stroke-width="1.0"/>
+<polyline points="265.5,344.5 274.5,335.5" fill="none" stroke="rgb(30,30,30)" stroke-width="1.0"/>
+<polyline points="329.5,335.5 338.5,344.5" fill="none" stroke="rgb(30,30,30)" stroke-width="1.0"/>
+<polyline points="329.5,344.5 338.5,335.5" fill="none" stroke="rgb(30,30,30)" stroke-width="1.0"/>
+<polyline points="136,356 46,356" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<polyline points="53.0,359.0 46,356 53.0,353.0" fill="none" stroke="#202020" stroke-width=".7"/>
+<rect x="48.5" y="334.8" width="67.80175781250001" height="9.450000000000001" fill="white"/>
+<text x="50.00" y="342.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">código de salida</text>
+<rect x="48.5" y="345.6" width="76.33203125" height="8.4" fill="white"/>
+<text x="50.00" y="352.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">y archivos, si los hay</text>
+<polyline points="131.5,357.5 140.5,366.5" fill="none" stroke="rgb(30,30,30)" stroke-width="1.0"/>
+<polyline points="131.5,366.5 140.5,357.5" fill="none" stroke="rgb(30,30,30)" stroke-width="1.0"/>
+<rect x="8" y="368" width="195" height="84" rx="0" fill="none" stroke="#202020" stroke-width=".7"/>
+<polygon points="8,368 27.328125,368 27.328125,378 22.328125,383 8,383" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="13.00" y="379.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="700" text-anchor="start">alt</text>
+<text x="52.00" y="379.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">[salida 0; CSV requeridos legibles]</text>
+<polyline points="46,388 60,388 60,400 46,400" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="53.0,403.0 46,400 53.0,397.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<rect x="64.5" y="384.8" width="113.62792968750001" height="9.450000000000001" fill="white"/>
+<text x="66.00" y="392.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">acepta: escribe DROPPED y</text>
+<rect x="64.5" y="394.8" width="136.22460937500003" height="9.450000000000001" fill="white"/>
+<text x="66.00" y="402.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">RUN-STAMP; devuelve el estado</text>
+<polyline points="8,410 203,410" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<text x="52.00" y="421.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">[otro caso]</text>
+<polyline points="46,426 60,426 60,438 46,438" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="53.0,441.0 46,438 53.0,435.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<rect x="64.5" y="422.8" width="100.22021484375001" height="9.450000000000001" fill="white"/>
+<text x="66.00" y="430.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">rechaza: stop; las salidas</text>
+<rect x="64.5" y="432.8" width="56.66601562500001" height="9.450000000000001" fill="white"/>
+<text x="66.00" y="440.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">no se aceptan</text>
+<polygon points="209,368 368,368 376,376 376,452.79999999999984 209,452.79999999999984" fill="white" stroke="#202020" stroke-width=".7"/>
+<polyline points="368,368 368,376 376,376" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="216.00" y="382.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">OpenMP en la búsqueda de los</text>
+<text x="216.00" y="392.40" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">parámetros globales (su verosimilitud)</text>
+<text x="216.00" y="402.80" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">y en las fases de votaciones y de</text>
+<text x="216.00" y="413.20" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">legisladores; la corrida comparativa fija</text>
+<text x="216.00" y="423.60" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">un hilo. El mapa de periodos servidos</text>
+<text x="216.00" y="434.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">se escribe en paralelo sin sincronizar</text>
+<text x="216.00" y="444.40" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">(P-01, pendiente).</text>
+<polyline points="8,468 374.6771653543307,468" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="8.00" y="478.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">Llamada del portal, con argumentos nombrados: dwnom_run(input_dir, engine = &quot;faithful&quot;,</text>
+<text x="8.00" y="488.50" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">faithful_mode = &quot;wmay&quot;, engines = &lt;ruta a los binarios&gt;, runs_dir = &lt;ruta&gt;, panel = &quot;&lt;etiqueta&gt;&quot;,</text>
+<text x="8.00" y="499.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">model = 0, niter = 4, start = &lt;semillas.csv&gt;). X: el objeto termina con el proceso de la CLI.</text>
+</svg>

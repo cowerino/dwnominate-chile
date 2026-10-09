@@ -1,0 +1,973 @@
+\chapter{Figuras y algoritmos de detalle}
+\label{anexo:figuras}
+
+Este anexo da la notación del modelo, los dos algoritmos que el cuerpo resume, el ciclo de
+estimación del motor fiel (vista F4) y el bootstrap paramétrico del estudio chileno, y las dos
+vistas de detalle. En el algoritmo \ref{alg:ciclo}, tres reglas son decisiones de diseño: el
+grado efectivo se fija por legislador (D-06); el tiempo se normaliza sobre los periodos
+servidos (D-10); y las constantes de las búsquedas se toman de la referencia y se declaran en
+la configuración de cada módulo. Dos desviaciones conocidas se declaran (D-19): las búsquedas
+escalares restauran al salir el mejor estado observado, donde el bucle original puede terminar
+en un paso no evaluado, y una restricción de separación que en la referencia es código
+inalcanzable no se porta.
+
+La figura \ref{fig:A1} muestra quién posee el estado del motor fiel. CSVLoader crea la
+entrada; DWNominate copia de ella en el constructor lo que necesita (votos, coordenadas,
+puntos medios y dispersiones) y no retiene el objeto de entrada; posee por valor la
+configuración, los metadatos de periodos y la presencia de legisladores, usa las búsquedas
+como funciones libres (D-23) y crea el resultado, con el estado terminal, al terminar (D-22).
+La CLI construye la configuración y deja apagados sus tres modos de validación, que fijan un
+bloque de parámetros; solo el motor moderno los expone como banderas. El interruptor de la
+salvaguarda \texttt{GRID} de 2004 está encendido por omisión y \archivo{--wmay-replication} lo
+apaga (D-24).
+
+La figura \ref{fig:A2} sigue una estimación con el motor fiel desde el portal en R. La CLI
+carga y valida las entradas (inicialización: semillas, $\beta$ y $w_2$), crea el motor con la
+configuración y los datos, llama una vez a \texttt{run()} y exporta parámetros terminales
+y el resumen fiel mixto (M-02, pendiente de I2).
+La nota apunta documentalmente a F4; no es un uso de interacción UML ni añade otro bucle. Solo la carga y la ejecución están dentro de
+bloques de captura: si lanzan una excepción, la CLI termina con código 1 y sin salidas; la
+construcción del motor y la exportación quedan fuera, y si un archivo de salida no se puede
+abrir, la CLI lo omite y termina con código 0, de modo que es la comprobación de archivos del
+portal la que rechaza la corrida. El portal acepta el
+resultado solo si el código de salida es cero y las coordenadas, los parámetros y el resumen
+se pueden leer (D-29), sin comprobar toda su cobertura o esquema. Sella la corrida (D-30);
+con el modo wmay, que es el de omisión, añade
+\archivo{--wmay-replication} (D-24). El paralelismo con OpenMP es una capacidad del motor; la
+corrida comparativa usa un hilo (D-28).
+
+\section*{Notación}
+La notación es la del capítulo 2 del documento de tesis. El legislador $i$
+ocupa el punto $\mathbf{x}_i$ en $s$ dimensiones; la votación $j$ tiene dos resultados,
+$\mathbf{o}_j^{\mathrm{S}}$ y $\mathbf{o}_j^{\mathrm{N}}$, dados por su punto medio y su
+separación, con utilidades y probabilidad de votar a favor
+\begin{equation}
+u_{ij}^{c} = \exp\Bigl(-\sum_{k=1}^{s} w_k^{2} \bigl(x_{ik} - o_{jk}^{c}\bigr)^{2}\Bigr),
+\quad c \in \{\mathrm{S}, \mathrm{N}\},
+\label{eq:util}
+\end{equation}
+\begin{equation}
+\Pr\bigl(\mathrm{voto}_{ij} = \mathrm{S}\bigr) = \Phi\bigl(\beta \,[u_{ij}^{\mathrm{S}} - u_{ij}^{\mathrm{N}}]\bigr),
+\label{eq:prob}
+\end{equation}
+con $w_1 = 1$, $w_2$ el peso de la segunda dimensión, $\beta$ el parámetro de señal y $\Phi$
+la normal estándar. La log-verosimilitud $\ell$ suma el logaritmo de la probabilidad de cada
+voto de las votaciones válidas, las de margen de la minoría ${\ge}\,2{,}5$\,\%, y $\ell/N$ es la
+verosimilitud por voto. Dos
+configuraciones se comparan centrándolas y alineando una con la otra por la transformación
+ortogonal óptima, sin cambio de escala; se informan las correlaciones por dimensión $r_1$ y
+$r_2$, la distancia media y la razón de amplitud
+\begin{equation}
+A = \mathrm{rms}(X)/\mathrm{rms}(X_{\mathrm{ref}}), \qquad
+\mathrm{rms}(X) = \Bigl({\textstyle\frac{1}{n}} \sum_{i=1}^{n} \Vert \mathbf{x}_i - \bar{\mathbf{x}} \Vert^{2}\Bigr)^{1/2}.
+\label{eq:amplitud}
+\end{equation}
+
+
+\begin{algorithm}[htbp]
+\caption{Ciclo de estimación del motor fiel.}
+\label{alg:ciclo}
+\small
+\begin{algorithmic}[1]
+\Require matrices de votaciones $V$ de $I$ legisladores y $J$ votaciones, valores iniciales $X^{(0)}$, dimensiones $s$, grado $m$, ciclos $T$
+\State $w \gets (1, w_2^{(0)}, \beta^{(0)})$; marcar válida cada votación con margen de la minoría ${\ge}\,2{,}5$\,\%
+\For{$c = 1, \dots, T$}
+  \If{$s \ge 2$} $w_2 \gets$ búsqueda local por pasos desde un paso de $0{,}01$ \EndIf
+  \State $\beta \gets$ búsqueda local por pasos desde un paso de $0{,}1$
+  \ForAll{votación válida $j$, en paralelo}
+     \State proyectar el punto medio $\mathbf{z}_j$ a la bola unitaria
+     \State calcular el plano de corte; si $c = 1$ y no hay parámetros precargados, tomar de él $(\mathbf{z}_j, \mathbf{d}_j)$ iniciales y con ellos la polaridad; en los ciclos siguientes, solo registrarlo
+     \State $(\mathbf{z}_j, \mathbf{d}_j) \gets$ cinco rondas de búsqueda lineal alternada en separación y punto medio
+  \EndFor
+  \State evaluar la verosimilitud global
+  \ForAll{legislador $i$ con al menos un periodo servido, en paralelo}
+     \State grado efectivo según periodos servidos: constante con menos de cinco, lineal con cinco, cuadrático con seis, cúbico con siete o más, sin exceder $m$
+     \State término constante inicial por mínimos cuadrados sobre las coordenadas vigentes (en el primer ciclo, los valores iniciales; con menos de cinco periodos, la del primero servido), reescalado a radio 0,75 si queda fuera de la bola
+     \State optimizar el término constante con el legislador inmóvil y la restricción de la bola; luego cada término temporal, desde cero y con los anteriores fijos
+     \State reconstruir las coordenadas por periodo sobre su tiempo normalizado
+  \EndFor
+  \State evaluar la verosimilitud global
+\EndFor
+\State \Return coordenadas, parámetros de votación, $w$, verosimilitud y estadísticos de clasificación
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[htbp]
+\caption{Bootstrap paramétrico de medianas de partido.}
+\label{alg:bootstrap}
+\small
+\begin{algorithmic}[1]
+\Require panel observado $V$; ajuste observado $(\hat X, \hat Z, \hat D, \hat\beta, \hat w_2)$, con $\hat Z$ y $\hat D$ el punto medio y la separación de cada votación; membresía $M(i,t)$; cortes $t_1 < t_2 < t_3$; réplicas $B$; estado maestro del generador aleatorio
+\For{$b = 1, \dots, B$}
+  \State derivar el generador aleatorio de la réplica desde el estado maestro
+  \State fijar la máscara de redibujo desde el panel observado: celdas no ausentes, votaciones elegibles y separación no nula
+  \ForAll{unidad $t$, diputado $i$, votación $j$ en esa máscara}
+    \State $p \gets \Phi\!\left(\hat\beta\,(u^{\mathrm{S}}_{ij} - u^{\mathrm{N}}_{ij})\right)$, con las utilidades de la ecuación (\ref{eq:util}) evaluadas en el ajuste observado
+    \State $V_b[i,j,t] \gets$ a favor con probabilidad $p$, en contra en otro caso
+  \EndFor
+  \State valores iniciales de la réplica: estimador estático por unidad sobre $V_b$, con signos armonizados
+  \State $X_b \gets$ motor$(V_b)$ desde esos valores iniciales, con el mismo grado, dimensiones, regla y umbral de elegibilidad, ciclos y optimizador; recalcular las votaciones retenidas sobre $V_b$
+  \State alinear $X_b$ a $\hat X$ en la primera dimensión por signo y localización
+\EndFor
+\State fijar las cohortes desde el ajuste observado y reutilizarlas sin cambio en cada réplica
+\ForAll{cohorte $c$, partido $p$}
+  \State $\delta \gets m_p(t_3) - m_p(t_1)$ sobre $\hat X$; \quad $\Delta_b \gets$ lo mismo sobre $X_b$; \quad $e_b \gets \Delta_b - \delta$
+  \State cota superior básica $\gets \delta - q_\alpha(e)$; \quad cota superior percentil $\gets q_{1-\alpha}(\Delta)$
+  \State $p_{\mathrm{izq}} \gets (1 + \#\{e_b \le \delta\})/(B+1)$; sesgo $\gets \bar\Delta - \delta$ junto al percentil
+  \State elegible si el partido tiene al menos cinco miembros en $t_1$ y en $t_3$
+\EndFor
+\State ajustar $p_{\mathrm{izq}}$ por Holm dentro de cada familia (cohorte, par de cortes) sobre los partidos elegibles
+\State \Return por (cohorte, partido): $\delta$, cotas, $p$ ajustado, indicador de robustez
+\end{algorithmic}
+\end{algorithm}
+
+La máscara de redibujo observada no es la máscara de ajuste de la réplica. El generador
+conserva las celdas fuera de ella; el motor moderno recalcula la proporción minoritaria en
+$V_b$ y retiene votaciones según la misma regla y umbral. Una votación elegible observada puede
+dejar de serlo en una réplica. Esto corrige la descripción, sin cambiar el bootstrap ni
+atribuirle un daño numérico medido. Las semillas por periodo se regeneran y armonizan en cada
+réplica; no se reutiliza el contrato de semilla común por legislador de los tres brazos.
+
+\begin{figure}[htbp]
+\centering
+\makebox[\textwidth][c]{\includegraphics[width=13.5cm]{A1-clases-estado.pdf}}
+\caption[A1. Clases y propiedad del estado del motor fiel]{Clases y propiedad del estado del
+motor fiel: DWNominate posee la configuración y el estado numérico, usa búsquedas libres (D-23)
+y crea el resultado con el estado terminal (D-22).}
+\label{fig:A1}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\makebox[\textwidth][c]{\includegraphics[width=13.5cm]{A2-secuencia-estimacion.pdf}}
+\caption[A2. Secuencia de una estimación]{Secuencia de una estimación con el motor fiel desde
+el portal en R: salida cero y CSV requeridos legibles, sin validar cobertura completa (D-29).}
+\label{fig:A2}
+\end{figure}
+
+\chapter[Registro completo de decisiones de diseño][Registro de decisiones]{Registro completo de decisiones de diseño}
+\label{anexo:decisiones}
+
+D-01 a D-21 provienen del registro del documento de tesis, fechado en su conjunto al 2 de
+octubre de 2026; D-22 a D-32 se agregaron en esta etapa al releer el código para las vistas.
+La razón y la evidencia de las decisiones que explican las vistas están en el cuadro
+\ref{tab:decisiones}, y la sección \ref{sec:registros} las agrupa en nueve registros.
+
+\footnotesize
+\begin{longtable}{L{0.8cm}L{3.5cm}L{2.7cm}L{3.2cm}L{1.85cm}}
+\caption[Registro de decisiones de diseño.]{Registro de decisiones de diseño, con la
+alternativa descartada, la consecuencia y el estado de cada una.}\label{tab:decisiones-completo}\\
+\toprule
+Id & Decisión & Alternativa descartada & Consecuencia & Estado \\
+\midrule
+\endfirsthead
+\multicolumn{5}{l}{\footnotesize\emph{Cuadro \ref{tab:decisiones-completo}, continuación}}\\
+\toprule
+Id & Decisión & Alternativa descartada & Consecuencia & Estado \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+D-01 & \texttt{DGESDD} de LAPACK de referencia como rutina predeterminada de
+descomposición; sin sustitución silenciosa & descomposición de Eigen con sustitución
+automática & la configuración se detiene si falta la biblioteca; cada corrida registra la
+rutina & vigente \\
+D-02 & perfil sin \texttt{fast-math} ni \texttt{march=native} & aritmética relajada &
+comparabilidad entre máquinas por verificar, no identidad demostrada &
+vigente \\
+D-03 & ninguna reducción de punto flotante dentro de regiones paralelas & reducción de OpenMP
+sobre la verosimilitud & suma de parciales en orden de índice; identidad de salidas con
+varios hilos pendiente de P-01 e I1 & vigente \\
+D-04 & ausentes conservados en la geometría del plano de corte, como en la referencia &
+filtrarlos de la nube de puntos & el modo anterior queda disponible por variable de entorno y
+se registra & vigente \\
+D-05 & valores iniciales canónicos por legislador y periodo, generados con el estimador
+estático y versionados con el motor & valores iniciales constantes por legislador & los
+valores iniciales son parte del instrumento y se regeneran en cada réplica & vigente \\
+D-06 & grado efectivo por legislador según periodos servidos; grado lineal como
+especificación principal & grado uniforme por panel; cuadrático como principal & coordenadas:
+grado efectivo por trayectoria; resumen: histograma por grado
+& vigente \\
+D-07 & ciclos externos igualados y truncamiento fijo declarado; ninguna afirmación de
+convergencia & regla de parada aplicada a ambos motores & prohíbe un requisito de
+convergencia; la comparación solo vale a ciclos iguales & vigente \\
+D-08 & cada ejecución registra rutina de descomposición, tratamiento de ausencias y marco de
+exportación & declarar la configuración solo en la documentación & un resultado sin sello se
+regenera en lugar de citarse & vigente \\
+D-09 & proyecciones a la bola unitaria conservadas en los tres sitios de la referencia &
+eliminarlas & fidelidad procedimental aunque no cambien el acuerdo & vigente \\
+D-10 & exportación en el tiempo normalizado de cada legislador, solo periodos servidos &
+rejilla global de periodos & el archivo exportado es la configuración ajustada & vigente \\
+D-11 & el fiel conserva sus rutinas; búsquedas NLopt solo en el moderno & adoptar NLopt
+en el motor fiel & la pregunta de fidelidad y la de mejora se responden con motores
+distintos & vigente \\
+D-12 & los motores se comparan y nunca se combinan & elegir un mejor motor & toda fila de
+resultado nombra motor, evaluador y rutina de descomposición; las variantes híbridas del
+repositorio son experimentales y quedan fuera de todo resultado & vigente \\
+D-13 & búsqueda escalar local recentrada en el motor moderno & solución condicional exacta
+global & evita el colapso de la segunda dimensión en el primer ciclo & vigente \\
+D-14 & tres niveles de verificación con un evaluador común & coincidencia de salidas
+finales & un defecto que reproduce la primera dimensión no pasa & vigente \\
+D-15 & falsación: la decisión de aceptación rechaza cada versión con un defecto real
+reintroducido; para RNF01 se propone situar los umbrales entre un valor defectuoso y uno
+corregido & umbrales leídos de una corrida que pasa & la prueba puede fallar; el valor del
+umbral corresponde al propietario & vigente; umbral propuesto \\
+D-16 & ventana igualada de doce unidades como diseño principal; los demás como sensibilidad
+& ventana expansiva como principal & un marco; el bootstrap corre sobre él & propuesta,
+pendiente de ratificación \\
+D-17 & inferencia solo sobre la primera dimensión; estimación en dos & inferencia en ambas &
+la segunda dimensión se describe siempre con su advertencia & vigente \\
+D-18 & repositorio público con resultados congelados y licencias; generadores del estudio en
+el repositorio de investigación & publicar todo el flujo & la reejecución completa en un
+solo comando queda pendiente & vigente \\
+D-19 & dos desviaciones declaradas de la referencia: las búsquedas escalares restauran al
+salir el mejor estado observado; la restricción de separación que en la referencia es
+código inalcanzable no se porta & portar el bucle y la restricción literalmente & fidelidad
+procedimental con dos excepciones documentadas en el código y en el registro & vigente \\
+D-20 & una mejora de rendimiento fiel exige identidad de salidas numéricas a uno y varios
+hilos; metadatos variables se validan aparte & aceptar mejoras dentro de
+una tolerancia numérica & la medición antes y después compara solo tiempo; un cambio que
+altera un bit es un cambio numérico con su propia verificación & propuesta \\
+D-21 & línea base de rendimiento reconstruida antes de cualquier cambio, con repeticiones,
+el mismo reloj para todos los brazos y la máquina y la compilación registradas & usar los
+tiempos publicados como línea base & los tiempos publicados, de una corrida por celda, no
+sirven de línea base & propuesta \\
+\addlinespace
+D-22 & estado numérico concentrado en \texttt{DWNominate}, trazado miembro a miembro a la
+referencia; fases como métodos en el orden original & repartir el estado en objetos por fase
+& la estructura no es la que un diseño nuevo elegiría; el motor puede detenerse entre fases &
+vigente \\
+D-23 & búsquedas como funciones libres con su contexto por argumento & métodos del
+orquestador & cada búsqueda puede ejecutarse aislada & vigente \\
+D-24 & salvaguarda \texttt{GRID} de 2004 tras un interruptor, apagada en el perfil comparado &
+portar un solo linaje & el motor fiel se compara con ambos linajes; el sello registra el modo
+& vigente \\
+D-25 & perfil de replicación para el brazo medido del motor moderno & medirlo con sus opciones
+por omisión & fuera del perfil el moderno cambia más que las búsquedas & vigente \\
+D-26 & origen para el legislador sin semilla; la rampa anterior, por variable de entorno &
+rampa según la posición en el padrón & arranque neutral, como la referencia; la variable no
+reproduce bit a bit el binario anterior & vigente \\
+D-27 & el portal rechaza sembrar en proceso un panel de varios periodos & sembrar sobre el
+primer periodo & exige una semilla por periodo o un archivo explícito & vigente \\
+D-28 & el portal fija el número de hilos y exige uno para Fortran y fiel & dejar los hilos al
+entorno & toda comparación a un hilo; el sello registra los hilos & vigente \\
+D-29 & salida cero, CSV requeridos legibles y directorio inicialmente vacío;
+excluidos como valor de retorno & leer lo que haya en el directorio & rechaza archivos
+faltantes o previos; cobertura y esquema completos por verificar & vigente \\
+D-30 & sello de cada corrida junto al estado & confiar en la documentación & si el motor no
+informa su SVD, el sello la infiere de la construcción y la marca como inferida & vigente \\
+D-31 & soporte con \texttt{std::sort} y la descomposición espectral de Eigen & port literal de
+\texttt{RSORT} y \texttt{RS} & el orden de los empates puede diferir del de \texttt{RSORT} &
+vigente; efecto no medido \\
+D-32 & el moderno aborta si la LL previa es finita y $\Delta\ell<-10^{-8}$ & continuar y
+exportar & inferencia: detectar una violación del contrato de bloque & vigente \\
+\end{longtable}
+\normalsize
+
+\chapter[Correspondencia entre las rutinas Fortran y los módulos C++][Correspondencia Fortran y C++]{Correspondencia entre las rutinas Fortran y los módulos C++}
+\label{anexo:correspondencia}
+
+Este anexo da el catálogo rutina a rutina que la vista F3 resume (cuadro
+\ref{tab:correspondencia}) y las piezas que existen solo en una de las dos variantes Fortran
+(cuadro \ref{tab:variantes}).
+
+\begin{table}[H]
+\centering
+\caption{Módulos del motor fiel y la rutina del programa de referencia que cada uno porta.}
+\label{tab:correspondencia}
+\footnotesize
+\begin{tabular}{L{3.3cm}L{5.8cm}L{3.2cm}}
+\toprule
+Módulo & Responsabilidad & Rutina de referencia \\
+\midrule
+\archivo{main_cli} & Línea de comandos, detección de periodos, escritura de salidas y
+sellos & programa principal (2004); \texttt{dwnom} y el envoltorio standalone (wmay) \\
+\archivo{csv_loader} & Lectura del panel y de los valores iniciales; disposición apilada por
+legislador y periodo & lectura de datos \\
+\texttt{dwnominate} & Orquestador: estado del modelo y ciclo externo con sus cuatro fases &
+\texttt{dwnom} \\
+\texttt{likelihood} & Verosimilitud global y estadísticos de clasificación, secuencial y
+paralela & \texttt{PLOG} \\
+\archivo{normal_cdf} & Tabla precalculada de la distribución normal y sus consultas &
+\archivo{init_zdf}, tabla ZDF \\
+\archivo{grid_optimizer} & Búsqueda escalar local por pasos para $\beta$ y $w_2$ &
+\texttt{SIGMAS}, \texttt{WINT} \\
+\archivo{rollcall_derivatives} & Verosimilitud y gradientes por votación & \texttt{PROLLC2} \\
+\archivo{rollcall_optimizer} & Búsquedas lineales alternadas de separación y punto medio
+& \texttt{RCINT2} \\
+\archivo{legislator_derivatives} & Verosimilitud, gradientes e información por legislador
+sobre la trayectoria & \texttt{PROX} \\
+\archivo{optimize_legislators} & Inicialización por mínimos cuadrados y búsqueda término
+a término & \texttt{XINT}; \texttt{GRID} (solo 2004; tras un interruptor, D-24) \\
+\archivo{cutting_plane} & Clasificación por plano de corte y dirección de mínima varianza
+& \texttt{CUTPLANE}, \texttt{SEARCH} \\
+\archivo{cutting_point} & Punto de corte óptimo en una dimensión; códigos de voto;
+polaridad & \texttt{JAN1PT}, \texttt{JAN11PT} \\
+\archivo{simple_ols}, \archivo{sort_utils} & Pseudoinversa por descomposición espectral de
+Eigen con el umbral de la referencia; ordenamiento por índices con \texttt{std::sort}, no un
+port del algoritmo de \texttt{RSORT} (D-31) & \texttt{REGA} (con \texttt{RS} en 2004,
+\texttt{DSYEV} en wmay), \texttt{RSORT} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Piezas propias de cada variante Fortran y su tratamiento en el motor fiel.}
+\label{tab:variantes}
+\footnotesize
+\begin{tabular}{L{2.4cm}L{5.0cm}L{4.9cm}}
+\toprule
+Variante & Piezas propias & En el motor fiel \\
+\midrule
+Original 2004 & salvaguarda \texttt{GRID}; descomposición \texttt{LSVRR} de IMSL y su
+manejo de errores; \texttt{RS} de EISPACK; formato fijo de entrada; estado en bloques
+\texttt{COMMON} (\texttt{/XXCOM/}, \texttt{/MINE/}) & \texttt{GRID} portado tras un
+interruptor y apagado en el modo wmay (D-24); \texttt{DGESDD} por omisión (D-01); descomposición
+espectral de Eigen (D-31) \\
+\addlinespace
+wmay & \texttt{DGESDD} y \texttt{DSYEV} de LAPACK; acoplamiento para R; envoltorio
+standalone; estado en módulos (\archivo{xxcom_mod}, \archivo{mine_mod}, \archivo{zdf_mod}),
+con un \texttt{COMMON /AREA1/} residual en \texttt{REGA}; sin \texttt{GRID} & configuración
+igualada en el modo wmay: \texttt{DGESDD}, sin \texttt{GRID}; es la referencia de
+reproducción y el evaluador común \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section*{Dependencias de módulos C++}
+
+Separadas de F3, las inclusiones verificadas de cabeceras se resumen a un nivel de módulo.
+Orquestación incluye directamente los cuatro grupos; se listan también las inclusiones
+internas, sin confundirlas con correspondencia histórica ni afirmar ocultamiento completo.
+
+\begin{table}[htbp]
+\centering\footnotesize
+\caption{Adyacencia de inclusiones entre grupos del motor fiel.}
+\begin{tabular}{L{3.0cm}L{4.0cm}L{5.4cm}}
+\toprule
+Cliente & Proveedor & Evidencia en cabeceras \\
+\midrule
+Orquestación & búsquedas, geometría, modelo, soporte & \archivo{dwnominate.hpp:14--23} \\
+Búsquedas & modelo y soporte & \archivo{grid_optimizer.hpp:12--13}; \archivo{rollcall_optimizer.hpp:12}; \archivo{optimize_legislators.hpp:10--12} \\
+Modelo & soporte & \archivo{likelihood.hpp:4} \\
+Geometría & soporte & \archivo{cutting_plane.hpp:10}; \archivo{cutting_point.hpp:9} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\chapter[Construcción, configuración y manejo de errores][Construcción y errores]{Construcción, configuración y manejo de errores}
+\label{anexo:construccion}
+
+Este anexo da la vista física del instrumento \parencite[cap.~2]{swebok2025}: cómo se
+construyen los tres binarios y el portal en R, qué configuración fija su resultado (cuadro
+\ref{tab:construccion}), y cómo responde cada componente a un error \parencite[cap.~3,
+§3.5]{swebok2025} (cuadro \ref{tab:errores}). Las rutas siguen la convención del cuadro
+\ref{tab:decisiones}.
+
+\begin{table}[H]
+\centering
+\caption{Construcción y configuración de los tres binarios y del portal en R.}
+\label{tab:construccion}
+\footnotesize
+\begin{tabular}{L{2.3cm}L{3.0cm}L{3.2cm}L{3.6cm}}
+\toprule
+Componente & Construcción & Dependencias & Configuración que fija el resultado \\
+\midrule
+Referencia wmay standalone & gfortran; \archivo{DW-NOMINATE-wmay.f} sin cambios, con
+\archivo{r_compat.f90} en lugar de las rutinas de impresión y salida de R y
+\archivo{standalone_main.f90} & LAPACK y BLAS al enlazar (\texttt{DGESDD}, \texttt{DSYEV}) &
+lee y escribe archivos; solo semilla por legislador; modo \texttt{evaluate}; se ejecuta desde
+su directorio, que no crea la salida. El original 2004 se compila aparte y es autocontenido \\
+\addlinespace
+Motor fiel & C++17 con CMake; \texttt{-O3} sin \emph{fast-math} ni \texttt{-march=native} &
+OpenMP y Eigen 3.4.0, obligatorios; LAPACK para \texttt{DGESDD}
+(\archivo{USE_SYSTEM_DGESDD}, encendida) & sin LAPACK o sin Eigen la construcción se detiene;
+la ruta Eigen solo con la opción apagada, y avisa si cae a Jacobi; el resumen registra la SVD
+y el marco de exportación; hilos por \archivo{OMP_NUM_THREADS} \\
+\addlinespace
+Motor moderno & C++20 con CMake; sin \emph{fast-math} & Eigen y NLopt, descargados si no
+están instalados; OpenMP opcional, apagado por omisión; LAPACK para \texttt{DGESDD} & misma
+detención si falta LAPACK; pruebas con \texttt{BUILD\_TESTING}; \archivo{--threads}, que el
+resumen registra \\
+\addlinespace
+Portal en R (\archivo{dwnom.R}) & R base & \texttt{wnominate} y \texttt{pscl}, solo para
+sembrar en proceso & ubica los binarios según la disposición del repositorio; fija hilos,
+perfil y semilla (D-24, D-25, D-28); sella la corrida (D-30) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\footnotesize
+\begin{longtable}{L{4.0cm}L{1.9cm}L{3.6cm}L{2.8cm}}
+\caption{Manejo de errores y excepciones, por componente.}\label{tab:errores}\\
+\toprule
+Condición & Dónde & Respuesta & Evidencia \\
+\midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{Cuadro \ref{tab:errores}, continuación}}\\
+\toprule
+Condición & Dónde & Respuesta & Evidencia \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+falta LAPACK con \texttt{DGESDD} encendida, o falta Eigen o NLopt & CMake & error de
+configuración; no hay binario & F \archivo{CMakeLists.txt:62}, \archivo{:100}; M
+\archivo{CMakeLists.txt:44, 58, 76} \\
+falta LAPACKE en la ruta de Eigen & CMake, fiel & aviso explícito; se usa Jacobi y el
+resumen lo registra & F \archivo{CMakeLists.txt:84} \\
+no hay matrices de votos o no se puede crear el directorio de salida & CLI & mensaje y código
+1 & F \archivo{main_cli.cpp:460-485} \\
+falta o no se lee una matriz o el archivo de semillas & carga & excepción; código 1, sin
+salidas & F \archivo{csv_loader.cpp:130, 292}, \archivo{main_cli.cpp:539-547} \\
+excepción durante la ejecución, como una falla de \texttt{DGESDD} & motor & código 1, sin
+salidas & F \archivo{cutting_plane.cpp:313, 323}, \archivo{main_cli.cpp:583-586} \\
+excepción al construir el motor & CLI, fiel & no se captura: la llamada está fuera de todo
+bloque \texttt{try} y el proceso termina de forma anormal & F \archivo{main_cli.cpp:576} \\
+no se puede abrir un archivo de salida & salida, fiel & lo omite con un mensaje y
+termina con código 0; el portal rechaza la corrida por archivo faltante & F
+\archivo{main_cli.cpp:228-231}; R 387-391 \\
+argumento desconocido & CLI & aviso; la corrida sigue & F \archivo{main_cli.cpp:175} \\
+LL previa finita y $\Delta\ell<-10^{-8}$ entre ciclos & motor moderno & excepción; código 1 & M
+\archivo{dwnominate.cpp:388-393} \\
+binario inexistente; hilos distintos de uno para Fortran o fiel; margen de la minoría distinto de 0,025;
+\texttt{periods} distinto del panel; directorio de salida con archivos & portal & detención
+antes de invocar el motor & R 84, 263, 268, 274, 279 \\
+sembrar en proceso un panel de varios periodos; semilla por fila para wmay; semilla con
+identificadores repetidos o coordenadas no finitas & portal & detención antes de invocar el
+motor & R 293-299, 304, 320-326 \\
+código de salida distinto de cero; faltan coordenadas, parámetros o resumen & portal &
+detención; las salidas no se aceptan & R 380-391 \\
+legislador que vota y no queda colocado & portal & no es error: fila en \archivo{DROPPED.csv}
+y en el valor de retorno & R 394-416 \\
+\end{longtable}
+\normalsize
+
+\chapter{Contratos de archivos}
+\label{anexo:contratos}
+
+Este anexo fija el contrato de archivos de los motores que la vista F6 abstrae (cuadro
+\ref{tab:contratos}) y las reglas de resolución de registros que la figura declara con
+multiplicidades opcionales.
+
+\begin{table}[H]
+\centering
+\caption[Contrato de archivos de los motores.]{Contrato de archivos de los motores. Todas
+las salidas van al directorio indicado en la línea de comandos; la referencia escribe un
+estado equivalente con otros nombres de archivo y de campo.}
+\label{tab:contratos}
+\footnotesize
+\begin{tabular}{L{3.6cm}L{5.2cm}L{3.6cm}}
+\toprule
+Archivo & Contenido & Observación \\
+\midrule
+\multicolumn{3}{l}{\emph{Entradas}} \\
+\archivo{votes_matrix_p<N>.csv} & fila por legislador, columna por votación; códigos de la
+referencia: 1 a 3 a favor, 4 a 6 en contra, 0 o mayor que 6 ausente; celda vacía o ilegible,
+ausente & un archivo por periodo, numerados desde 1 sin huecos; el portal escribe 9 como
+ausente \\
+\archivo{legislator_metadata.csv} & identificador, nombre, partido, región, distrito &
+inerte para la estimación \\
+\archivo{wnominate_coordinates.csv} & semilla por legislador: identificador y dos coordenadas &
+el binario exige el archivo, no cada legislador; único contrato que wmay admite \\
+semilla por fila (\archivo{--seed-per-period}) & identificador, periodo, dos coordenadas &
+opcional; prioridad sobre la anterior \\
+parámetros de votación de referencia & sesión, identificador, punto medio y separación por
+dimensión & opcional; si falta, parten en cero \\
+\addlinespace
+\multicolumn{3}{l}{\emph{Salidas}} \\
+\archivo{cpp_coordinates_all_periods.csv} & legislador, periodo, coordenadas, grado
+efectivo & solo periodos servidos; marco del optimizador \\
+variante \archivo{_corrected} & las mismas coordenadas con los signos invertidos según la
+regla de orientación & no es un nuevo ajuste \\
+\archivo{cpp_bill_parameters.csv} & votación, punto medio y separación por dimensión &
+índice global de votación \\
+\archivo{cpp_summary.csv} & verosimilitud, ciclos, votos válidos, clasificación, pesos,
+grado pedido, histograma de grado efectivo y tiempo & LL terminal; clasificación de fase
+previa (M-02); SVD, ausencias y marco registrados \\
+\archivo{RUN-STAMP.csv}, \archivo{DROPPED.csv} & sello de la corrida y excluidos, escritos por
+el portal & junto al estado; el portal también los devuelve \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Reglas de resolución. El padrón y los archivos de semillas son registros crudos: pueden traer
+identificadores fuera del panel, y el motor no exige que cada registro calce con exactamente
+una fila servida; el portal sí rechaza una semilla con identificadores repetidos. El
+emparejamiento de coordenadas entre corridas es por (legislador, periodo), sin validación uno
+a uno. La identidad del panel requiere hashes de las matrices, del orden de identificadores
+de legisladores, votaciones y periodos, de los archivos de semillas y de la configuración.
+Se conserva la procedencia en los manifiestos de linaje y en \archivo{RUN-STAMP.csv}
+(binario, semilla, argumentos y backend), sin atribuir al sello hashes que no escribe.
+Los recuentos crudos, no ausentes y ajustados son diagnósticos separados; no identifican la matriz.
+
+\chapter{Perfil de ejecución}
+\label{anexo:perfil}
+
+Este anexo reúne en el cuadro de perfil de ejecución (cuadro \ref{tab:perfil}) las banderas,
+la rutina de SVD, los hilos, el arranque, el evaluador de la verosimilitud, los ciclos y el
+contrato de semillas que las vistas F4, T5 y F7 dejan fuera de las cajas, junto con las
+invocaciones del protocolo de reproducción wmay. Este cuadro fija esa comparación de tres
+brazos; el protocolo original 2004 (cuadro \ref{tab:protocolos}) declara sus diferencias.
+El bootstrap regenera semillas por periodo y elegibilidad por réplica (algoritmo \ref{alg:bootstrap}).
+
+\footnotesize
+\begin{longtable}{L{2.6cm}L{5.0cm}L{4.8cm}}
+\caption[Perfil de ejecución.]{Perfil de ejecución de los motores, con el perfil
+comparado.}\label{tab:perfil}\\
+\toprule
+Aspecto & Opción, variable o invocación & Perfil comparado y observación \\
+\midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{Cuadro \ref{tab:perfil}, continuación}}\\
+\toprule
+Aspecto & Opción, variable o invocación & Perfil comparado y observación \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Entradas y salidas & \archivo{--input-dir}, \archivo{--output-dir}, \archivo{--wnominate},
+\archivo{--seed-per-period} & código de salida distinto de cero si falta una matriz o el
+archivo de semillas (cuadro \ref{tab:errores}) \\
+\addlinespace
+Estimación & \archivo{--model} (grado), \archivo{--iterations} (ciclos), \archivo{--periods},
+\archivo{--dimensions} & grado declarado por panel; cuatro ciclos; dos dimensiones; en una
+dimensión no se ajusta el peso y el corte usa \texttt{JAN11PT} \\
+\addlinespace
+Contrato de semillas & semilla por legislador o por fila & por legislador en todos los
+brazos, único contrato que wmay admite; por fila solo como control \\
+\addlinespace
+Linaje del motor fiel & \archivo{--wmay-replication}; en el portal, el modo wmay o el de la
+salvaguarda de 2004 & modo wmay: \texttt{GRID} apagado (D-24) \\
+\addlinespace
+Perfil del motor moderno & \archivo{--fortran-replication}; el portal añade
+\archivo{--optimizer-precision=strict} & fija las opciones canónicas (COBYLA, búsqueda escalar
+local, votaciones desde cero, sin identificación adicional ni tolerancias adaptativas, iguales
+a las de omisión); cambia la tabla de verosimilitud, la de la referencia en lugar de la normal
+continua, y retira las cotas globales de $w_2$ y $\beta$ (D-25) \\
+\addlinespace
+Búsquedas del motor moderno & \archivo{--scalar-search}, \archivo{--block-solver} & local y
+COBYLA en el perfil comparado \\
+\addlinespace
+Parada opcional del moderno & \archivo{--convergence-abs}, \archivo{--convergence-rel},
+\archivo{--convergence-patience}, \archivo{--min-iterations} & desactivada por omisión
+(tolerancias en cero); nunca criterio de parada en una comparación (D-07) \\
+\addlinespace
+Arranque & escalares iniciales de la referencia; votaciones en cero; legislador sin semilla
+en el origen & iguales en ambos motores (D-25, D-26) \\
+\addlinespace
+Evaluador de la verosimilitud & fiel: tabla precalculada de la referencia; moderno:
+\archivo{--likelihood} (continua por omisión) & tabla de la referencia en ambos motores (D-25)
+\\
+\addlinespace
+Rutina de SVD & \archivo{USE_SYSTEM_DGESDD} (fiel), \archivo{DWNOMINATE_USE_SYSTEM_DGESDD}
+(moderno) & \texttt{DGESDD}; registrada en el resumen del fiel y en el sello (D-01, D-30) \\
+\addlinespace
+Hilos & \archivo{OMP_NUM_THREADS} (fiel); \archivo{--threads} (moderno) & uno en toda
+comparación, impuesto por el portal (D-28) \\
+\addlinespace
+Modos anteriores del fiel & \archivo{DWNOM_EXPORT_GLOBAL_T},
+\archivo{DWNOM_CUTPLANE_FILTER_ABSENT}, \archivo{DWNOM_SEED_FALLBACK_RAMP} & conservan
+comportamientos previos a una corrección; los que cambian un número publicado quedan en el
+resumen \\
+\addlinespace
+Volcado de fases & \archivo{DWNOM_PHASE_DUMP} & registro por votación con marcas de fase para
+el nivel de componente; inerte en otro caso \\
+\addlinespace
+Llamada desde el portal & \texttt{dwnom\_run} con directorio de entrada, motor, binarios,
+directorio de corridas, panel, grado, ciclos y semillas & devuelve coordenadas, parámetros,
+escalares, excluidos y sello; salida cero y CSV requeridos legibles (figura
+\ref{fig:A2}) \\
+\addlinespace
+Reevaluación bajo evaluador común & \archivo{stage_terminal_state.py}; wmay standalone en modo
+\texttt{evaluate} & cero ciclos; el arnés exige su directorio de trabajo \\
+\addlinespace
+Comparación de coordenadas & \archivo{map_agreement.py} & emparejamiento por (legislador,
+periodo); alineación ortogonal sin reescalar; marco global o por periodo declarado \\
+\end{longtable}
+\normalsize
+
+\chapter{Narrativas de los casos de uso}
+\label{anexo:narrativas}
+
+Este anexo da, para cada caso de uso de la vista F2, la precondición, la condición de fallo y
+el criterio de término que la figura no dibuja (cuadro \ref{tab:narrativas}).
+
+\footnotesize
+\begin{longtable}{L{2.6cm}L{3.2cm}L{3.2cm}L{3.2cm}}
+\caption{Narrativas de los casos de uso: precondición, fallo y término.}\label{tab:narrativas}\\
+\toprule
+Caso de uso & Precondición & Fallo & Término \\
+\midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{Cuadro \ref{tab:narrativas}, continuación}}\\
+\toprule
+Caso de uso & Precondición & Fallo & Término \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Declarar panel y semillas (RF01, RF02) & directorio de panel con una matriz por periodo y el
+archivo de semillas por legislador; opcionalmente semillas por fila y parámetros de votación
+de referencia & falta una matriz o el archivo de semillas: error y código de salida distinto
+de cero, sin salidas & el motor reporta cuántas coordenadas iniciales aplicó por cada vía,
+cuántos legisladores partieron del origen o quedaron excluidos y qué grado efectivo recibió
+cada uno; un argumento desconocido y la ausencia del archivo opcional se aceptan con aviso \\
+\addlinespace
+Estimar estático o dinámico (RF03, RF04) & entradas declaradas; perfil de la corrida
+(dimensiones, grado, ciclos) & código de salida distinto de cero, o salida cero con archivos
+incompletos: el portal rechaza la corrida & directorio de estado con coordenadas, parámetros
+de votación y resumen con su procedencia; código de salida cero \\
+\addlinespace
+Validar con el caso chileno (RF10 a RF12) & ajuste observado sobre el panel del 55.º
+periodo; cortes y cohortes fijados desde el calendario antes de inspeccionar estimación
+alguna & una réplica cuyo número de periodos difiera del observado o cuyo grado efectivo
+exceda el lineal se rechaza; la orientación de la primera dimensión se verifica antes de
+leer réplica alguna & por (cohorte, partido): desplazamiento, cotas, valor $p$ ajustado e
+indicador de robustez, con rejilla, grado, valores iniciales y motor declarados \\
+\addlinespace
+Verificar y comparar (RF08, RF09) & dos corridas controladas que superan el control de
+paridad de entradas: mismo panel, semillas, ciclos, grado, códigos y margen de la minoría, marco de
+exportación y configuración de compilación & una cláusula de paridad que falla: la
+comparación no se ejecuta; una discrepancia con sello distinto se reporta como configuración
+distinta, no como defecto & informe de comparación: diferencia de verosimilitud bajo
+evaluador común, desacuerdo absoluto por votación, correlaciones por dimensión, razón de
+amplitud, peso de la segunda dimensión de ambos motores y reflexiones, con cobertura y marco
+declarados \\
+\end{longtable}
+\normalsize
+
+\chapter[Conjunto de paneles de prueba y ajustes igualados][Paneles de prueba]{Conjunto de paneles de prueba y ajustes igualados}
+\label{anexo:paneles}
+
+Este anexo detalla el conjunto de paneles de las pruebas exhaustivas (cuadro
+\ref{tab:paneles}) y los estadísticos y ajustes igualados que la sección
+\ref{sec:experimental} resume (cuadro \ref{tab:estadisticos}).
+
+\begin{table}[H]
+\centering
+\caption[Conjunto de paneles de prueba.]{Conjunto de paneles de prueba. La descripción identifica el escenario; los hashes de
+matriz, orden, semillas y configuración identifican la entrada. Los recuentos son diagnósticos.}
+\label{tab:paneles}
+\footnotesize
+\begin{tabular}{L{3.4cm}L{3.9cm}L{1.5cm}L{3.5cm}}
+\toprule
+Panel & Escenario & Grado & Brazos de referencia \\
+\midrule
+Legislaturas 353, 366 y 368 (estáticos) & una legislatura cada uno; bytes idénticos a un
+periodo del panel de 23 periodos de la curación anterior & 0 & referencia, fiel, moderno \\
+Senado de EE.\,UU., 90.º Congreso (estático) & un periodo; comparación externa & 0 &
+referencia, fiel, moderno \\
+Senado de EE.\,UU., Congresos 111 a 115 & cinco periodos; valores iniciales reparados & 1 &
+los tres, en dos máquinas \\
+Cámara de Diputados 2002--2022 & 23 periodos, extendido a marzo de 2022 & 1 & los tres, en
+dos máquinas \\
+Cámara de Diputados, curación anterior & 23 periodos, legislaturas 346 a 368 & 2 & los tres \\
+55.º periodo legislativo & doce unidades de cuatro meses & 1 & referencia; el brazo fiel
+debe congelarse \\
+Sintéticos (tres niveles de información en la segunda dimensión) & verdad conocida por
+construcción & 0 & archivos de verdad \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\footnotesize
+\begin{longtable}{L{3.5cm}L{8.9cm}}
+\caption[Estadísticos y ajustes igualados de las pruebas exhaustivas.]{Estadísticos de las
+pruebas exhaustivas, por nivel de verificación, y ajustes del protocolo wmay de tres brazos.
+La aceptación contra 2004 registra las diferencias del cuadro \ref{tab:protocolos}; RNF01 queda abierto.}\label{tab:estadisticos}\\
+\toprule
+Elemento & Especificación \\
+\midrule
+\endfirsthead
+\multicolumn{2}{l}{\footnotesize\emph{Cuadro \ref{tab:estadisticos}, continuación}}\\
+\toprule
+Elemento & Especificación \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\multicolumn{2}{l}{\emph{Estadísticos, por nivel}} \\
+Componente & tasa de error del plano de corte; identidad de los escalares tras el primer
+ciclo \\
+Estado & diferencia de verosimilitud por voto bajo el evaluador común, con el desacuerdo
+absoluto por votación al lado; identidad del recuento de votos válidos \\
+Mapa & correlaciones por dimensión en el marco global, razón de amplitud, distancia media y
+reflexiones \\
+Determinismo & identidad de salidas numéricas con uno, dos, cuatro y doce hilos; metadatos aparte \\
+\addlinespace
+\multicolumn{2}{l}{\emph{Ajustes igualados}} \\
+Ciclos & cuatro, la convención de la comparación publicada, declarados en cada sello \\
+Grado & el declarado por panel \\
+Valores iniciales & en la comparación wmay, por legislador en todos los brazos, porque wmay solo lee esa
+forma; los valores por periodo como control \\
+Hilos & uno en toda comparación \\
+Motor moderno & modo de replicación y precisión estricta \\
+Rutina de descomposición & protocolo wmay: \texttt{DGESDD}; original 2004: \texttt{LSVRR}; fiel: backend registrado \\
+Aritmética & estricta, sin \emph{fast-math} \\
+Escalares iniciales & los de la referencia \\
+Dimensiones & dos \\
+\end{longtable}
+\normalsize
+
+\chapter{Diseño del estudio chileno}
+\label{anexo:chile}
+
+Este anexo da el diseño del estudio chileno que la sección \ref{sec:algoritmos} resume: el
+contraste, la inferencia y la periodización con su regla de discretización (tarea E3).
+
+El estudio estima el desplazamiento de las medianas de partido en la primera dimensión durante
+el 55.º periodo legislativo, dividido en tres fases por el estallido social del 18 de octubre
+de 2019, el plebiscito del 25 de octubre de 2020 y el fin del periodo el 10 de marzo de 2022,
+cortes fijados desde el calendario antes de inspeccionar estimación alguna. Para el partido
+$p$, el contraste es $\Delta_p = m_{p3} - m_{p1}$, con $m_{pk}$ la mediana de la primera
+dimensión de sus diputados activos al fin de la fase $k$, y la hipótesis alternativa
+unilateral $\Delta_p < 0$ se fijó antes del análisis \parencite{nieves2026jcc}. La inferencia
+sigue el bootstrap paramétrico establecido para este estimador
+\parencite{lewis2004measuring,carroll2009measuring}: redibujar cada voto desde su probabilidad
+ajustada y reestimar todo el instrumento en cada réplica (algoritmo \ref{alg:bootstrap}). Tres
+decisiones lo distinguen del uso habitual: los valores iniciales se regeneran dentro de cada
+réplica, porque reutilizar los observados con pocos ciclos puede anclar las soluciones; solo
+se redibujan las votaciones válidas; y cada réplica se alinea a la primera dimensión observada
+por signo y localización (D-17). Un partido se declara robustamente desplazado solo si ambas
+cotas son negativas y el valor $p$ ajustado por \textcite{holm1979simple} es menor que el
+nivel (RF11).
+
+La subdivisión del tiempo es una elección del analista que los datos no fijan y que mueve el
+resultado (RF12); el diseño la trata como un parámetro declarado (cuadro \ref{tab:disenos}).
+El principal, propuesto y pendiente de ratificación (D-16), es la ventana igualada: un solo
+ajuste sobre las doce unidades de cuatro meses del periodo, en un solo marco, sobre el cual
+corre el bootstrap; los otros tres son análisis de sensibilidad. La regla de discretización
+tiene tres cláusulas. El grado es siempre lineal, para que una rejilla más fina no cambie la
+mezcla de grados efectivos. La unidad debe ser lo bastante corta para que la cohorte que entró
+al inicio alcance cinco unidades servidas, el mínimo del término lineal (D-06), y lo bastante
+larga para que ninguna unidad quede vacía en el receso de verano: con el umbral de veinte
+votos, la de cuatro meses es la más corta que el registro sostiene. Y toda cifra declara
+rejilla, grado y valores iniciales. El modelo se estima en dos dimensiones, pero la
+inferencia se hace solo sobre la primera (D-17), porque la segunda es considerablemente más
+sensible entre implementaciones, optimizadores, horizontes y réplicas
+\parencite{nieves2026jcc}.
+
+\begin{table}[H]
+\centering
+\caption{Diseños de periodización: qué varía cada uno, cómo trata los marcos y qué pregunta
+responde.}
+\label{tab:disenos}
+\footnotesize
+\begin{tabular}{L{2.9cm}L{3.5cm}L{2.8cm}L{3.1cm}}
+\toprule
+Diseño & Varía o fija & Marcos & Pregunta \\
+\midrule
+Ventana igualada (principal, pendiente de ratificación) & un ajuste; doce unidades de cuatro
+meses; grado lineal & un marco; solo el control de orientación & cuánto se desplazaron las
+medianas en un marco común \\
+\addlinespace
+Ventana expansiva & tres ajustes anidados que terminan en cada frontera & rotación estimada en
+las unidades de calentamiento & cuánto depende una posición terminal del registro anterior \\
+\addlinespace
+Por tramos & tres ajustes independientes, uno por fase, con seis unidades internas cada uno &
+tres marcos lado a lado & si hubo un salto en la frontera \\
+\addlinespace
+Ajuste único rebanado & un ajuste sobre las unidades del diseño por tramos & sin realineación
+& control de los dos anteriores \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\chapter[Mejora de rendimiento: cambios candidatos y protocolo][Mejora de rendimiento]{Mejora de rendimiento: cambios candidatos y protocolo}
+\label{anexo:rendimiento}
+
+Este anexo da el catálogo completo de cambios candidatos de la mejora de rendimiento del
+motor fiel (cuadro \ref{tab:candidatos}) y el protocolo de medición paso a paso (cuadro
+\ref{tab:protocolo}) que la sección \ref{sec:rendimiento} resume. Ningún cambio está
+implementado. La inserción concurrente P-01 está en la fase de legisladores: el lazo paralelo
+inserta en el contenedor de periodos servidos por legislador sin sección crítica, mientras los
+coeficientes temporales tienen una preinicialización en serie hecha precisamente para evitar
+ese riesgo (F \archivo{dwnominate.cpp:1463-1465}, \archivo{:1478}, \archivo{:1814}); la corrección
+es extender esa preinicialización. Por inspección, la carrera no toca los números ajustados,
+pero alimenta el marco de exportación.
+
+\footnotesize
+\begin{longtable}{L{0.8cm}L{5.3cm}L{2.2cm}L{4.0cm}}
+\caption[Cambios candidatos de rendimiento.]{Cambios candidatos de la mejora de rendimiento
+del motor fiel, la fase que afectan y su efecto esperado sobre los resultados. Ninguno está
+implementado; el efecto esperado es una hipótesis que la condición de aceptación somete a
+prueba.}\label{tab:candidatos}\\
+\toprule
+Id & Cambio & Fase & Efecto esperado en los resultados \\
+\midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{Cuadro \ref{tab:candidatos}, continuación}}\\
+\toprule
+Id & Cambio & Fase & Efecto esperado en los resultados \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+M-01 & restringir los lazos de cada votación y las evaluaciones globales al bloque de filas
+de su periodo & votaciones; verosimilitud global & ninguno: mismas celdas no ausentes, en el
+mismo orden \\
+M-02 & guardar los votos por bloques de periodo con índice local, contiguos por votación, con
+una vista por legislador para los lazos que la usan & todas; carga & ninguno si cada lazo
+conserva su orden; reordenar lazos está excluido \\
+M-03 & listas precalculadas, en orden ascendente, de los votantes de cada votación y de las
+votaciones de cada legislador & votaciones; verosimilitud global & ninguno: mismo orden de
+suma \\
+M-04 & eliminar asignaciones y copias dentro de los lazos internos; memoria reutilizable por
+hilo & todas & ninguno: mismos valores \\
+M-05 & evaluar solo la verosimilitud en los puntos de búsqueda lineal y en la primera y
+última evaluación de cada votación & votaciones; legisladores & ninguno esperado; se verifica
+porque la primera evaluación inicia la historia de la búsqueda \\
+M-06 & una sola consulta a la tabla normal por voto para el valor y su logaritmo &
+votaciones; verosimilitud & ninguno: mismas entradas de la tabla \\
+M-07 & preparar una sola vez los datos invariantes de cada votación y suprimir el trabajo
+muerto del plano de corte & votaciones & ninguno: mismos arreglos, en el mismo orden \\
+M-08 & guardar invariantes dentro de las búsquedas escalares & escalares & ninguno si se
+respeta el orden de evaluación; valor esperado bajo \\
+M-09 & carga en tiempo proporcional a los votos válidos & carga & ninguno \\
+\addlinespace
+X-01 & omitir el plano de corte cuando su resultado se descarta & votaciones & estado
+ajustado sin cambio, pero altera el flujo del procedimiento: fuera del alcance sin decisión
+del propietario \\
+\addlinespace
+P-01 & eliminar la inserción concurrente en un contenedor compartido de la fase de
+legisladores & legisladores & requisito previo de corrección; no altera los números
+ajustados \\
+P-02 & registrar el número de hilos en el resumen de cada corrida & salida & requisito
+previo de medición; la línea nueva se excluye de la comparación de archivos \\
+\end{longtable}
+\normalsize
+
+\footnotesize
+\begin{longtable}{L{2.2cm}L{6.2cm}L{4.0cm}}
+\caption[Protocolo de medición de rendimiento.]{Protocolo de medición de la mejora de
+rendimiento: qué fija cada paso y por qué.}\label{tab:protocolo}\\
+\toprule
+Paso & Qué se fija o se hace & Por qué \\
+\midrule
+\endfirsthead
+\multicolumn{3}{l}{\footnotesize\emph{Cuadro \ref{tab:protocolo}, continuación}}\\
+\toprule
+Paso & Qué se fija o se hace & Por qué \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Requisitos previos & corregir la inserción concurrente (P-01) y registrar el número de hilos
+(P-02) & un resultado no reproducible no puede medirse \\
+\addlinespace
+Línea base & etiquetar la versión de partida; mismo compilador, opciones, bibliotecas y máquina
+para ambas versiones; registrar procesador, memoria, sistema operativo y opciones & los tiempos
+publicados no fijan estas condiciones \\
+\addlinespace
+Paneles & cuatro estáticos y tres dinámicos del cuadro \ref{tab:paneles}; mismos valores
+iniciales; cuatro ciclos; dos dimensiones & el tiempo depende del camino de búsqueda \\
+\addlinespace
+Condición de aceptación & cinco corridas por versión e hilos: parámetros, claves y estadísticas
+idénticos; excluir solo tiempo, hilos y fecha; validar esos metadatos aparte & un cambio que
+altera un bit es un cambio numérico (D-20) \\
+\addlinespace
+Perfilado & atribuir el tiempo de la línea base a cada rutina; contadores de acceso a memoria &
+elegir cambios por evidencia y contrastar la hipótesis del recorrido \\
+\addlinespace
+Medición & una corrida de calentamiento descartada; al menos cinco corridas por panel, versión
+y número de hilos, intercaladas; mediana, mínimo, máximo y rango intercuartílico; cambio como
+cociente de medianas & separar la mejora de la variación de la máquina; comparación principal
+a un hilo (RNF04) \\
+\addlinespace
+Orden y registro & cambios de a uno, primero los de mayor efecto esperado en la fase de
+votaciones; resultados en un directorio fechado e inmutable con sus programas generadores & que
+un fallo sea atribuible; trazabilidad numérica (RNF06) \\
+\end{longtable}
+\normalsize
+
+\chapter{Procedencia y evidencia de esta revisión}
+\label{anexo:procedencia}
+
+Se verificaron localmente los motores en \archivo{ad945a91} y la investigación en
+\archivo{3cb203e3}. Los números de línea del portal R corresponden a su archivo local modificado, SHA-256\par
+{\footnotesize\texttt{170d8a4638b312e6a5d83f45d1f0ea417b843d5d50d5a6ab0fd516a767dc0090}}\par
+no al blob publicado de la revisión base. La fuente original seleccionada es \archivo{DW-NOMINATE-2004.FOR};
+su SHA-256 es\par
+{\footnotesize\texttt{276e3cb545f2ba18d4ce4ca193f45ae8695c7e0b343f3dbcb7caaeaaa13d63a8}}\par
+El ejecutable original recompilado el 6 de octubre tiene SHA-256\par
+{\footnotesize\texttt{08dc4e042e46b67268a0e533ef64ba6a6643a33d6de22b6bda1d6ad13701c2ab}}\par
+Los comandos, compilador GNU Fortran 15.2.0, dependencias y hashes completos están en
+\href{run:../evidence/lineage/builds/README.md}{la procedencia de builds incluida}.
+Esa construcción original usó los flags legacy registrados y wmay usó \texttt{-O2};
+sus tiempos no se usan como benchmark. El benchmark E3 exige nuevas condiciones comparables.
+
+Las tres comparaciones dinámicas retenidas original/wmay y sus limitaciones se documentan en
+\href{run:../evidence/ENGINE-CLOSEOUT.md}{el registro de linaje incluido}. El motor fiel con
+GRID activo no reemplaza esa identificación del original. El paquete conserva fuentes de
+código verificadas y manifiestos; no contiene un nuevo replay numérico ni modifica el artículo.
+
+El 8 de octubre la API confirmó la rama pública del motor en \archivo{00ba24c0}, con seis
+commits locales de reorganización aún ausentes del remoto; el commit \archivo{ad945a91} no
+se pudo recuperar allí. El backlog base y el portal R publicado sí existen en la revisión privada citada
+de investigación, pero las propuestas I y la ampliación local del portal no están en esos blobs.
+El archivo local del portal coincide con el hash usado en la revisión de figuras del 7 de octubre;
+sus números de línea siguen vigentes para esa copia. Se incluye y cita esa fuente local exacta. Esto verifica destinos para la cuenta consultada, no permisos de cada lector.
+La evidencia de diseño de esta revisión se entrega en este PDF y en su paquete local.
+
+La planilla de seguimiento pudo leerse mediante el conector: G2 aún figuraba ``Sin empezar'',
+con fecha de E2 del 2 de octubre; E3 y H8 no aparecían entre esas filas. El registro de este
+informe documenta los artefactos actuales; sincronizar los estados y la fecha de la planilla
+con el responsable sigue pendiente. El backlog incluido también conserva G2/E3 sin empezar y H8
+pendiente; este informe distingue diseño escrito de aprobación. La API del 8 de octubre devuelve
+\texttt{permission=none} y \texttt{pull=false} para Julio (\texttt{jcredberry}) en
+\texttt{quevotan-db}; la ruta remota \texttt{tesis/} aún no existe. Publicación y acceso siguen abiertos.
+La confirmación del objetivo chileno, RNF01 y la periodización siguen siendo decisiones del
+profesor guía. El resultado de esta pasada es un candidato de revisión, no una entrega registrada.
+
+
+\section*{Propuestas I1--I7 para la Etapa 3}
+
+La revisión final de diseño produjo dieciocho mejoras agrupadas en siete propuestas locales
+del backlog. El registro leído las marca \emph{Pendiente}, hasta que Roberto y Pablo las
+adopten. No se presentan como implementación realizada ni como tareas E2 incumplidas.
+
+\begin{table}[htbp]
+\centering\footnotesize
+\caption{Propuestas de la Etapa 3 incorporadas al registro local el 8 de octubre.}
+\begin{tabular}{L{0.7cm}L{7.9cm}L{2.0cm}L{1.0cm}}
+\toprule
+ID & Alcance y relación con este diseño & Responsable & Horas \\
+\midrule
+I1 & corregir P-01 y verificar salidas idénticas con 1/2/4/12 hilos; prerrequisito de I6 & Pablo & 8 \\
+I2 & resumen del estado final, exportación 1D y hilos en resumen & Pablo & 8 \\
+I3 & errores y contratos de entrada/salida & Pablo & 8 \\
+I4 & modos de prueba por componente accesibles desde la CLI fiel & Pablo & 6 \\
+I5 & productor RF09 único, emparejamiento uno a uno & Roberto & 10 \\
+I6 & rendimiento a un núcleo y salidas idénticas; original 2004 como referente de tesis,
+wmay como antecedente adicional & ambos & 40 \\
+I7 & comentarios obsoletos; rutas y dependencia requieren pruebas de ejecución y construcción & Roberto & 3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Las horas son estimaciones propuestas. La copia del backlog local incluida conserva el texto
+original de I6 (``contra wmay''); el \href{run:../evidence/ETAPA-3-consistency-proposal-2026-10-08.md}{registro E3 corregido}
+alinea la propuesta con el original 2004.
+El registro corregido no adopta las tareas ni cambia los responsables. Las pruebas de I1 muestran
+el defecto antes y exigen determinismo después; I2 corrige estadísticas antes de congelar I6.
+
+La \href{run:../evidence/performance-candidates-confirmed-2026-10-08.md}{comprobación estática
+de candidatos del 8 de octubre} confirma premisas de C1 a C15 y propone N1 a N7; no construye,
+ejecuta ni mide mejoras. Precisa que C2 puede trasladar costo a legisladores y verosimilitud,
+C6 consume menos resultados de lo supuesto, y C5/C8 tienen un alcance de asignaciones más
+estrecho. Son insumos de I6, no resultados del informe.
+
+Antes de optimizar, I1 debe preinicializar el mapa de periodos servidos y endurecer el acceso
+al mapa de coeficientes de la misma región paralela; I2 corrige resumen, exportación y sello. Sigue una
+línea base reconstruida y perfilada, preservando D-03 y verificando identidad de salidas tras
+cada cambio. N1 exige reutilizar solo entradas iguales bit a bit; C14 y N4 omiten evaluaciones
+del flujo heredado y requieren una decisión explícita. Los tiempos históricos citados por esa
+nota deben regenerarse; no se transfieren como mediciones actuales. El catálogo del anexo
+\ref{anexo:rendimiento} conserva el diseño E2 y esta fuente amplía la planificación E3.
+
+La auditoría completa de concurrencia del motor moderno queda como tarea H4 pendiente: revisar
+escrituras compartidas y repetir paneles estáticos/dinámicos a 1/2/4/12 hilos con builds e inputs
+identificados. P-01 y P-02 se encontraron en el fiel; sus diferencias con el moderno no prueban
+seguridad global. No se ejecutó esa auditoría ni un nuevo experimento en esta revisión.

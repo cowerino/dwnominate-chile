@@ -1,0 +1,3 @@
+Correspondencia de responsabilidades entre los dos antecedentes Fortran y el motor fiel C++. Catálogo de rutinas y variantes en el anexo de correspondencia.
+
+Línea horizontal: correspondencia de responsabilidad; no es dependencia UML.

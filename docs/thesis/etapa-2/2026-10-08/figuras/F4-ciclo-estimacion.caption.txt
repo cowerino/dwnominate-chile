@@ -1,0 +1,3 @@
+Ciclo de estimación compartido por wmay y el motor fiel. Cada ciclo ajusta los parámetros globales, actualiza las posiciones de las votaciones, evalúa la verosimilitud, actualiza las posiciones de los legisladores y vuelve a evaluar; el número de ciclos es fijo y no hay prueba de convergencia. El estado terminal es el conjunto de parámetros al terminar el último ciclo. El resumen fiel mezcla la LL terminal con clasificación de la fase previa (M-02, pendiente de I2). Compartir este flujo no garantiza cifras iguales entre implementaciones. Perfil de la vista: dos dimensiones y cuatro ciclos.
+
+Clave de notación: UML actividad; rectángulo redondeado, acción; rombo, unión o decisión; círculo lleno, inicio; círculo con anillo, fin. Nombres de rutinas Fortran en tipo menor.

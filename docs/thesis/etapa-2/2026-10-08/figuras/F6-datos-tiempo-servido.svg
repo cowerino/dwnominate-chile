@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="135mm" height="169.333mm" viewBox="0 0 382.677 480">
+<rect width="100%" height="100%" fill="white"/>
+<title>F6</title>
+<desc>Modelo conceptual de los datos y del tiempo servido. Un legislador tiene una fila por periodo servido; cada fila contiene las celdas de voto de las votaciones válidas de ese periodo. La semilla por legislador y la semilla por fila son contratos distintos. Cada legislador con al menos un periodo servido tiene una trayectoria, que se evalúa solo en los periodos servidos con un tiempo local que recorre ese intervalo; el término lineal exige al menos cinco periodos servidos (el cuadrático seis y el cúbico siete) y con menos el modelo efectivo es constante. Es un modelo conceptual, no una base de datos.</desc>
+<rect x="4" y="10" width="118" height="46" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="63.00" y="24.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Semilla por legislador</text>
+<polyline points="4,29.0 122,29.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="10.00" y="40.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">una coordenada inicial</text>
+<text x="10.00" y="51.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">por legislador</text>
+<rect x="158" y="10" width="94" height="38" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="205.00" y="24.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Panel</text>
+<polyline points="158,29.0 252,29.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="164.00" y="40.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">periodos, votaciones</text>
+<rect x="4" y="80" width="118" height="38" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="63.00" y="94.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Legislador</text>
+<polyline points="4,99.0 122,99.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="10.00" y="110.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">identificador único</text>
+<rect x="274" y="72" width="104" height="38" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="326.00" y="86.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Periodo</text>
+<polyline points="274,91.0 378,91.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="280.00" y="102.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">índice en el panel</text>
+<rect x="4" y="142" width="118" height="58" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="63.00" y="156.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Trayectoria</text>
+<polyline points="4,161.0 122,161.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="10.00" y="172.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">coeficientes por legislador</text>
+<text x="10.00" y="183.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">evaluada en los periodos</text>
+<text x="10.00" y="194.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">servidos</text>
+<rect x="158" y="142" width="88" height="66" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="202.00" y="156.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Fila servida</text>
+<polyline points="158,161.0 246,161.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="164.00" y="172.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">legislador, periodo</text>
+<text x="164.00" y="183.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">/ tiempo local</text>
+<text x="164.00" y="194.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">/ coordenadas</text>
+<rect x="274" y="142" width="90" height="60" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="319.00" y="156.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Semilla por fila</text>
+<polyline points="274,161.0 364,161.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="280.00" y="172.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">por legislador y</text>
+<text x="280.00" y="183.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">periodo; opcional</text>
+<rect x="158" y="232" width="88" height="58" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="202.00" y="246.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Celda de voto</text>
+<polyline points="158,251.0 246,251.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="164.00" y="262.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">fila y votación</text>
+<text x="164.00" y="273.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">sí, no o ausente</text>
+<rect x="274" y="232" width="104" height="58" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="326.00" y="246.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Votación</text>
+<polyline points="274,251.0 378,251.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="280.00" y="262.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">periodo y columna</text>
+<text x="280.00" y="273.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">válida: margen de la</text>
+<text x="280.00" y="284.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">minoría ≥ 2,5 %</text>
+<polyline points="176,48 176,88 122,88" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="180.00" y="60.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">1</text>
+<text x="126.00" y="85.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">*</text>
+<polyline points="252,29 324,29 324,72" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="256.00" y="26.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">1</text>
+<text x="320.00" y="69.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="end">*</text>
+<polyline points="122,108 196,108 196,142" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="126.00" y="105.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">1</text>
+<text x="200.00" y="139.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">*</text>
+<polyline points="274,92 232,92 232,142" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="270.00" y="89.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="end">1</text>
+<text x="228.00" y="139.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="end">*</text>
+<polyline points="62,56 62,80" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="66.00" y="66.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">0..1</text>
+<text x="66.00" y="77.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">1</text>
+<polyline points="62,118 62,142" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="66.00" y="128.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">1</text>
+<text x="66.00" y="139.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">0..1</text>
+<polyline points="372,110 372,232" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="368.00" y="120.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="end">1</text>
+<text x="368.00" y="229.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="end">*</text>
+<polyline points="208,208 208,232" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="212.00" y="217.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">1</text>
+<text x="212.00" y="229.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">*</text>
+<polyline points="274,257 246,257" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="271.00" y="254.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="end">1</text>
+<text x="249.00" y="254.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">*</text>
+<polyline points="246,172 274,172" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="249.00" y="169.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">1</text>
+<text x="272.00" y="184.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="end">0..1</text>
+<polyline points="158,172 122,172" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<polyline points="129.0,175.0 122,172 129.0,169.0" fill="none" stroke="#202020" stroke-width=".7"/>
+<text x="140.00" y="168.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">«Derive»</text>
+<text x="4.00" y="312.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="start">Ejemplo: un legislador presente en los periodos 2 y 4 de un panel de cinco</text>
+<rect x="6" y="322" width="70" height="24" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="41.00" y="337.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="middle">periodo 1</text>
+<text x="41.00" y="360.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="middle">sin fila</text>
+<text x="41.00" y="371.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="middle">no se evalúa</text>
+<rect x="80" y="322" width="70" height="24" rx="0" fill="#ededed" stroke="#202020" stroke-width=".7"/>
+<text x="115.00" y="337.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="700" text-anchor="middle">periodo 2</text>
+<text x="115.00" y="360.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="middle">fila servida</text>
+<text x="115.00" y="371.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="middle">t = −1</text>
+<rect x="154" y="322" width="70" height="24" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="189.00" y="337.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="middle">periodo 3</text>
+<text x="189.00" y="360.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="middle">sin fila</text>
+<text x="189.00" y="371.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="middle">no se evalúa</text>
+<rect x="228" y="322" width="70" height="24" rx="0" fill="#ededed" stroke="#202020" stroke-width=".7"/>
+<text x="263.00" y="337.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="700" text-anchor="middle">periodo 4</text>
+<text x="263.00" y="360.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="middle">fila servida</text>
+<text x="263.00" y="371.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="middle">t = +1</text>
+<rect x="302" y="322" width="70" height="24" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="337.00" y="337.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="middle">periodo 5</text>
+<text x="337.00" y="360.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="middle">sin fila</text>
+<text x="337.00" y="371.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="middle">no se evalúa</text>
+<text x="4.00" y="390.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">Dos filas servidas, (L, 2) y (L, 4), cada una con sus celdas de voto. El tiempo local recorre solo esos</text>
+<text x="4.00" y="400.50" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">dos periodos; las coordenadas se evalúan y se exportan en esas dos filas, no en el periodo 3.</text>
+<text x="4.00" y="411.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">Modelo efectivo: constante, porque el término lineal exige al menos 5 periodos servidos</text>
+<text x="4.00" y="421.50" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">(cuadrático 6, cúbico 7); ambas filas reciben las mismas coordenadas.</text>
+<polyline points="8,434 374.6771653543307,434" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="8.00" y="444.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">Línea continua con multiplicidades: asociación (0..1, opcional). Barra inicial: atributo derivado.</text>
+<text x="8.00" y="454.50" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">Flecha discontinua «Derive»: las coordenadas de la fila se derivan de la trayectoria y del tiempo</text>
+<text x="8.00" y="465.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">local. Archivos, columnas y signos corregidos en el cuadro de contratos del anexo.</text>
+</svg>

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="135mm" height="170.039mm" viewBox="0 0 382.677 482">
+<rect width="100%" height="100%" fill="white"/>
+<title>F4</title>
+<desc>Ciclo de estimación compartido por wmay y el motor fiel. Cada ciclo ajusta los parámetros globales, actualiza las posiciones de las votaciones, evalúa la verosimilitud, actualiza las posiciones de los legisladores y vuelve a evaluar; el número de ciclos es fijo y no hay prueba de convergencia. El estado terminal es el conjunto de parámetros al terminar el último ciclo. El resumen fiel mezcla la LL terminal con clasificación de la fase previa (M-02, pendiente de I2). Compartir este flujo no garantiza cifras iguales entre implementaciones. Perfil de la vista: dos dimensiones y cuatro ciclos.</desc>
+<ellipse cx="191.33858267716536" cy="10.0" rx="4.0" ry="4.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<polyline points="191.33858267716536,14 191.33858267716536,22" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="194.33858267716536,15.0 191.33858267716536,22 188.33858267716536,15.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<rect x="60" y="22" width="263" height="36" rx="7" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="191.50" y="38.52" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">Cargar panel y semillas; inicializar el estado</text>
+<text x="191.50" y="49.92" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">marcar las votaciones válidas; ciclo := 1</text>
+<polyline points="191.33858267716536,58 191.33858267716536,66" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="194.33858267716536,59.0 191.33858267716536,66 188.33858267716536,59.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<polygon points="191.33858267716536,66 198.33858267716536,71 191.33858267716536,76 184.33858267716536,71" fill="white" stroke="#202020" stroke-width=".7"/>
+<polyline points="191.33858267716536,76 191.33858267716536,86" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="194.33858267716536,79.0 191.33858267716536,86 188.33858267716536,79.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<rect x="60" y="86" width="263" height="36" rx="7" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="191.50" y="102.53" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">Ajustar los parámetros globales</text>
+<text x="191.50" y="113.93" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">peso de la segunda dimensión y beta: WINT, SIGMAS</text>
+<polyline points="191.33858267716536,122 191.33858267716536,132" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="194.33858267716536,125.0 191.33858267716536,132 188.33858267716536,125.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<rect x="60" y="132" width="263" height="36" rx="7" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="191.50" y="148.53" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">Actualizar las posiciones de las votaciones</text>
+<text x="191.50" y="159.93" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">corte: CUTPLANE (2D) o JAN11PT (1D); búsqueda: RCINT2</text>
+<polyline points="191.33858267716536,168 191.33858267716536,178" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="194.33858267716536,171.0 191.33858267716536,178 188.33858267716536,171.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<rect x="60" y="178" width="263" height="36" rx="7" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="191.50" y="194.53" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">Evaluar la verosimilitud</text>
+<text x="191.50" y="205.93" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">PLOG</text>
+<polyline points="191.33858267716536,214 191.33858267716536,224" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="194.33858267716536,217.0 191.33858267716536,224 188.33858267716536,217.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<rect x="60" y="224" width="263" height="36" rx="7" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="191.50" y="240.53" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">Actualizar las posiciones de los legisladores</text>
+<text x="191.50" y="251.93" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">trayectoria en tiempo servido: XINT</text>
+<polyline points="191.33858267716536,260 191.33858267716536,270" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="194.33858267716536,263.0 191.33858267716536,270 188.33858267716536,263.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<rect x="60" y="270" width="263" height="36" rx="7" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="191.50" y="286.52" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">Evaluar la verosimilitud</text>
+<text x="191.50" y="297.92" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">PLOG; ciclo := ciclo + 1</text>
+<polyline points="191.33858267716536,306 191.33858267716536,318" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="194.33858267716536,311.0 191.33858267716536,318 188.33858267716536,311.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<polygon points="191.33858267716536,318 235.33858267716536,336 191.33858267716536,354 147.33858267716536,336" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="191.34" y="339.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="middle">¿ciclo ≤ T?</text>
+<polyline points="147.33858267716536,336 30,336 30,71 184.33858267716536,71" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="177.33858267716536,68.0 184.33858267716536,71 177.33858267716536,74.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<text x="36.00" y="329.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">[sí]</text>
+<polyline points="191.33858267716536,354 191.33858267716536,368" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="194.33858267716536,361.0 191.33858267716536,368 188.33858267716536,361.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<text x="199.34" y="364.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">[no]</text>
+<rect x="60" y="368" width="263" height="34" rx="7" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="191.50" y="383.52" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">Exportar parámetros terminales</text>
+<text x="191.50" y="394.92" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">y resumen (fiel: estado mixto, M-02)</text>
+<polyline points="191.33858267716536,402 191.33858267716536,412" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="194.33858267716536,405.0 191.33858267716536,412 188.33858267716536,405.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<ellipse cx="191.33858267716536" cy="418.0" rx="6.0" ry="6.0" fill="white" stroke="#202020" stroke-width=".7"/>
+<ellipse cx="191.33858267716536" cy="418.0" rx="3.5" ry="3.5" fill="black" stroke="#202020" stroke-width=".7"/>
+<polyline points="8,432 374.6771653543307,432" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="8.00" y="442.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">wmay / fiel en modo wmay: 2D, T = 4, sin parada por convergencia. Rutinas en tipo menor; el</text>
+<text x="8.00" y="452.50" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">alcance 1D se documenta en el perfil de ejecución.</text>
+</svg>

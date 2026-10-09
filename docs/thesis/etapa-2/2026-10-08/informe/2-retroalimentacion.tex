@@ -1,0 +1,97 @@
+\chapter{Incorpora la retroalimentación}
+\label{cap:retro}
+
+\section{Estado de la retroalimentación de la Etapa 1}
+\label{sec:estado-retro}
+
+El Informe de Etapa 1 se entregó el 4 de septiembre de 2026 (\href{run:../evidence/informe-etapa-1.pdf}{Informe de Etapa 1 entregado}). La revisión escrita anunciada no llegó como
+documento; en la reunión del 5 de octubre el profesor guía informó que la Etapa 1 fue
+calificada con 7,0 y que no quedaba retroalimentación pendiente. La única observación abierta
+concierne a la implementación: el motor fiel debe alcanzar el rendimiento a un núcleo del
+original 2004, revisando sus estructuras de datos (protocolos de la sección
+\ref{sec:protocolos}). Su diseño está en la sección
+\ref{sec:rendimiento} y en el registro RD-9; la implementación y la medición antes y después
+corresponden a la Etapa 3, cuya pauta las pide.
+
+\section{Indicaciones del profesor guía y cambios hechos}
+\label{sec:indicaciones}
+
+El cuadro \ref{tab:indicaciones} registra cada indicación del profesor guía desde el inicio
+del curso, el cambio que produjo y dónde se ve.
+
+\footnotesize
+\begin{longtable}{L{1.6cm}L{3.4cm}L{4.8cm}L{2.4cm}}
+\caption{Indicaciones del profesor guía, cambio hecho y dónde se ve.}\label{tab:indicaciones}\\
+\toprule
+Fecha y medio & Indicación & Cambio hecho & Dónde se ve \\
+\midrule
+\endfirsthead
+\multicolumn{4}{l}{\footnotesize\emph{Cuadro \ref{tab:indicaciones}, continuación}}\\
+\toprule
+Fecha y medio & Indicación & Cambio hecho & Dónde se ve \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+24 ago., mensaje del curso & Límite de treinta páginas; estructura de Cardiff; SWEBOK v4 como
+guía de estándares & el cuerpo lleva lo que la pauta evalúa y el detalle va a anexos; cada
+vista y decisión cita SWEBOK v4.0a, ISO/IEC/IEEE 42010, IEEE 1016 o UML 2.5.1 & todo el
+informe \\
+\addlinespace
+3 sept., reunión & Derivar los requisitos de lo construido; el umbral RNF01 es del
+propietario; no afirmar convergencia & cada decisión cita código o configuración con archivo y
+línea; el valor del umbral queda abierto; ciclos fijos, sin prueba de convergencia & cuadro
+\ref{tab:decisiones}; sección \ref{sec:experimental}; RD-5 \\
+\addlinespace
+28 sept., reunión semanal & Mejorar el rendimiento del motor fiel revisando punteros y
+estructuras de datos & RNF04 precisado; OE1 con criterio medible y plazos; diseño de la mejora
+(D-20, D-21) & sección \ref{sec:rendimiento}; RD-9 \\
+\addlinespace
+5 oct., reunión & Informe propio por etapa y criterio; diagramas según estándares; decisiones
+con su porqué; rendimiento a un núcleo del Fortran & este informe; seis figuras de cuerpo, un cuadro de mecanismos y dos
+figuras de anexo con notación declarada; decisiones con alternativa, razón y evidencia; nueve
+registros & secciones \ref{sec:decisiones} y \ref{sec:registros} \\
+\end{longtable}
+\normalsize
+
+\section{Cambios al contenido de la Etapa 1}
+\label{sec:cambios-e1}
+
+El Informe de Etapa 1 queda como se entregó. En el documento de trabajo de título
+(\href{run:../evidence/documento-tesis-2026-10-04.pdf}{documento de tesis, 4 de octubre de 2026}) su contenido recibió
+después cambios que no responden a una observación sobre la Etapa 1, sino a indicaciones
+posteriores, a la auditoría de cada cifra contra su fuente y a una revisión adversarial
+independiente: el capítulo 2 se completó, porque sus ecuaciones no coincidían con el código; se
+agregó RNF09, Mantenibilidad y auditabilidad, que el propietario pide desde el 15 de abril de
+2026 y que el diseño no tenía respaldado (cuadro \ref{tab:atributos}); el hito de octubre de
+OE1 se acotó y la mejora completa medida pasó a inicios de diciembre, porque no cabe en cuatro
+semanas junto con las pruebas de la Etapa 3 (RD-9); se retiraron o corrigieron cifras de los
+capítulos 1 y 3, entre ellas la causa del caso de 61 de 168 legisladores; y el registro de
+tareas salió del documento hacia la planilla y el repositorio (capítulo \ref{cap:avance}).
+
+\section{Propuesta: el caso chileno como validación en condiciones operativas reales}
+\label{sec:propuesta-chile}
+
+Esta propuesta de los autores deriva de la reunión del 5 de octubre y queda pendiente de
+confirmación en la revisión del 9 de octubre. En esa reunión el profesor guía describió el
+trabajo como dos tareas, mostrar que el programa Fortran se puede replicar y que se puede
+mejorar, con una validación cuantitativa contra el Fortran. OE3 enuncia el estudio chileno
+«como caso de validación del instrumento», pero lo mantiene como objetivo propio. Se propone
+que sea la validación en condiciones operativas reales que pide la pauta de la Etapa 4: si se
+confirma, OE3 se reformula o se retira, RF10 a RF12 se trazan a esa validación y la tarea H1
+queda resuelta en dos tareas, replicar y mejorar. Mientras no se confirme, los objetivos de la
+sección \ref{sec:recap} siguen vigentes.
+
+\section{Decisiones que quedan en manos del profesor guía}
+\label{sec:decisiones-guia}
+
+\begin{enumerate}
+  \item Confirmación de la propuesta anterior y, con ella, de la descomposición de objetivos
+  (tarea H1).
+  \item Valor del umbral de fidelidad RNF01, criterio de aceptación de las pruebas
+  exhaustivas (tareas C6 y H2); la sección \ref{sec:experimental} propone su forma.
+  \item Ratificación del diseño principal de periodización del estudio chileno (D-16).
+\end{enumerate}
+
+El 5 de octubre se acordó entregar un informe propio como enlace. El límite de treinta
+páginas se aplica por informe y al cuerpo como supuesto de trabajo, no como acuerdo ratificado.

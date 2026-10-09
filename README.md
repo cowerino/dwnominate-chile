@@ -173,3 +173,8 @@ contract, which matters: the frame the seed supplies is the frame the fit keeps.
 
 MIT for the source code, a separate licence for data, third-party components under their own
 terms. `LICENSING.md` has the complete map; `LICENSE` and `LICENSE-DATA` carry the texts.
+
+## Thesis report and design diagrams
+
+[Etapa 2 report and diagram review, 2026-10-08](docs/thesis/etapa-2/2026-10-08/README.md).
+This dated course review does not change the frozen paper results or certify pending designs as implemented.

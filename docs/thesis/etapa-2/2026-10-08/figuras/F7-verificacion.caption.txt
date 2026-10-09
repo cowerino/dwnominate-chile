@@ -1,0 +1,3 @@
+Protocolo wmay: puntuación del estado con evaluador común y comparación de mapas. La cobertura y el marco se declaran con cada medida.
+
+Clave de notación: UML actividad con flujo de objetos; rectángulo redondeado, acción; rectángulo, objeto de datos; región rotulada (a), (b), partición de actividad (la pestaña es una marca propia). LL, r1, r2 y amplitud se definen en el texto; nombres de guiones en tipo menor.

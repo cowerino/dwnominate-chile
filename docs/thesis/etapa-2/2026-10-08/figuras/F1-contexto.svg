@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="135mm" height="112.889mm" viewBox="0 0 382.677 320">
+<rect width="100%" height="100%" fill="white"/>
+<title>F1</title>
+<desc>Contexto lógico del instrumento de investigación y sus entradas externas. Ruta común verificada: portal R, ejecutables y comprobación de archivos.</desc>
+<rect x="8" y="10" width="160" height="42" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="88.00" y="20.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">«actor»</text>
+<text x="88.00" y="32.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Fuentes de paneles</text>
+<polyline points="8,37.0 168,37.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="14.00" y="48.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">repositorios de votaciones nominales</text>
+<rect x="215" y="10" width="160" height="42" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="295.00" y="20.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">«actor»</text>
+<text x="295.00" y="32.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Servicio de semillas</text>
+<polyline points="215,37.0 375,37.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="221.00" y="48.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">W-NOMINATE en R</text>
+<rect x="112" y="96" width="150" height="172" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="187.00" y="106.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">«component»</text>
+<text x="187.00" y="118.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Instrumento DW-NOMINATE</text>
+<text x="118.00" y="134.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">ámbito lógico de investigación</text>
+<text x="118.00" y="148.80" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">preparación, motores C++ y</text>
+<text x="118.00" y="158.60" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">verificación</text>
+<text x="118.00" y="173.40" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">portal R invoca ejecutables; valida</text>
+<text x="118.00" y="183.20" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">archivos y sella corridas aceptadas</text>
+<rect x="284" y="148" width="92" height="64" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="330.00" y="158.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">«actor»</text>
+<text x="330.00" y="170.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Referencia wmay</text>
+<polyline points="284,175.0 376,175.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="290.00" y="186.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">Fortran; evaluador</text>
+<text x="290.00" y="195.80" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="start">común</text>
+<ellipse cx="26.0" cy="101.0" rx="5.0" ry="5.0" fill="white" stroke="#202020" stroke-width=".7"/>
+<polyline points="26,106 26,126" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polyline points="16,114 36,114" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polyline points="17,138 26,126 35,138" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="26.00" y="152.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="middle">Analista</text>
+<ellipse cx="26.0" cy="219.0" rx="5.0" ry="5.0" fill="white" stroke="#202020" stroke-width=".7"/>
+<polyline points="26,224 26,244" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polyline points="16,232 36,232" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polyline points="17,256 26,244 35,256" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="26.00" y="270.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="middle">Verificador</text>
+<polyline points="88,52 88,78 136,78 136,96" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<polyline points="139.0,89.0 136,96 133.0,89.0" fill="none" stroke="#202020" stroke-width=".7"/>
+<text x="93.00" y="74.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">entrega panel</text>
+<polyline points="226,96 226,52" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<polyline points="223.0,59.0 226,52 229.0,59.0" fill="none" stroke="#202020" stroke-width=".7"/>
+<text x="221.00" y="76.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="end">envía votos</text>
+<polyline points="248,52 248,96" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<polyline points="251.0,89.0 248,96 245.0,89.0" fill="none" stroke="#202020" stroke-width=".7"/>
+<text x="253.00" y="76.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">devuelve semillas</text>
+<polyline points="44,126 112,126" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<polyline points="105.0,123.0 112,126 105.0,129.0" fill="none" stroke="#202020" stroke-width=".7"/>
+<text x="48.00" y="99.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">declara panel,</text>
+<text x="48.00" y="109.50" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">semillas</text>
+<text x="48.00" y="120.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">y motor</text>
+<polyline points="112,160 44,160" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<polyline points="51.0,163.0 44,160 51.0,157.0" fill="none" stroke="#202020" stroke-width=".7"/>
+<text x="48.00" y="172.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">devuelve</text>
+<text x="48.00" y="182.50" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">coordenadas</text>
+<text x="48.00" y="193.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">y parámetros</text>
+<polyline points="44,236 112,236" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<polyline points="105.0,233.0 112,236 105.0,239.0" fill="none" stroke="#202020" stroke-width=".7"/>
+<text x="48.00" y="219.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">solicita</text>
+<text x="48.00" y="229.50" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">comparación</text>
+<polyline points="112,258 44,258" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<polyline points="51.0,261.0 44,258 51.0,255.0" fill="none" stroke="#202020" stroke-width=".7"/>
+<text x="56.00" y="270.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">devuelve</text>
+<text x="56.00" y="280.50" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">comparación</text>
+<polyline points="262,126 330,126 330,148" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<polyline points="333.0,141.0 330,148 327.0,141.0" fill="none" stroke="#202020" stroke-width=".7"/>
+<polyline points="330,212 330,270 262,270" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<polyline points="269.0,273.0 262,270 269.0,267.0" fill="none" stroke="#202020" stroke-width=".7"/>
+<text x="284.00" y="91.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">panel, semillas o</text>
+<text x="284.00" y="101.50" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">estado</text>
+<text x="276.00" y="235.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.2" font-weight="400" text-anchor="start">coordenadas</text>
+<text x="276.00" y="245.50" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.2" font-weight="400" text-anchor="start">o LL</text>
+<polyline points="8,295 374.6771653543307,295" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="8.00" y="305.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">Flecha discontinua: flujo de información. LL: log-verosimilitud.</text>
+</svg>
