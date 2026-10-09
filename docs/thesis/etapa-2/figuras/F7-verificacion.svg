@@ -1,69 +1,54 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="135mm" height="162.983mm" viewBox="0 0 382.677 462">
+<svg xmlns="http://www.w3.org/2000/svg" width="135mm" height="136.525mm" viewBox="0 0 382.677 387">
 <rect width="100%" height="100%" fill="white"/>
-<title>F7</title>
-<desc>Protocolo wmay: puntuación del estado con evaluador común y comparación de mapas. La cobertura y el marco se declaran con cada medida.</desc>
-<rect x="8" y="10" width="367" height="50" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="191.50" y="24.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">Corridas controladas</text>
-<polyline points="8,29.0 375,29.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<text x="14.00" y="40.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">estado terminal del motor C++ y corrida wmay ajustada con el mismo panel, la misma</text>
-<text x="14.00" y="51.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">semilla por legislador y el mismo horizonte de ciclos</text>
-<rect x="4" y="76" width="180" height="322" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<polygon points="4,76 59.55078125,76 59.55078125,86 54.55078125,91 4,91" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="9.00" y="87.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="700" text-anchor="start">(a) reevaluar</text>
-<rect x="199" y="76" width="180" height="322" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<polygon points="199,76 255.44140625,76 255.44140625,86 250.44140625,91 199,91" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="204.00" y="87.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="700" text-anchor="start">(b) comparar</text>
-<rect x="10" y="104" width="168" height="42" rx="7" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="94.00" y="123.53" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">Preparar el estado</text>
-<text x="94.00" y="134.93" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">stage_terminal_state.py</text>
-<rect x="10" y="164" width="168" height="54" rx="7" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="94.00" y="184.12" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">Evaluar con la referencia wmay</text>
-<text x="94.00" y="195.53" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="middle">sin volver a ajustar: cero ciclos</text>
-<text x="94.00" y="206.33" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">standalone, modo evaluate</text>
-<rect x="10" y="236" width="168" height="40" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="94.00" y="250.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">LL del estado C++</text>
-<polyline points="10,255.0 178,255.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<text x="16.00" y="266.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">bajo el evaluador de wmay</text>
-<rect x="10" y="294" width="168" height="42" rx="7" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="94.00" y="307.82" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">Comparar con la LL</text>
-<text x="94.00" y="319.22" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">de la corrida wmay</text>
-<text x="94.00" y="330.62" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">LL de su resumen: summary.csv</text>
-<rect x="10" y="354" width="168" height="38" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="94.00" y="368.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">Diferencia de LL</text>
-<polyline points="10,373.0 178,373.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<text x="16.00" y="384.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">bajo evaluador común</text>
-<rect x="205" y="104" width="168" height="78" rx="7" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="289.00" y="130.72" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">Comparar coordenadas</text>
-<text x="289.00" y="142.12" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="middle">emparejar por (legislador, periodo)</text>
-<text x="289.00" y="152.93" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="middle">centrar y alinear sin reescalar</text>
-<text x="289.00" y="163.73" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">alineación ortogonal; map_agreement.py</text>
-<rect x="205" y="236" width="168" height="52" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="289.00" y="250.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">Medidas de acuerdo</text>
-<polyline points="205,255.0 373,255.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<text x="211.00" y="266.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">n emparejados, r1, r2,</text>
-<text x="211.00" y="277.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">amplitud y distancia media</text>
-<polygon points="205,306 365,306 373,314 373,349.19999999999993 205,349.19999999999993" fill="white" stroke="#202020" stroke-width=".7"/>
-<polyline points="365,306 365,314 373,314" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<text x="212.00" y="320.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">Declarar cobertura por lado y marco</text>
-<text x="212.00" y="330.40" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">global o por periodo. Claves únicas y</text>
-<text x="212.00" y="340.80" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">cobertura completa: I5, pendiente.</text>
-<polyline points="94,60 94,104" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<polygon points="97.0,97.0 94,104 91.0,97.0" fill="black" stroke="#202020" stroke-width=".7"/>
-<polyline points="94,146 94,164" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<polygon points="97.0,157.0 94,164 91.0,157.0" fill="black" stroke="#202020" stroke-width=".7"/>
-<polyline points="94,218 94,236" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<polygon points="97.0,229.0 94,236 91.0,229.0" fill="black" stroke="#202020" stroke-width=".7"/>
-<polyline points="94,276 94,294" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<polygon points="97.0,287.0 94,294 91.0,287.0" fill="black" stroke="#202020" stroke-width=".7"/>
-<polyline points="94,336 94,354" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<polygon points="97.0,347.0 94,354 91.0,347.0" fill="black" stroke="#202020" stroke-width=".7"/>
-<polyline points="289,60 289,104" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<polygon points="292.0,97.0 289,104 286.0,97.0" fill="black" stroke="#202020" stroke-width=".7"/>
-<polyline points="289,182 289,236" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<polygon points="292.0,229.0 289,236 286.0,229.0" fill="black" stroke="#202020" stroke-width=".7"/>
-<polyline points="8,410 374.6771653543307,410" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<text x="8.00" y="420.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">Rectángulo redondeado: acción. Rectángulo: objeto de datos. Flecha continua: flujo de objetos.</text>
-<text x="8.00" y="430.50" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">LL: log-verosimilitud; r1 y r2: correlación por dimensión tras alinear; amplitud: razón de</text>
-<text x="8.00" y="441.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">tamaños. Alineación ortogonal: rotación o reflexión, sin reescalar. Ambas corridas usan la semilla</text>
-<text x="8.00" y="451.50" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">por legislador. El referente de corridas es wmay, no el original 2004.</text>
+<title>Two complementary checks</title>
+<desc>Common-evaluator likelihood and map agreement are distinct verification protocols.</desc>
+<text x="8.00" y="18.00" font-family="'Segoe UI', Arial, sans-serif" font-size="12" font-weight="700" text-anchor="start">Two complementary checks</text>
+<rect x="8" y="39" width="367" height="48" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="191.50" y="53.00" font-family="'Segoe UI', Arial, sans-serif" font-size="10" font-weight="700" text-anchor="middle">Matched C++ and wmay runs</text>
+<polyline points="8,58 375,58" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="14.00" y="69.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">Same panel, per-legislator seeds and cycle horizon</text>
+<text x="93.00" y="111.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="700" text-anchor="middle">COMMON EVALUATOR</text>
+<text x="290.00" y="111.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="700" text-anchor="middle">MAP AGREEMENT</text>
+<rect x="8" y="133" width="172" height="39" rx="7" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="94.00" y="151.03" font-family="'Segoe UI', Arial, sans-serif" font-size="9.5" font-weight="400" text-anchor="middle">Prepare terminal state</text>
+<text x="94.00" y="162.43" font-family="'Segoe UI', Arial, sans-serif" font-size="8" font-weight="400" text-anchor="middle">stage_terminal_state.py</text>
+<rect x="8" y="192" width="172" height="46" rx="7" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="94.00" y="213.53" font-family="'Segoe UI', Arial, sans-serif" font-size="9.5" font-weight="400" text-anchor="middle">Evaluate with wmay</text>
+<text x="94.00" y="224.93" font-family="'Segoe UI', Arial, sans-serif" font-size="8" font-weight="400" text-anchor="middle">Zero cycles; no refitting</text>
+<rect x="8" y="258" width="172" height="46" rx="7" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="94.00" y="279.52" font-family="'Segoe UI', Arial, sans-serif" font-size="9.5" font-weight="400" text-anchor="middle">Compare log-likelihood</text>
+<text x="94.00" y="290.92" font-family="'Segoe UI', Arial, sans-serif" font-size="8" font-weight="400" text-anchor="middle">C++ state versus wmay run</text>
+<rect x="8" y="324" width="172" height="35" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="94.00" y="338.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9.5" font-weight="700" text-anchor="middle">LL difference</text>
+<polyline points="8,343.0 180,343.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="14.00" y="354.00" font-family="'Segoe UI', Arial, sans-serif" font-size="8" font-weight="400" text-anchor="start">Common evaluator</text>
+<rect x="203" y="133" width="172" height="60" rx="7" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="289.00" y="156.72" font-family="'Segoe UI', Arial, sans-serif" font-size="9.5" font-weight="400" text-anchor="middle">Match and align coordinates</text>
+<text x="289.00" y="168.12" font-family="'Segoe UI', Arial, sans-serif" font-size="8" font-weight="400" text-anchor="middle">Key: (legislator, period)</text>
+<text x="289.00" y="177.72" font-family="'Segoe UI', Arial, sans-serif" font-size="8" font-weight="400" text-anchor="middle">Orthogonal alignment; no rescaling</text>
+<rect x="203" y="215" width="172" height="66" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="289.00" y="229.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9.5" font-weight="700" text-anchor="middle">Agreement metrics</text>
+<polyline points="203,234.0 375,234.0" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="209.00" y="245.00" font-family="'Segoe UI', Arial, sans-serif" font-size="8.5" font-weight="400" text-anchor="start">Matched n; correlation r1, r2</text>
+<text x="209.00" y="255.40" font-family="'Segoe UI', Arial, sans-serif" font-size="8.5" font-weight="400" text-anchor="start">Amplitude ratio; mean distance</text>
+<polygon points="203,302 367,302 375,310 375,345.19999999999993 203,345.19999999999993" fill="white" stroke="#202020" stroke-width=".7"/>
+<polyline points="367,302 367,310 375,310" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="210.00" y="316.00" font-family="'Segoe UI', Arial, sans-serif" font-size="8.5" font-weight="400" text-anchor="start">Report per-side coverage and alignment</text>
+<text x="210.00" y="326.40" font-family="'Segoe UI', Arial, sans-serif" font-size="8.5" font-weight="400" text-anchor="start">frame. Unique-key and full-coverage</text>
+<text x="210.00" y="336.80" font-family="'Segoe UI', Arial, sans-serif" font-size="8.5" font-weight="400" text-anchor="start">checks are pending.</text>
+<polyline points="94,87 94,96" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polyline points="94,122 94,133" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="97.0,126.0 94,133 91.0,126.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<polyline points="289,87 289,96" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polyline points="289,122 289,133" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="292.0,126.0 289,133 286.0,126.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<polyline points="94,172 94,192" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="97.0,185.0 94,192 91.0,185.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<polyline points="94,238 94,258" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="97.0,251.0 94,258 91.0,251.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<polyline points="94,304 94,324" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="97.0,317.0 94,324 91.0,317.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<polyline points="289,193 289,215" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="292.0,208.0 289,215 286.0,208.0" fill="black" stroke="#202020" stroke-width=".7"/>
+<text x="8.00" y="379.00" font-family="'Segoe UI', Arial, sans-serif" font-size="8" font-weight="400" text-anchor="start">Reference here: wmay. This protocol does not establish original-2004 equivalence.</text>
 </svg>

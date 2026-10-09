@@ -1,53 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="135mm" height="157.692mm" viewBox="0 0 382.677 447">
+<svg xmlns="http://www.w3.org/2000/svg" width="135mm" height="137.583mm" viewBox="0 0 382.677 390">
 <rect width="100%" height="100%" fill="white"/>
-<title>F2</title>
-<desc>Objetivos dentro del instrumento de investigación: estimación, validación chilena y comparación. Los roles pueden ser ejercidos por la misma persona.</desc>
-<rect x="110" y="10" width="266" height="394" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="243.00" y="25.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Instrumento de investigación DW-NOMINATE</text>
-<text x="243.00" y="37.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="middle">estimación, validación y comparación</text>
-<ellipse cx="30.0" cy="117.0" rx="5.0" ry="5.0" fill="white" stroke="#202020" stroke-width=".7"/>
-<polyline points="30,122 30,142" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<polyline points="20,130 40,130" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<polyline points="21,154 30,142 39,154" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<text x="30.00" y="168.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="middle">Analista</text>
-<ellipse cx="30.0" cy="323.0" rx="5.0" ry="5.0" fill="white" stroke="#202020" stroke-width=".7"/>
-<polyline points="30,328 30,348" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<polyline points="20,336 40,336" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<polyline points="21,360 30,348 39,360" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<text x="30.00" y="374.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="middle">Verificador</text>
-<ellipse cx="243.0" cy="64.0" rx="85.0" ry="20.0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="243.00" y="63.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">Declarar panel y semillas</text>
-<text x="243.00" y="74.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">RF02</text>
-<ellipse cx="243.0" cy="136.0" rx="90.0" ry="28.0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="243.00" y="131.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" font-style="italic" text-anchor="middle">Estimar posiciones</text>
-<text x="243.00" y="142.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">RF01, RF03 a RF07</text>
-<text x="243.00" y="152.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">con motor fiel o moderno (RF05, RF06)</text>
-<ellipse cx="183.0" cy="209.0" rx="56.0" ry="19.0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="183.00" y="208.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">Estimar estático</text>
-<text x="183.00" y="219.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">RF03</text>
-<ellipse cx="303.0" cy="209.0" rx="56.0" ry="19.0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="303.00" y="208.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">Estimar dinámico</text>
-<text x="303.00" y="219.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">RF04</text>
-<ellipse cx="238.0" cy="286.0" rx="105.0" ry="24.0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="238.00" y="281.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">Validar con el caso chileno</text>
-<text x="238.00" y="292.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">RF10 a RF12</text>
-<text x="238.00" y="302.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">flujo de investigación</text>
-<ellipse cx="243.0" cy="364.0" rx="85.0" ry="24.0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="243.00" y="359.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="400" text-anchor="middle">Verificar y comparar</text>
-<text x="243.00" y="370.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">RF08, RF09</text>
-<text x="243.00" y="380.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">contra la referencia wmay</text>
-<polyline points="183,190 183,172 219,172 219,163" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<polygon points="214.0,172.0 219,163 224.0,172.0" fill="white" stroke="#202020" stroke-width=".7"/>
-<polyline points="303,190 303,172 267,172 267,163" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<polygon points="262.0,172.0 267,163 272.0,172.0" fill="white" stroke="#202020" stroke-width=".7"/>
-<polyline points="343,286 368,286 368,136 333,136" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
-<polyline points="340.0,139.0 333,136 340.0,133.0" fill="none" stroke="#202020" stroke-width=".7"/>
-<text x="364.00" y="250.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="end">«include»</text>
-<polyline points="44,120 158,62" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<polyline points="44,128 153,136" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<polyline points="44,138 62,138 62,286 133,286" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<polyline points="44,326 158,364" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<polyline points="8,412 374.6771653543307,412" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
-<text x="8.00" y="422.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">Línea: participación. Triángulo hueco: especialización. Cursiva: caso abstracto. «include»:</text>
-<text x="8.00" y="432.50" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">inclusión. RF: requisito funcional.</text>
+<title>Research use cases</title>
+<desc>User goals within the logical DW-NOMINATE research instrument.</desc>
+<text x="8.00" y="18.00" font-family="'Segoe UI', Arial, sans-serif" font-size="12" font-weight="700" text-anchor="start">Research use cases</text>
+<rect x="108" y="37" width="268" height="342" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="242.00" y="54.00" font-family="'Segoe UI', Arial, sans-serif" font-size="10" font-weight="700" text-anchor="middle">DW-NOMINATE research instrument</text>
+<ellipse cx="27.0" cy="120.0" rx="5.0" ry="5.0" fill="white" stroke="#202020" stroke-width=".7"/>
+<polyline points="27,125 27,145" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polyline points="17,133 37,133" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polyline points="18,157 27,145 36,157" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="27.00" y="171.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="middle">Analyst</text>
+<ellipse cx="27.0" cy="301.0" rx="5.0" ry="5.0" fill="white" stroke="#202020" stroke-width=".7"/>
+<polyline points="27,306 27,326" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polyline points="17,314 37,314" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polyline points="18,338 27,326 36,338" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<text x="27.00" y="352.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="middle">Verifier</text>
+<ellipse cx="241.0" cy="88.0" rx="87.0" ry="18.0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="241.00" y="91.00" font-family="'Segoe UI', Arial, sans-serif" font-size="10" font-weight="400" text-anchor="middle">Declare panel and seeds</text>
+<ellipse cx="242.5" cy="152.0" rx="92.5" ry="24.0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="242.50" y="152.00" font-family="'Segoe UI', Arial, sans-serif" font-size="10" font-weight="400" font-style="italic" text-anchor="middle">Estimate positions</text>
+<text x="242.50" y="164.00" font-family="'Segoe UI', Arial, sans-serif" font-size="8.5" font-weight="400" text-anchor="middle">Faithful or modern engine</text>
+<ellipse cx="180.0" cy="224.0" rx="56.0" ry="18.0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="180.00" y="227.00" font-family="'Segoe UI', Arial, sans-serif" font-size="10" font-weight="400" text-anchor="middle">Static estimate</text>
+<ellipse cx="300.0" cy="224.0" rx="56.0" ry="18.0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="300.00" y="227.00" font-family="'Segoe UI', Arial, sans-serif" font-size="10" font-weight="400" text-anchor="middle">Dynamic estimate</text>
+<ellipse cx="236.0" cy="290.0" rx="108.0" ry="20.0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="236.00" y="293.00" font-family="'Segoe UI', Arial, sans-serif" font-size="10" font-weight="400" text-anchor="middle">Validate on Chilean data</text>
+<ellipse cx="243.0" cy="348.0" rx="90.0" ry="18.0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="243.00" y="348.00" font-family="'Segoe UI', Arial, sans-serif" font-size="10" font-weight="400" text-anchor="middle">Verify and compare</text>
+<text x="243.00" y="360.00" font-family="'Segoe UI', Arial, sans-serif" font-size="8.5" font-weight="400" text-anchor="middle">wmay reference</text>
+<polyline points="180,206 180,190 216,190 216,176" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="211.0,185.0 216,176 221.0,185.0" fill="white" stroke="#202020" stroke-width=".7"/>
+<polyline points="300,206 300,190 266,190 266,176" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polygon points="261.0,185.0 266,176 271.0,185.0" fill="white" stroke="#202020" stroke-width=".7"/>
+<polyline points="344,290 365,290 365,152 335,152" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7" stroke-dasharray="3 2"/>
+<polyline points="342.0,155.0 335,152 342.0,149.0" fill="none" stroke="#202020" stroke-width=".7"/>
+<text x="362.00" y="257.00" font-family="'Segoe UI', Arial, sans-serif" font-size="8" font-weight="400" text-anchor="end">«include»</text>
+<polyline points="41,123 154,88" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polyline points="41,134 150,152" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polyline points="41,144 63,144 63,290 128,290" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
+<polyline points="41,322 153,348" fill="none" stroke="rgb(30,30,30)" stroke-width="0.7"/>
 </svg>

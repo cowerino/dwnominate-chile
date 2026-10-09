@@ -3,9 +3,13 @@
 **Versión: 2026-10-08.** Trabajo de título sobre la reimplementación y refactorización de DW-NOMINATE.
 
 - **[Informe completo](informe.pdf)**: 30 páginas de cuerpo y 75 páginas totales.
-- **[Portafolio de diagramas](diagramas.pdf)**: ocho figuras y el cuadro T5, con sus leyendas.
+- **[Portafolio de diagramas](diagramas.pdf)**: ocho figuras y el cuadro T5 en inglés, con diseño simplificado y sin leyendas extensas.
 
-## Figuras individuales
+El informe conserva sus figuras originales en español. El portafolio y las imágenes
+individuales presentan la edición en inglés para revisión; mantienen las notas de alcance
+y limitaciones necesarias para interpretar los diagramas.
+
+## Figuras individuales en inglés
 
 - [Contexto](figuras/F1-contexto.svg)
 - [Casos de uso](figuras/F2-casos-de-uso.svg)

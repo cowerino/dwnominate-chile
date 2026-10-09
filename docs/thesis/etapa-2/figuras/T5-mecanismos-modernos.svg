@@ -1,71 +1,59 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="135mm" height="118.533mm" viewBox="0 0 382.677 336">
+<svg xmlns="http://www.w3.org/2000/svg" width="135mm" height="113.594mm" viewBox="0 0 382.677 322">
 <rect width="100%" height="100%" fill="white"/>
-<title>T5</title>
-<desc>Mecanismos de búsqueda fieles y modernos en el perfil controlado. La tabla separa implementación y restricciones de los controles de medición.</desc>
-<text x="191.34" y="15.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9.5" font-weight="700" text-anchor="middle">Mecanismos: fiel y moderno</text>
-<text x="191.34" y="29.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="400" text-anchor="middle">Perfil: replicación Fortran, precisión estricta, escalar local, COBYLA</text>
-<rect x="6" y="43" width="53" height="35" rx="0" fill="#ededed" stroke="#202020" stroke-width=".7"/>
-<text x="10.00" y="57.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="700" text-anchor="start">Parámetro</text>
-<rect x="59" y="43" width="88" height="35" rx="0" fill="#ededed" stroke="#202020" stroke-width=".7"/>
-<text x="63.00" y="57.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="700" text-anchor="start">Fiel</text>
-<rect x="147" y="43" width="75" height="35" rx="0" fill="#ededed" stroke="#202020" stroke-width=".7"/>
-<text x="151.00" y="57.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="700" text-anchor="start">Moderno</text>
-<rect x="222" y="43" width="88" height="35" rx="0" fill="#ededed" stroke="#202020" stroke-width=".7"/>
-<text x="226.00" y="57.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="700" text-anchor="start">Restricción</text>
-<rect x="310" y="43" width="66.67716535433073" height="35" rx="0" fill="#ededed" stroke="#202020" stroke-width=".7"/>
-<text x="314.00" y="57.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8" font-weight="700" text-anchor="start">Activo</text>
-<rect x="6" y="78" width="53" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="10.00" y="92.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">Peso de la</text>
-<text x="10.00" y="103.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">segunda</text>
-<text x="10.00" y="114.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">dimensión</text>
-<rect x="59" y="78" width="88" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="63.00" y="92.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">Rejilla WINT</text>
-<rect x="147" y="78" width="75" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="151.00" y="92.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">BOBYQA</text>
-<text x="151.00" y="103.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">escalar</text>
-<rect x="222" y="78" width="88" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="226.00" y="92.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">Intervalo local de</text>
-<text x="226.00" y="103.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">WINT; solo en 2D</text>
-<rect x="310" y="78" width="66.67716535433073" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="314.00" y="92.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">Local</text>
-<rect x="6" y="132" width="53" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="10.00" y="146.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">Beta</text>
-<rect x="59" y="132" width="88" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="63.00" y="146.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">Rejilla SIGMAS</text>
-<rect x="147" y="132" width="75" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="151.00" y="146.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">BOBYQA</text>
-<text x="151.00" y="157.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">escalar</text>
-<rect x="222" y="132" width="88" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="226.00" y="146.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">Intervalo local de</text>
-<text x="226.00" y="157.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">SIGMAS</text>
-<rect x="310" y="132" width="66.67716535433073" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="314.00" y="146.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">Local</text>
-<rect x="6" y="186" width="53" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="10.00" y="200.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">Votación</text>
-<rect x="59" y="186" width="88" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="63.00" y="200.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">Búsqueda por</text>
-<text x="63.00" y="211.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">término RCINT2</text>
-<rect x="147" y="186" width="75" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="151.00" y="200.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">COBYLA de</text>
-<text x="151.00" y="211.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">bloque</text>
-<rect x="222" y="186" width="88" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="226.00" y="200.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">Norma del punto</text>
-<text x="226.00" y="211.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">medio ≤ 1</text>
-<rect x="310" y="186" width="66.67716535433073" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="314.00" y="200.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">COBYLA</text>
-<rect x="6" y="240" width="53" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="10.00" y="254.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">Legislador</text>
-<rect x="59" y="240" width="88" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="63.00" y="254.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">Búsqueda por</text>
-<text x="63.00" y="265.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">término XINT</text>
-<rect x="147" y="240" width="75" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="151.00" y="254.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">COBYLA de</text>
-<text x="151.00" y="265.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">bloque</text>
-<rect x="222" y="240" width="88" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="226.00" y="254.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">Norma del término</text>
-<text x="226.00" y="265.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">constante ≤ 1</text>
-<rect x="310" y="240" width="66.67716535433073" height="54" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="314.00" y="254.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="9" font-weight="400" text-anchor="start">COBYLA</text>
-<text x="6.00" y="310.00" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">Opcionales fuera del perfil: escalar global; bloques SLSQP o híbridos. Las cotas globales de peso y</text>
-<text x="6.00" y="320.50" font-family="'Palatino Linotype', Palatino, 'Book Antiqua', serif" font-size="8.5" font-weight="400" text-anchor="start">beta se retiran en replicación; persiste el intervalo local.</text>
+<title>Optimization mechanisms</title>
+<desc>Search mechanisms and constraints in the controlled faithful and modern profiles.</desc>
+<text x="8.00" y="18.00" font-family="'Segoe UI', Arial, sans-serif" font-size="12" font-weight="700" text-anchor="start">Optimization mechanisms</text>
+<text x="8.00" y="37.00" font-family="'Segoe UI', Arial, sans-serif" font-size="8" font-weight="400" text-anchor="start">Controlled profile: local scalar searches, strict arithmetic, COBYLA blocks.</text>
+<rect x="8" y="52" width="80" height="29" rx="0" fill="#ededed" stroke="#202020" stroke-width=".7"/>
+<text x="14.00" y="67.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="700" text-anchor="start">Parameter</text>
+<rect x="88" y="52" width="91" height="29" rx="0" fill="#ededed" stroke="#202020" stroke-width=".7"/>
+<text x="94.00" y="67.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="700" text-anchor="start">Faithful</text>
+<rect x="179" y="52" width="89" height="29" rx="0" fill="#ededed" stroke="#202020" stroke-width=".7"/>
+<text x="185.00" y="67.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="700" text-anchor="start">Modern</text>
+<rect x="268" y="52" width="107" height="29" rx="0" fill="#ededed" stroke="#202020" stroke-width=".7"/>
+<text x="274.00" y="67.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="700" text-anchor="start">Constraint</text>
+<rect x="8" y="81" width="80" height="49" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="14.00" y="96.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">2nd-dimension</text>
+<text x="14.00" y="107.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">weight</text>
+<rect x="88" y="81" width="91" height="49" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="94.00" y="96.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">WINT grid</text>
+<rect x="179" y="81" width="89" height="49" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="185.00" y="96.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">BOBYQA</text>
+<text x="185.00" y="107.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">scalar</text>
+<rect x="268" y="81" width="107" height="49" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="274.00" y="96.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">Local WINT interval;</text>
+<text x="274.00" y="107.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">2D only</text>
+<rect x="8" y="130" width="80" height="49" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="14.00" y="145.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">Beta</text>
+<rect x="88" y="130" width="91" height="49" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="94.00" y="145.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">SIGMAS grid</text>
+<rect x="179" y="130" width="89" height="49" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="185.00" y="145.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">BOBYQA</text>
+<text x="185.00" y="156.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">scalar</text>
+<rect x="268" y="130" width="107" height="49" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="274.00" y="145.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">Local SIGMAS</text>
+<text x="274.00" y="156.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">interval</text>
+<rect x="8" y="179" width="80" height="49" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="14.00" y="194.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">Roll call</text>
+<rect x="88" y="179" width="91" height="49" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="94.00" y="194.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">RCINT2</text>
+<text x="94.00" y="205.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">term-wise search</text>
+<rect x="179" y="179" width="89" height="49" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="185.00" y="194.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">COBYLA</text>
+<text x="185.00" y="205.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">block</text>
+<rect x="268" y="179" width="107" height="49" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="274.00" y="194.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">Midpoint norm ≤ 1</text>
+<rect x="8" y="228" width="80" height="49" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="14.00" y="243.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">Legislator</text>
+<rect x="88" y="228" width="91" height="49" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="94.00" y="243.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">XINT</text>
+<text x="94.00" y="254.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">term-wise search</text>
+<rect x="179" y="228" width="89" height="49" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="185.00" y="243.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">COBYLA</text>
+<text x="185.00" y="254.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">block</text>
+<rect x="268" y="228" width="107" height="49" rx="0" fill="white" stroke="#202020" stroke-width=".7"/>
+<text x="274.00" y="243.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">Constant-term</text>
+<text x="274.00" y="254.00" font-family="'Segoe UI', Arial, sans-serif" font-size="9" font-weight="400" text-anchor="start">norm ≤ 1</text>
+<text x="8.00" y="295.00" font-family="'Segoe UI', Arial, sans-serif" font-size="8" font-weight="400" text-anchor="start">Global scalar search, SLSQP and hybrid blocks are outside this profile.</text>
+<text x="8.00" y="309.00" font-family="'Segoe UI', Arial, sans-serif" font-size="8" font-weight="400" text-anchor="start">Replication removes global scalar bounds; the local search interval remains.</text>
 </svg>
