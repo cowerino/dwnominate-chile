@@ -25,7 +25,7 @@
 <ellipse cx="300.0" cy="224.0" rx="56.0" ry="18.0" fill="white" stroke="#202020" stroke-width=".7"/>
 <text x="300.00" y="227.00" font-family="'Segoe UI', Arial, sans-serif" font-size="10" font-weight="400" text-anchor="middle">Dynamic estimate</text>
 <ellipse cx="236.0" cy="290.0" rx="108.0" ry="20.0" fill="white" stroke="#202020" stroke-width=".7"/>
-<text x="236.00" y="293.00" font-family="'Segoe UI', Arial, sans-serif" font-size="10" font-weight="400" text-anchor="middle">Validate on Chilean data</text>
+<text x="236.00" y="293.00" font-family="'Segoe UI', Arial, sans-serif" font-size="10" font-weight="400" text-anchor="middle">Validate with real-world cases</text>
 <ellipse cx="243.0" cy="348.0" rx="90.0" ry="18.0" fill="white" stroke="#202020" stroke-width=".7"/>
 <text x="243.00" y="348.00" font-family="'Segoe UI', Arial, sans-serif" font-size="10" font-weight="400" text-anchor="middle">Verify and compare</text>
 <text x="243.00" y="360.00" font-family="'Segoe UI', Arial, sans-serif" font-size="8.5" font-weight="400" text-anchor="middle">wmay reference</text>

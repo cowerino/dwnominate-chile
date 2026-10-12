@@ -12,7 +12,7 @@ y limitaciones necesarias para interpretar los diagramas.
 ## Figuras individuales en inglés
 
 - [Contexto](figuras/F1-contexto.svg)
-- [Casos de uso](figuras/F2-casos-de-uso.svg)
+- [Casos de uso: validación con casos reales](figuras/F2-casos-de-uso.svg)
 - [Correspondencia Fortran/C++](figuras/F3-fortran-a-cpp.svg)
 - [Ciclo de estimación](figuras/F4-ciclo-estimacion.svg)
 - [Mecanismos fieles y modernos](figuras/T5-mecanismos-modernos.svg)
